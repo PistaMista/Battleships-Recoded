@@ -30,9 +30,21 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     {
 
     }
-
+    /// <summary>
+    /// The stripe mesh.
+    /// </summary>
     Mesh stripeMesh;
 
+    /// <summary>
+    /// Set the specified size, sideWidth, flat, stripeMovementSpeed, stripeWidth and stripeSpacing.
+    /// </summary>
+    /// <returns>The set.</returns>
+    /// <param name="size">Size.</param>
+    /// <param name="sideWidth">Side width.</param>
+    /// <param name="flat">If set to <c>true</c> flat.</param>
+    /// <param name="stripeMovementSpeed">Stripe movement speed.</param>
+    /// <param name="stripeWidth">Stripe width.</param>
+    /// <param name="stripeSpacing">Stripe spacing.</param>
     public void Set(Vector2 size, float sideWidth, bool flat, float stripeMovementSpeed, float stripeWidth, float stripeSpacing)
     {
         Destroy(visualParent);
@@ -83,7 +95,9 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         visualParent.transform.rotation = Quaternion.Euler(Vector3.right * (flat ? 90 : 0));
     }
 
-
+    /// <summary>
+    /// Builds the mesh.
+    /// </summary>
     void BuildMesh()
     {
         List<Vector3> vertices = new List<Vector3>();
@@ -161,6 +175,13 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         stripeMesh.triangles = triangles.ToArray();
     }
 
+    /// <summary>
+    /// Casts a ray on the borders.
+    /// </summary>
+    /// <returns>The raycast.</returns>
+    /// <param name="position">Position.</param>
+    /// <param name="direction">Direction.</param>
+    /// <param name="maxDistance">Max distance.</param>
     Vector2 BorderRaycast(Vector2 position, Vector2 direction, float maxDistance)
     {
         direction = direction.normalized;

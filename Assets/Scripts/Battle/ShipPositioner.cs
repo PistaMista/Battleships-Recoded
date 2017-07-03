@@ -52,7 +52,9 @@ public class ShipPositioner : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Update this instance.
+    /// </summary>
     void Update()
     {
         if (battle != null)
@@ -299,6 +301,9 @@ public class ShipPositioner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Randomizes the ships.
+    /// </summary>
     static void RandomizeShips()
     {
         ValidateTiles();
@@ -321,6 +326,10 @@ public class ShipPositioner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes the ship.
+    /// </summary>
+    /// <param name="ship">Ship.</param>
     public static void RemoveShip(Ship ship)
     {
         for (int i = 0; i < ship.tiles.Length; i++)
