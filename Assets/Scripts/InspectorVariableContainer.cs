@@ -49,7 +49,7 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public string[] boardVisualModules;
     /// <summary>
-    /// The prefab for the ship placement indicator.
+    /// The material for the ship placement indicator.
     /// </summary>
-    public GameObject shipPlacementIndicator;
+    public Material shipPlacementIndicatorMaterial;
 }

@@ -22,7 +22,7 @@ public class ShipPositioner : MonoBehaviour
     /// Adds ships to a battle.
     /// </summary>
     /// <param name="battle"></param>
-    public static void AddShipsToBattle(Battle battle)
+    public static void AddShipsToBattle ( Battle battle )
     {
         currentPlayer = null;
         ShipPositioner.battle = battle;
@@ -34,13 +34,13 @@ public class ShipPositioner : MonoBehaviour
     /// Switches to the next player.
     /// </summary>
     /// <returns>Whether there are players to select.</returns>
-    public static bool NextPlayer()
+    public static bool NextPlayer ()
     {
-        Player nextPlayer = battle.GetNextPlayer(currentPlayer);
+        Player nextPlayer = battle.GetNextPlayer( currentPlayer );
         if (currentPlayer != null && nextPlayer == battle.combatants[0])
         {
             currentPlayer = null;
-            Debug.Log("No more players.");
+            Debug.Log( "No more players." );
             return false;
         }
         else
@@ -55,7 +55,7 @@ public class ShipPositioner : MonoBehaviour
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update()
+    void Update ()
     {
         if (battle != null)
         {
@@ -86,7 +86,7 @@ public class ShipPositioner : MonoBehaviour
     /// <summary>
     /// Recalculates the tiles valid for placement.
     /// </summary>
-    public static void ValidateTiles()
+    public static void ValidateTiles ()
     {
         if (shipsToPlace.Count > 0)
         {
@@ -97,10 +97,10 @@ public class ShipPositioner : MonoBehaviour
                 processedTiles = new List<BoardTile>();
                 foreach (BoardTile tile in currentPlayer.board.tiles)
                 {
-                    if (!processedTiles.Contains(tile))
+                    if (!processedTiles.Contains( tile ))
                     {
-                        validTiles.AddRange(ValidateTileRegion(tile, Vector3.right));
-                        validTiles.AddRange(ValidateTileRegion(tile, Vector3.forward));
+                        validTiles.AddRange( ValidateTileRegion( tile, Vector3.right ) );
+                        validTiles.AddRange( ValidateTileRegion( tile, Vector3.forward ) );
                     }
                 }
             }
@@ -114,38 +114,38 @@ public class ShipPositioner : MonoBehaviour
                     List<BoardTile> candidates = new List<BoardTile>();
                     foreach (Vector3 cardinal in cardinals)
                     {
-                        BoardTile candidate = currentPlayer.board.GetTileAtWorldPosition(selectedTiles[0].transform.position + cardinal);
+                        BoardTile candidate = currentPlayer.board.GetTileAtWorldPosition( selectedTiles[0].transform.position + cardinal );
                         if (candidate != null)
                         {
                             if (candidate.containedShip == null)
                             {
-                                candidates.Add(candidate);
+                                candidates.Add( candidate );
                             }
                         }
                     }
 
                     List<BoardTile> localTiles = new List<BoardTile>();
-                    localTiles.AddRange(ValidateTileRegion(selectedTiles[0], Vector3.forward));
-                    localTiles.AddRange(ValidateTileRegion(selectedTiles[0], Vector3.right));
+                    localTiles.AddRange( ValidateTileRegion( selectedTiles[0], Vector3.forward ) );
+                    localTiles.AddRange( ValidateTileRegion( selectedTiles[0], Vector3.right ) );
 
                     foreach (BoardTile candidate in candidates)
                     {
-                        if (localTiles.Contains(candidate))
+                        if (localTiles.Contains( candidate ))
                         {
-                            validTiles.Add(candidate);
+                            validTiles.Add( candidate );
                         }
                     }
                 }
                 else
                 {
                     Vector3 direction = selectedTiles[0].transform.position - selectedTiles[1].transform.position;
-                    BoardTile candidate1 = currentPlayer.board.GetTileAtWorldPosition(selectedTiles[0].transform.position + direction);
-                    BoardTile candidate2 = currentPlayer.board.GetTileAtWorldPosition(selectedTiles[selectedTiles.Count - 1].transform.position - direction);
+                    BoardTile candidate1 = currentPlayer.board.GetTileAtWorldPosition( selectedTiles[0].transform.position + direction );
+                    BoardTile candidate2 = currentPlayer.board.GetTileAtWorldPosition( selectedTiles[selectedTiles.Count - 1].transform.position - direction );
                     if (candidate1 != null)
                     {
                         if (candidate1.containedShip == null)
                         {
-                            validTiles.Add(candidate1);
+                            validTiles.Add( candidate1 );
                         }
                     }
 
@@ -153,7 +153,7 @@ public class ShipPositioner : MonoBehaviour
                     {
                         if (candidate2.containedShip == null)
                         {
-                            validTiles.Add(candidate2);
+                            validTiles.Add( candidate2 );
                         }
                     }
                 }
@@ -170,7 +170,7 @@ public class ShipPositioner : MonoBehaviour
     /// </summary>
     /// <param name="tile">Root tile.</param>
     /// <param name="direction">Direction.</param>
-    static List<BoardTile> ValidateTileRegion(BoardTile tile, Vector3 direction)
+    static List<BoardTile> ValidateTileRegion ( BoardTile tile, Vector3 direction )
     {
         List<BoardTile> candidateTiles = new List<BoardTile>();
         int space = 0;
@@ -180,20 +180,20 @@ public class ShipPositioner : MonoBehaviour
             for (int depth = 0; depth < shipsToPlace[0].length; depth++)
             {
                 Vector3 examinedPosition = tile.transform.position + direction * depth * i;
-                BoardTile candidate = currentPlayer.board.GetTileAtWorldPosition(examinedPosition);
+                BoardTile candidate = currentPlayer.board.GetTileAtWorldPosition( examinedPosition );
                 if (candidate != null)
                 {
-                    if (!processedTiles.Contains(candidate))
+                    if (!processedTiles.Contains( candidate ))
                     {
-                        processedTiles.Add(candidate);
+                        processedTiles.Add( candidate );
                     }
                     if (candidate.containedShip == null)
                     {
-                        if (!candidateTiles.Contains(candidate))
+                        if (!candidateTiles.Contains( candidate ))
                         {
-                            if (!validTiles.Contains(candidate))
+                            if (!validTiles.Contains( candidate ))
                             {
-                                candidateTiles.Add(candidate);
+                                candidateTiles.Add( candidate );
                             }
                             space++;
                         }
@@ -221,24 +221,24 @@ public class ShipPositioner : MonoBehaviour
     /// Selects a tile to contain the current ship.
     /// </summary>
     /// <param name="tile"></param>
-    public static void SelectTile(BoardTile tile)
+    public static void SelectTile ( BoardTile tile )
     {
-        if (validTiles.Contains(tile))
+        if (validTiles.Contains( tile ))
         {
             if (selectedTiles.Count > 0)
             {
-                if (Vector3.Distance(selectedTiles[0].transform.position, tile.transform.position) > 1.1f)
+                if (Vector3.Distance( selectedTiles[0].transform.position, tile.transform.position ) > 1.1f)
                 {
-                    selectedTiles.Add(tile);
+                    selectedTiles.Add( tile );
                 }
                 else
                 {
-                    selectedTiles.Insert(0, tile);
+                    selectedTiles.Insert( 0, tile );
                 }
             }
             else
             {
-                selectedTiles.Add(tile);
+                selectedTiles.Add( tile );
             }
 
             if (selectedTiles.Count == shipsToPlace[0].length)
@@ -254,7 +254,7 @@ public class ShipPositioner : MonoBehaviour
     /// <summary>
     /// Finishes placing the current ship.
     /// </summary>
-    static void PlaceShip()
+    static void PlaceShip ()
     {
         Ship ship = shipsToPlace[0];
 
@@ -268,43 +268,43 @@ public class ShipPositioner : MonoBehaviour
         Vector3 position1 = selectedTiles[0].transform.position;
         Vector3 position2 = selectedTiles[selectedTiles.Count - 1].transform.position;
 
-        ship.boardPosition = position1 + (position2 - position1) / 2f;
-        if ((position1 - position2).x != 0) //Rotates the ship correctly
+        ship.boardPosition = position1 + ( position2 - position1 ) / 2f;
+        if (( position1 - position2 ).x != 0) //Rotates the ship correctly
         {
-            ship.boardRotation = Vector3.up * (90f - 180f * Random.Range(0, 2));
+            ship.boardRotation = Vector3.up * ( 90f - 180f * Random.Range( 0, 2 ) );
         }
         else
         {
-            ship.boardRotation = Vector3.up * (180f * Random.Range(0, 2));
+            ship.boardRotation = Vector3.up * ( 180f * Random.Range( 0, 2 ) );
         }
 
         //currentPlayer.ships[Master.vars.startingShipLoadout.Length - shipsToPlace.Count] = ship;
         ship.transform.parent = currentPlayer.transform;
         ship.PositionOnBoard();
-        shipsToPlace.RemoveAt(0);
+        shipsToPlace.RemoveAt( 0 );
     }
 
     /// <summary>
     /// Assigns new ships for the current player.
     /// </summary>
-    static void AssignShipsToCurrentPlayer()
+    static void AssignShipsToCurrentPlayer ()
     {
         currentPlayer.ships = new Ship[Master.vars.startingShipLoadout.Length];
 
         shipsToPlace = new List<Ship>();
         for (int i = 0; i < Master.vars.startingShipLoadout.Length; i++)
         {
-            Ship ship = Instantiate(Master.vars.startingShipLoadout[i]).GetComponent<Ship>();
+            Ship ship = Instantiate( Master.vars.startingShipLoadout[i] ).GetComponent<Ship>();
             ship.owner = currentPlayer;
             currentPlayer.ships[i] = ship;
-            shipsToPlace.Add(ship);
+            shipsToPlace.Add( ship );
         }
     }
 
     /// <summary>
     /// Randomizes the ships.
     /// </summary>
-    static void RandomizeShips()
+    static void RandomizeShips ()
     {
         ValidateTiles();
 
@@ -316,13 +316,13 @@ public class ShipPositioner : MonoBehaviour
                 shipsToPlace = new List<Ship>();
                 foreach (Ship ship in currentPlayer.ships)
                 {
-                    RemoveShip(ship);
+                    RemoveShip( ship );
                 }
                 ValidateTiles();
             }
 
-            BoardTile randomTile = validTiles[Random.Range(0, validTiles.Count)];
-            SelectTile(randomTile);
+            BoardTile randomTile = validTiles[Random.Range( 0, validTiles.Count )];
+            SelectTile( randomTile );
         }
     }
 
@@ -330,7 +330,7 @@ public class ShipPositioner : MonoBehaviour
     /// Removes the ship.
     /// </summary>
     /// <param name="ship">Ship.</param>
-    public static void RemoveShip(Ship ship)
+    public static void RemoveShip ( Ship ship )
     {
         for (int i = 0; i < ship.tiles.Length; i++)
         {
@@ -344,6 +344,6 @@ public class ShipPositioner : MonoBehaviour
             ship.tiles[i] = null;
         }
 
-        shipsToPlace.Insert(0, ship);
+        shipsToPlace.Insert( 0, ship );
     }
 }
