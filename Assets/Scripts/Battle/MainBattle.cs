@@ -12,9 +12,8 @@ public class MainBattle : Battle
 
     public override void StartBattle ()
     {
-        UserInterface.elements[3].Disable();
-        UserInterface.elements[4].Enable();
         base.StartBattle();
+        UserInterface.RespondToBattleChanges();
     }
 
     protected override void BeginTurn ()

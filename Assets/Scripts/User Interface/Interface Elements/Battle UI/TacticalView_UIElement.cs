@@ -11,8 +11,7 @@ public class TacticalView_UIElement : UIElement
     {
         base.Enable();
         battle = UserInterface.managedBattle;
-        OnBattleChange();
-        overheadCameraPosition.y = Master.vars.mainBattleBoardDistance * 1.2f / Mathf.Tan( Camera.main.fieldOfView * Mathf.Deg2Rad );
+        overheadCameraPosition.y = Master.vars.mainBattleBoardDistance * 1.2f / Mathf.Tan( Camera.main.fieldOfView * Mathf.Deg2Rad / 2 );
     }
 
     public override void Disable ()
@@ -23,16 +22,32 @@ public class TacticalView_UIElement : UIElement
     public override void OnBattleChange ()
     {
         base.OnBattleChange();
-        foreach (Player player in UserInterface.managedBattle.combatants)
+        if (UserInterface.managedBattle.activePlayer != null && !gameObject.activeInHierarchy)
         {
-            player.board.ResetVisualModules();
+            Enable();
+        }
+        else if (gameObject.activeInHierarchy)
+        {
+            Disable();
         }
 
-        if (battle.activePlayer != null)
+        if (gameObject.activeInHierarchy)
         {
-            if (battle.selectedPlayer == null)
+            foreach (Player player in UserInterface.managedBattle.combatants)
             {
-                Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 3f, Mathf.Infinity, false );
+                player.board.ResetVisualModules();
+            }
+
+            if (battle.activePlayer != null)
+            {
+                if (battle.selectedPlayer == null)
+                {
+                    Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 3f, Mathf.Infinity, false );
+                    foreach (Player player in battle.combatants)
+                    {
+                        player.board.visualModules[1].Enable();
+                    }
+                }
             }
         }
     }

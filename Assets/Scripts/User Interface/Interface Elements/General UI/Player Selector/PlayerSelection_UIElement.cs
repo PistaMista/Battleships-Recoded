@@ -17,10 +17,10 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     Vector2 addPlayerButtonVelocity;
 
 
-    public override void Enable()
+    public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetBlurIntensity(5f, 1f);
+        Cameraman.SetBlurIntensity( 5f, 1f );
         reservedSpace = 1200f - addPlayerButton.GetComponent<Image>().rectTransform.rect.width;
         if (panels == null)
         {
@@ -29,49 +29,49 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         RefreshGraphics();
     }
 
-    public override void Disable()
+    public override void Disable ()
     {
         base.Disable();
         while (panels.Count > 0)
         {
-            RemovePlayerPanel(panels[0]);
+            RemovePlayerPanel( panels[0] );
         }
     }
 
-    protected override void Update()
+    protected override void Update ()
     {
         base.Update();
-        addPlayerButton.anchoredPosition = Vector2.SmoothDamp(addPlayerButton.anchoredPosition, Vector2.right * targetAddPlayerButtonXPosition, ref addPlayerButtonVelocity, 1f, Mathf.Infinity, Time.deltaTime);
+        addPlayerButton.anchoredPosition = Vector2.SmoothDamp( addPlayerButton.anchoredPosition, Vector2.right * targetAddPlayerButtonXPosition, ref addPlayerButtonVelocity, 1f, Mathf.Infinity, Time.deltaTime );
     }
 
     /// <summary>
     /// Removes a player panel.
     /// </summary>
     /// <param name="panel"></param>
-    public void RemovePlayerPanel(PlayerPanel panel)
+    public void RemovePlayerPanel ( PlayerPanel panel )
     {
-        Destroy(panel.gameObject);
-        panels.Remove(panel);
+        Destroy( panel.gameObject );
+        panels.Remove( panel );
         RefreshGraphics();
     }
 
     /// <summary>
     /// Refreshes the graphics of the UI.
     /// </summary>
-    void RefreshGraphics()
+    void RefreshGraphics ()
     {
         if (panels.Count > 0)
         {
             float position = 0;
             if (panels.Count < 3)
             {
-                addPlayerButton.gameObject.SetActive(true);
+                addPlayerButton.gameObject.SetActive( true );
                 targetAddPlayerButtonXPosition = 440;
                 position = reservedSpace - 320f;
             }
             else
             {
-                addPlayerButton.gameObject.SetActive(false);
+                addPlayerButton.gameObject.SetActive( false );
                 position = 950f;
             }
             foreach (PlayerPanel panel in panels)
@@ -89,33 +89,33 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     /// <summary>
     /// Adds another player.
     /// </summary>
-    public void AddPlayer()
+    public void AddPlayer ()
     {
         if (panels.Count < 3)
         {
-            PlayerPanel newPanel = Instantiate(panelPrefab).GetComponent<PlayerPanel>();
-            newPanel.name.text = "Player " + (panels.Count + 1);
+            PlayerPanel newPanel = Instantiate( panelPrefab ).GetComponent<PlayerPanel>();
+            newPanel.name.text = "Player " + ( panels.Count + 1 );
             newPanel.transform.parent = carrier.transform;
             newPanel.GetComponent<RectTransform>().anchoredPosition = Vector2.left * 200f;
-            panels.Add(newPanel);
+            panels.Add( newPanel );
             RefreshGraphics();
         }
     }
 
-    protected override void OnDrag(Vector2 initialPosition, Vector2 currentPosition)
+    protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
-        if (Mathf.Abs(currentPosition.x - initialPosition.x) > Screen.width / 4.5f)
+        if (Mathf.Abs( currentPosition.x - initialPosition.x ) > Screen.width / 4.5f)
         {
-            base.OnDrag(initialPosition, currentPosition);
-            targetPosition.x = (currentPosition.x - initialPosition.x);
+            base.OnDrag( initialPosition, currentPosition );
+            targetPosition.x = ( currentPosition.x - initialPosition.x );
         }
     }
 
-    protected override void OnEndPress(Vector2 initialPosition, Vector2 currentPosition)
+    protected override void OnEndPress ( Vector2 initialPosition, Vector2 currentPosition )
     {
-        base.OnEndPress(initialPosition, currentPosition);
+        base.OnEndPress( initialPosition, currentPosition );
         float rawDistance = currentPosition.x - initialPosition.x;
-        if (Mathf.Abs(rawDistance) > Screen.width / 3.5f)
+        if (Mathf.Abs( rawDistance ) > Screen.width / 3.5f)
         {
             if (rawDistance > 0)
             {
@@ -149,15 +149,15 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     /// <summary>
     /// Starts the battle.
     /// </summary>
-    void StartBattle()
+    void StartBattle ()
     {
-        Battle battle = new GameObject("Main Battle").AddComponent<MainBattle>();
+        Battle battle = new GameObject( "Main Battle" ).AddComponent<MainBattle>();
         Player[] players = new Player[panels.Count];
         int humans = 0;
 
         for (int i = 0; i < players.Length; i++)
         {
-            GameObject playerObject = new GameObject("Player - " + panels[i].name.text);
+            GameObject playerObject = new GameObject( "Player - " + panels[i].name.text );
             Player player;
             if (panels[i].AI.isOn)
             {
@@ -171,12 +171,16 @@ public class PlayerSelection_UIElement : Slidable_UIElement
 
             player.AI = panels[i].AI.isOn;
             player.label = panels[i].name.text;
-            player.board.InitialiseTiles((int)panels[i].boardSizeSlider.value);
+            if (player.label.Length == 0)
+            {
+                player.label = "Player " + ( i + 1 );
+            }
+            player.board.InitialiseTiles( (int)panels[i].boardSizeSlider.value );
             player.battle = battle;
             players[i] = player;
 
             float angle = 360f / players.Length * i;
-            player.transform.position = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * Master.vars.secondaryBattleBoardDistance;
+            player.transform.position = new Vector3( Mathf.Cos( angle * Mathf.Deg2Rad ), 0, Mathf.Sin( angle * Mathf.Deg2Rad ) ) * Master.vars.mainBattleBoardDistance;
         }
 
         for (int i = 0; i < players.Length; i++)
@@ -185,19 +189,19 @@ public class PlayerSelection_UIElement : Slidable_UIElement
             {
                 if (x != i)
                 {
-                    players[i].hits.Add(players[x], new Dictionary<BoardTile, TileHitInformation>());
+                    players[i].hits.Add( players[x], new Dictionary<BoardTile, TileHitInformation>() );
                 }
             }
         }
 
-        battle.Initialise(players, false);
+        battle.Initialise( players, false );
         if (humans > 0)
         {
             UserInterface.elements[3].Enable();
         }
         else
         {
-            Cameraman.SetBlurIntensity(0, 1f);
+            Cameraman.SetBlurIntensity( 0, 1f );
         }
     }
 }

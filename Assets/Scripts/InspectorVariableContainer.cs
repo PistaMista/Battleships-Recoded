@@ -52,4 +52,8 @@ public class InspectorVariableContainer : MonoBehaviour
     /// The material for the ship placement indicator.
     /// </summary>
     public Material shipPlacementIndicatorMaterial;
+    /// <summary>
+    /// The material for player tag backgrounds.
+    /// </summary>
+    public Material playerTagBackgroundMaterial;
 }
