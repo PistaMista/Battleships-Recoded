@@ -23,7 +23,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
         base.Disable();
         Destroy( indicator );
     }
-    ShipPlacementUIIndicator deprecated;
+
     DynamicStripedRectangle_GraphicsElement indicator;
 
     int previouslySelectedTiles;
@@ -43,7 +43,6 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 {
                     indicator.gameObject.SetActive( true );
                     previouslySelectedTiles = selectedTiles.Count;
-                    //deprecated.Adapt();
 
                     Vector3 relative = selectedTiles[selectedTiles.Count - 1].transform.position - selectedTiles[0].transform.position;
                     indicator.transform.position = relative / 2f + selectedTiles[0].transform.position + Vector3.up * 0.12f;

@@ -21,7 +21,10 @@ public class Board : MonoBehaviour
     /// </summary>
     public BoardVisualModule[] visualModules;
 
-    void Update()
+    /// <summary>
+    /// Update this instance.
+    /// </summary>
+    void Update ()
     {
         foreach (BoardVisualModule module in visualModules)
         {
@@ -32,13 +35,16 @@ public class Board : MonoBehaviour
         }
     }
 
-    void Awake()
+    /// <summary>
+    /// Awake this instance.
+    /// </summary>
+    void Awake ()
     {
         visualModules = new BoardVisualModule[Master.vars.boardVisualModules.Length];
 
         for (int i = 0; i < visualModules.Length; i++)
         {
-            visualModules[i] = (BoardVisualModule)ScriptableObject.CreateInstance(Master.vars.boardVisualModules[i] + "_BoardVisualModule");
+            visualModules[i] = (BoardVisualModule)ScriptableObject.CreateInstance( Master.vars.boardVisualModules[i] + "_BoardVisualModule" );
             visualModules[i].Initialize();
             visualModules[i].board = this;
         }
@@ -47,49 +53,66 @@ public class Board : MonoBehaviour
     /// <summary>
     /// Resets all enabled visual modes.
     /// </summary>
-    public void ResetVisualModules()
+    public void ResetVisualModules ()
     {
         foreach (BoardVisualModule module in visualModules)
         {
             module.Disable();
         }
 
-        Destroy(visualParent);
-        visualParent = new GameObject("Visual Parent");
+        Destroy( visualParent );
+        visualParent = new GameObject( "Visual Parent" );
         visualParent.transform.parent = transform;
         visualParent.transform.localPosition = Vector3.zero;
+
+        foreach (Ship ship in owner.ships)
+        {
+            ship.gameObject.SetActive( false );
+        }
     }
 
+    /// <summary>
+    /// The grid.
+    /// </summary>
     GameObject grid;
-    public void ReinitializeGrid()
+
+    /// <summary>
+    /// Reinitializes the grid.
+    /// </summary>
+    public void ReinitializeGrid ()
     {
-        Destroy(grid);
-        grid = new GameObject("Grid");
+        Destroy( grid );
+        grid = new GameObject( "Grid" );
         grid.transform.parent = visualParent.transform;
         grid.transform.localPosition = Vector3.up * 0.1f;
-        int sideLength = (int)Mathf.Sqrt(tiles.Length);
+        int sideLength = (int)Mathf.Sqrt( tiles.Length );
 
         for (int x = 1; x < sideLength; x++)
         {
             float pos = -(float)sideLength / 2f + x;
-            AddGridLine(new Vector3(pos, 0f, 0f), false, sideLength + 0.3f);
+            AddGridLine( new Vector3( pos, 0f, 0f ), false, sideLength + 0.3f );
         }
 
         for (int y = 1; y < sideLength; y++)
         {
             float pos = -(float)sideLength / 2f + y;
-            AddGridLine(new Vector3(0f, 0f, pos), true, sideLength + 0.3f);
+            AddGridLine( new Vector3( 0f, 0f, pos ), true, sideLength + 0.3f );
         }
     }
 
-
-    void AddGridLine(Vector3 localPosition, bool rotated, float length)
+    /// <summary>
+    /// Adds a grid line.
+    /// </summary>
+    /// <param name="localPosition">Local position.</param>
+    /// <param name="rotated">If set to <c>true</c> rotated.</param>
+    /// <param name="length">Length.</param>
+    void AddGridLine ( Vector3 localPosition, bool rotated, float length )
     {
-        GameObject line = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        GameObject line = GameObject.CreatePrimitive( PrimitiveType.Quad );
         line.transform.parent = grid.transform;
         line.transform.localPosition = localPosition;
-        line.transform.localScale = new Vector3(Master.vars.boardLineThickness, length, 1f);
-        line.transform.rotation = Quaternion.Euler(Vector3.up * (rotated ? 90 : 0) + Vector3.right * 90f);
+        line.transform.localScale = new Vector3( Master.vars.boardLineThickness, length, 1f );
+        line.transform.rotation = Quaternion.Euler( Vector3.up * ( rotated ? 90 : 0 ) + Vector3.right * 90f );
     }
 
     /// <summary>
@@ -97,10 +120,10 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="position">The world position to search.</param>
     /// <returns>The tile near position.</returns>
-    public BoardTile GetTileAtWorldPosition(Vector3 position)
+    public BoardTile GetTileAtWorldPosition ( Vector3 position )
     {
-        int dimensions = (int)Mathf.Sqrt(tiles.Length);
-        Vector3 pos = position - this.transform.position + Vector3.one * ((float)dimensions / 2f);
+        int dimensions = (int)Mathf.Sqrt( tiles.Length );
+        Vector3 pos = position - this.transform.position + Vector3.one * ( (float)dimensions / 2f );
         if (pos.x < 0 || pos.x >= dimensions || pos.z < 0 || pos.z >= dimensions)
         {
             pos = -Vector3.one;
@@ -119,18 +142,18 @@ public class Board : MonoBehaviour
     /// Initialises the tiles that will make up the board.
     /// </summary> 
     /// <param name="dimensions">The side length of the board.</param>
-    public void InitialiseTiles(int dimensions)
+    public void InitialiseTiles ( int dimensions )
     {
-        Vector3 initialPosition = -(new Vector3(1, 0, 1) * (dimensions / 2f - 0.5f));
+        Vector3 initialPosition = -( new Vector3( 1, 0, 1 ) * ( dimensions / 2f - 0.5f ) );
         tiles = new BoardTile[dimensions, dimensions];
 
         for (int x = 0; x < dimensions; x++)
         {
             for (int y = 0; y < dimensions; y++)
             {
-                BoardTile tile = new GameObject("Board Tile " + x + " , " + y).AddComponent<BoardTile>();
+                BoardTile tile = new GameObject( "Board Tile " + x + " , " + y ).AddComponent<BoardTile>();
                 tile.transform.parent = transform;
-                tile.transform.localPosition = initialPosition + new Vector3(x, 0, y);
+                tile.transform.localPosition = initialPosition + new Vector3( x, 0, y );
                 tile.board = this;
                 tiles[x, y] = tile;
             }

@@ -280,6 +280,8 @@ public class ShipPositioner : MonoBehaviour
 
         //currentPlayer.ships[Master.vars.startingShipLoadout.Length - shipsToPlace.Count] = ship;
         ship.transform.parent = currentPlayer.transform;
+
+        ship.gameObject.SetActive( true );
         ship.PositionOnBoard();
         shipsToPlace.RemoveAt( 0 );
     }
@@ -344,6 +346,7 @@ public class ShipPositioner : MonoBehaviour
             ship.tiles[i] = null;
         }
 
+        ship.gameObject.SetActive( false );
         shipsToPlace.Insert( 0, ship );
     }
 }
