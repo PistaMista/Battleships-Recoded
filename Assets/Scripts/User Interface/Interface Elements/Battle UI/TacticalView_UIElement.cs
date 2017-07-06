@@ -26,7 +26,7 @@ public class TacticalView_UIElement : UIElement
         {
             Enable();
         }
-        else if (gameObject.activeInHierarchy)
+        else if (( UserInterface.managedBattle.activePlayer == null || UserInterface.managedBattle.selectedPlayer != null ) && gameObject.activeInHierarchy)
         {
             Disable();
         }
@@ -42,7 +42,7 @@ public class TacticalView_UIElement : UIElement
             {
                 if (battle.selectedPlayer == null)
                 {
-                    Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 3f, Mathf.Infinity, false );
+                    Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 1.15f, Mathf.Infinity, false );
                     foreach (Player player in battle.combatants)
                     {
                         player.board.visualModules[1].Enable();
@@ -55,11 +55,29 @@ public class TacticalView_UIElement : UIElement
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
+        Debug.Log( "Tap" );
+        if (battle.selectedPlayer == null)
+        {
+            Vector3 worldPosition = InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 1 );
+            foreach (Player player in battle.combatants)
+            {
+                Bounds tagBounds = ( (TacticalView_BoardVisualModule)player.board.visualModules[1] ).textBounds;
+                Vector3 lowerCorner = player.board.transform.position - tagBounds.extents;
+                Vector3 upperCorner = player.board.transform.position + tagBounds.extents;
+
+                if (worldPosition.x > lowerCorner.x && worldPosition.x < upperCorner.x && worldPosition.z > lowerCorner.z && worldPosition.z < upperCorner.z)
+                {
+                    battle.SelectPlayer( player );
+                    break;
+                }
+            }
+        }
     }
 
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnDrag( initialPosition, currentPosition );
+        Debug.Log( "Drag" );
     }
 
     protected override void Update ()

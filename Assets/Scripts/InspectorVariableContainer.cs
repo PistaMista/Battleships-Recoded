@@ -56,4 +56,8 @@ public class InspectorVariableContainer : MonoBehaviour
     /// The material for player tag backgrounds.
     /// </summary>
     public Material playerTagBackgroundMaterial;
+    /// <summary>
+    /// The active player tag background material.
+    /// </summary>
+    public Material activePlayerTagBackgroundMaterial;
 }
