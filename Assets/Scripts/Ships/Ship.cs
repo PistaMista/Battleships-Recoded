@@ -31,6 +31,10 @@ public class Ship : MonoBehaviour
     /// The number of ship segments still intact.
     /// </summary>
     public int lengthRemaining;
+    /// <summary>
+    /// All the players who can see exactly where this ship is.
+    /// </summary>
+    public List<Player> revealedBy;
 
     /// <summary>
     /// The type of this ship.
@@ -48,7 +52,7 @@ public class Ship : MonoBehaviour
     /// <summary>
     /// Registers a hit on this ship.
     /// </summary>
-    public void RegisterHit()
+    public void RegisterHit ()
     {
         lengthRemaining--;
 
@@ -83,16 +87,17 @@ public class Ship : MonoBehaviour
     /// <summary>
     /// Positions this ship correctly on the board.
     /// </summary>
-    public void PositionOnBoard()
+    public void PositionOnBoard ()
     {
         transform.position = boardPosition;
-        transform.rotation = Quaternion.Euler(boardRotation);
+        transform.rotation = Quaternion.Euler( boardRotation );
     }
 
 
-    void Awake()
+    void Awake ()
     {
         tiles = new BoardTile[length];
+        revealedBy = new List<Player>();
         lengthRemaining = length;
     }
 
@@ -103,7 +108,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     public RotatableWeaponMounting[] gunTurrets;
 
-    void Update()
+    void Update ()
     {
 
     }

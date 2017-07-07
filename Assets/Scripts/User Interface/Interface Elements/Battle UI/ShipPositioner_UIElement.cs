@@ -48,14 +48,17 @@ public class ShipPositioner_UIElement : UIElement
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
-        BoardTile tile = ShipPositioner.currentPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y ) );
-        if (tile != null)
+        if (ShipPositioner.currentPlayer != null)
         {
-            if (tile.containedShip != null)
+            BoardTile tile = ShipPositioner.currentPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y ) );
+            if (tile != null)
             {
-                tile.containedShip.transform.position = Vector3.zero;
-                ShipPositioner.RemoveShip( tile.containedShip );
-                nextPlayerButton.gameObject.SetActive( false );
+                if (tile.containedShip != null)
+                {
+                    tile.containedShip.transform.position = Vector3.zero;
+                    ShipPositioner.RemoveShip( tile.containedShip );
+                    nextPlayerButton.gameObject.SetActive( false );
+                }
             }
         }
     }

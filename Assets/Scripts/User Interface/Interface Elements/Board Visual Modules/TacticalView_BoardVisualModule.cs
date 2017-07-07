@@ -5,6 +5,7 @@ using UnityEngine;
 public class TacticalView_BoardVisualModule : BoardVisualModule
 {
     public Bounds textBounds;
+    Vector3 targetTagPosition;
 
     public override void Initialize ()
     {
@@ -32,8 +33,8 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         background.transform.parent = visualParent.transform;
         background.transform.localPosition = Vector3.zero;
 
-        float boardDimensions = Mathf.Sqrt( board.tiles.Length );
-        visualParent.transform.localPosition = Vector3.forward * ( textBounds.extents.z * 1.2f + boardDimensions );
+        visualParent.transform.localPosition = Vector3.up * 3;
+
         if (board.owner.battle.activePlayer == board.owner)
         {
             background.material = Master.vars.activePlayerTagBackgroundMaterial;
@@ -43,6 +44,9 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
             background.material = Master.vars.playerTagBackgroundMaterial;
         }
         background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
+
+        float boardDimensions = Mathf.Sqrt( board.tiles.Length );
+        targetTagPosition = ( ( board.owner.battle.selectedPlayer == board.owner ) ? Vector3.forward * ( textBounds.extents.z * 1.2f + boardDimensions ) : Vector3.zero ) + visualParent.transform.position.y * Vector3.up;
     }
 
     public override void Disable ()
@@ -50,8 +54,10 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         base.Disable();
     }
 
+    Vector3 currentVelocity;
     public override void Refresh ()
     {
         base.Refresh();
+        visualParent.transform.localPosition = Vector3.SmoothDamp( visualParent.transform.localPosition, targetTagPosition, ref currentVelocity, 0.3f, Mathf.Infinity );
     }
 }

@@ -15,6 +15,7 @@ public class BoardVisualModule : ScriptableObject
     public virtual void Enable ()
     {
         enabled = true;
+        Destroy( visualParent );
         visualParent = new GameObject( "Visual Parent" );
         visualParent.transform.parent = board.visualParent.transform;
         visualParent.transform.localPosition = Vector3.zero;
