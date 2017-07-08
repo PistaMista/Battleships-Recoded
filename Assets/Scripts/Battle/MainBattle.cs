@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MainBattle : Battle
 {
+    public Player lastSelectedPlayer;
     public override void Initialise ( Player[] combatants, bool functional )
     {
         base.Initialise( combatants, functional );
@@ -36,6 +37,7 @@ public class MainBattle : Battle
 
     public override void SelectPlayer ( Player player )
     {
+        lastSelectedPlayer = selectedPlayer;
         base.SelectPlayer( player );
         UserInterface.RespondToBattleChanges();
     }

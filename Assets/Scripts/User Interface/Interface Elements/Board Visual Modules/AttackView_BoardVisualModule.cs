@@ -22,13 +22,12 @@ public class AttackView_BoardVisualModule : BoardVisualModule
 
         float boardSide = Mathf.Sqrt( board.tiles.Length );
         float elevation = 0.5f + ( boardSide / 2f ) / Mathf.Atan( Camera.main.fieldOfView / 2f * Mathf.Deg2Rad );
-        Cameraman.AddWaypoint( board.owner.transform.position + Vector3.up * elevation, Vector3.down, 0.3f, Mathf.Infinity, false );
+        Cameraman.AddWaypoint( board.owner.transform.position + Vector3.up * elevation, Vector3.down, 0.3f, Mathf.Infinity, 90f, false );
     }
 
     public override void Disable ()
     {
         base.Disable();
-        board.visualModules[1].Disable();
     }
 
     public override void Refresh ()

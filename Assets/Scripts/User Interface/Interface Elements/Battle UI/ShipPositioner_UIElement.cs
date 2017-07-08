@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class ShipPositioner_UIElement : UIElement
 {
+    Canvas canvas;
     public override void Enable ()
     {
         base.Enable();
+        canvas = GetComponent<Canvas>();
     }
 
     public override void Disable ()
@@ -112,8 +114,8 @@ public class ShipPositioner_UIElement : UIElement
     {
         nextPlayerButton.gameObject.SetActive( false );
         playerNameText.text = ShipPositioner.currentPlayer.label;
-        playerNameText.rectTransform.anchoredPosition = Vector2.right * ( 600f + playerNameText.rectTransform.rect.width / 2f );
-        instructionText.rectTransform.anchoredPosition = Vector2.left * ( 600f + instructionText.rectTransform.rect.width / 2f );
+        playerNameText.rectTransform.anchoredPosition = Vector2.right * ( Screen.width / 2f + playerNameText.rectTransform.rect.width / 2f ) + Vector2.down * ( canvas.GetComponent<RectTransform>().rect.height / 2f - playerNameText.rectTransform.rect.height / 2f );
+        instructionText.rectTransform.anchoredPosition = Vector2.left * ( Screen.width / 2f + instructionText.rectTransform.rect.width / 2f ) + Vector2.up * ( canvas.GetComponent<RectTransform>().rect.height / 2f - instructionText.rectTransform.rect.height / 2f );
         notificationTimeRemaining = 3f;
 
         ShipPositioner.currentPlayer.board.ResetVisualModules();
@@ -122,21 +124,21 @@ public class ShipPositioner_UIElement : UIElement
 
         float playerBoardSideLength = Mathf.Sqrt( ShipPositioner.currentPlayer.board.tiles.Length );
         float elevation = 0.5f + ( playerBoardSideLength / 2f ) / Mathf.Atan( Camera.main.fieldOfView / 2f * Mathf.Deg2Rad );
-        Cameraman.AddWaypoint( ShipPositioner.currentPlayer.transform.position + Vector3.up * elevation, Vector3.down, 0.3f, Mathf.Infinity, false );
+        Cameraman.AddWaypoint( ShipPositioner.currentPlayer.transform.position + Vector3.up * elevation, Vector3.down, 0.3f, Mathf.Infinity, 98f, false );
     }
 
     void RefreshNotification ()
     {
         if (notificationTimeRemaining > 1f)
         {
-            playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.zero, ref nameTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
-            instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.zero, ref instructionTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
+            playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.down * ( canvas.GetComponent<RectTransform>().rect.height / 2f - playerNameText.rectTransform.rect.height / 2f ), ref nameTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
+            instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.up * ( canvas.GetComponent<RectTransform>().rect.height / 2f - instructionText.rectTransform.rect.height / 2f ), ref instructionTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
             Cameraman.SetBlurIntensity( 5f, 0.3f );
         }
         else
         {
-            playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.up * 350f, ref nameTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
-            instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.down * 250f, ref instructionTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
+            playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.down * playerNameText.rectTransform.rect.height / 1.5f, ref nameTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
+            instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.up * instructionText.rectTransform.rect.height / 1.5f, ref instructionTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
             Cameraman.SetBlurIntensity( 0f, 0.3f );
         }
     }

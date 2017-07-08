@@ -11,6 +11,7 @@ public class Cameraman : MonoBehaviour
         public Vector3 targetDirection;
         public float transitionTime;
         public float transitionSpeedLimit;
+        public float switchThreshold;
         public bool teleporting;
     }
 
@@ -29,29 +30,29 @@ public class Cameraman : MonoBehaviour
     static float transitionSpeed = 0f;
     static BlurOptimized blur;
 
-    void Awake()
+    void Awake ()
     {
         waypoints = new List<CameraWaypoint>();
         blur = Camera.main.GetComponent<BlurOptimized>();
     }
 
 
-    void Update()
+    void Update ()
     {
         if (waypoints.Count > 0)
         {
-            if (transitionProgress > 98f && waypoints.Count > 1)
+            if (transitionProgress > waypoints[0].switchThreshold && waypoints.Count > 1)
             {
                 NextWaypoint();
             }
 
-            transitionProgress = Mathf.SmoothDamp(transitionProgress, 100f, ref transitionSpeed, waypoints[0].transitionTime, waypoints[0].transitionSpeedLimit);
+            transitionProgress = Mathf.SmoothDamp( transitionProgress, 100f, ref transitionSpeed, waypoints[0].transitionTime, waypoints[0].transitionSpeedLimit );
 
-            float interpolation = waypoints[0].teleporting ? (transitionProgress > 90 ? 100f : 0f) : transitionProgress;
-            currentPosition = Vector3.Lerp(initialPosition, waypoints[0].targetPosition, interpolation / 100f);
-            currentDirection = Vector3.Slerp(initialDirection, waypoints[0].targetDirection, interpolation / 100f);
+            float interpolation = waypoints[0].teleporting ? ( transitionProgress > 90 ? 100f : 0f ) : transitionProgress;
+            currentPosition = Vector3.Lerp( initialPosition, waypoints[0].targetPosition, interpolation / 100f );
+            currentDirection = Vector3.Slerp( initialDirection, waypoints[0].targetDirection, interpolation / 100f );
 
-            currentBlurIntensity = Mathf.SmoothDamp(currentBlurIntensity, targetBlurIntensity, ref blurChangeRate, blurChangeTime, Mathf.Infinity);
+            currentBlurIntensity = Mathf.SmoothDamp( currentBlurIntensity, targetBlurIntensity, ref blurChangeRate, blurChangeTime, Mathf.Infinity );
             blur.blurSize = currentBlurIntensity;
             blur.enabled = currentBlurIntensity > 0.1f;
         }
@@ -68,28 +69,29 @@ public class Cameraman : MonoBehaviour
     /// <summary>
     /// Moves the camera to the current position and direction.
     /// </summary>
-    void Move()
+    void Move ()
     {
         Camera.main.transform.position = currentPosition;
-        Camera.main.transform.rotation = Quaternion.LookRotation(currentDirection);
+        Camera.main.transform.rotation = Quaternion.LookRotation( currentDirection );
     }
 
 
-    public static void AddWaypoint(Vector3 position, Vector3 direction, float transitionTime, float transitionSpeedLimit, bool teleporting)
+    public static void AddWaypoint ( Vector3 position, Vector3 direction, float transitionTime, float transitionSpeedLimit, float switchThreshold, bool teleporting )
     {
         CameraWaypoint waypoint;
         waypoint.targetPosition = position;
         waypoint.targetDirection = direction;
         waypoint.transitionTime = transitionTime;
         waypoint.transitionSpeedLimit = transitionSpeedLimit;
+        waypoint.switchThreshold = switchThreshold;
         waypoint.teleporting = teleporting;
 
-        waypoints.Add(waypoint);
+        waypoints.Add( waypoint );
     }
 
-    static void NextWaypoint()
+    static void NextWaypoint ()
     {
-        waypoints.RemoveAt(0);
+        waypoints.RemoveAt( 0 );
         transitionProgress = 0f;
 
         initialPosition = currentPosition;
@@ -104,7 +106,7 @@ public class Cameraman : MonoBehaviour
     /// Sets the blur effect of the camera.
     /// </summary>
     /// <param name="intensity">The intensity of the blur.</param>
-    public static void SetBlurIntensity(float intensity, float transitionTime)
+    public static void SetBlurIntensity ( float intensity, float transitionTime )
     {
         targetBlurIntensity = intensity;
         blurChangeTime = transitionTime;

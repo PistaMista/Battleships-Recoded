@@ -51,10 +51,10 @@ public class InputController : MonoBehaviour
     /// </summary>
     public static int securityLevel = 63;
 
-    public delegate void OnBeginPress(Vector2 position);
-    public delegate void OnTap(Vector2 position);
-    public delegate void OnEndPress(Vector2 initialPosition, Vector2 currentPosition);
-    public delegate void OnDrag(Vector2 initialPosition, Vector2 currentPosition);
+    public delegate void OnBeginPress ( Vector2 position );
+    public delegate void OnTap ( Vector2 position );
+    public delegate void OnEndPress ( Vector2 initialPosition, Vector2 currentPosition );
+    public delegate void OnDrag ( Vector2 initialPosition, Vector2 currentPosition );
 
     public static OnBeginPress onBeginPress;
     public static OnTap onTap;
@@ -67,7 +67,7 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// The update function.
     /// </summary>
-    void Update()
+    void Update ()
     {
         if (Application.isMobilePlatform)
         {
@@ -86,20 +86,20 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// Methods used to calculate input for PC.
     /// </summary>
-    void PCInput()
+    void PCInput ()
     {
         float clippingDistance = Camera.main.transform.position.y - referenceY;
-        currentScreenInputPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
-        beginPress = Input.GetMouseButtonDown(0);
+        currentScreenInputPosition = new Vector3( Input.mousePosition.x, Input.mousePosition.y );
+        beginPress = Input.GetMouseButtonDown( 0 );
         if (endPress)
         {
             endPress = false;
         }
         else
         {
-            endPress = Input.GetMouseButtonUp(0);
+            endPress = Input.GetMouseButtonUp( 0 );
         }
-        pressed = Input.GetMouseButton(0);
+        pressed = Input.GetMouseButton( 0 );
     }
 
 
@@ -107,14 +107,14 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// Methods used to calculate input for mobile.
     /// </summary>
-    void MobileInput()
+    void MobileInput ()
     {
         float clippingDistance = Camera.main.transform.position.y - referenceY;
         if (Input.touchCount > 0)
         {
             pressed = true;
-            Touch touch = Input.GetTouch(0);
-            currentScreenInputPosition = new Vector3(touch.position.x, touch.position.y);
+            Touch touch = Input.GetTouch( 0 );
+            currentScreenInputPosition = new Vector3( touch.position.x, touch.position.y );
         }
         else
         {
@@ -130,14 +130,14 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// The methods used to calculate input for PC and mobile.
     /// </summary>
-    void Shared()
+    void Shared ()
     {
         if (beginPress)
         {
             initialScreenInputPosition = currentScreenInputPosition;
             if (onBeginPress != null)
             {
-                onBeginPress(currentScreenInputPosition);
+                onBeginPress( currentScreenInputPosition );
             }
         }
 
@@ -145,17 +145,17 @@ public class InputController : MonoBehaviour
 
         if (tap && onTap != null)
         {
-            onTap(initialScreenInputPosition);
+            onTap( initialScreenInputPosition );
         }
 
         if (endPress && onEndPress != null)
         {
-            onEndPress(initialScreenInputPosition, currentScreenInputPosition);
+            onEndPress( initialScreenInputPosition, currentScreenInputPosition );
         }
 
         if (pressed)
         {
-            if (Vector3.Distance(currentScreenInputPosition, initialScreenInputPosition) / Screen.width * 100f > dragRegisterDistance)
+            if (Vector3.Distance( currentScreenInputPosition, initialScreenInputPosition ) / Screen.width * 100f > dragRegisterDistance)
             {
                 dragging = true;
             }
@@ -167,7 +167,7 @@ public class InputController : MonoBehaviour
 
         if (dragging && onDrag != null)
         {
-            onDrag(initialScreenInputPosition, currentScreenInputPosition);
+            onDrag( initialScreenInputPosition, currentScreenInputPosition );
         }
     }
 
@@ -176,12 +176,12 @@ public class InputController : MonoBehaviour
     /// </summary>
     /// <param name="screenPosition"></param>
     /// <param name="clippingDistance"></param>
-    public static Vector3 ConvertToWorldPoint(Vector2 screenPosition, float clippingDistance)
+    public static Vector3 ConvertToWorldPoint ( Vector2 screenPosition, float clippingDistance )
     {
-        return Camera.main.ScreenToWorldPoint((Vector3)screenPosition + Vector3.forward * clippingDistance);
+        return Camera.main.ScreenToWorldPoint( (Vector3)screenPosition + Vector3.forward * clippingDistance );
     }
 
-    public void ChangeSecurityLevel(int level)
+    public void ChangeSecurityLevel ( int level )
     {
         InputController.securityLevel = level;
     }

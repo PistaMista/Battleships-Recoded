@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class AttackView_UIElement : UIElement
 {
+    Player viewedPlayer;
     public override void Enable ()
     {
-        base.Enable();
         if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer)
         {
-            UserInterface.managedBattle.selectedPlayer.board.visualModules[2].Enable();
+            viewedPlayer = UserInterface.managedBattle.selectedPlayer;
+            viewedPlayer.board.visualModules[2].Enable();
+            base.Enable();
         }
         else
         {
@@ -19,10 +21,10 @@ public class AttackView_UIElement : UIElement
 
     public override void Disable ()
     {
-        base.Disable();
-        if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer)
+        if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer || UserInterface.managedBattle.activePlayer == null)
         {
-            UserInterface.managedBattle.selectedPlayer.board.visualModules[2].Disable();
+            viewedPlayer.board.visualModules[2].Disable();
+            base.Disable();
         }
         else
         {
@@ -40,6 +42,15 @@ public class AttackView_UIElement : UIElement
         else if (gameObject.activeInHierarchy)
         {
             Disable();
+        }
+    }
+
+    protected override void OnTap ( Vector2 position )
+    {
+        base.OnTap( position );
+        if (UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) ) == null)
+        {
+            UserInterface.managedBattle.SelectPlayer( null );
         }
     }
 }
