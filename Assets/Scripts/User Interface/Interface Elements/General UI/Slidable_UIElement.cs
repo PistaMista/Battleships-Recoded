@@ -14,23 +14,31 @@ public class Slidable_UIElement : UIElement
     /// </summary>
     public Vector2 targetPosition;
     /// <summary>
+    /// The original position.
+    /// </summary>
+    public Vector2 originalPosition;
+    /// <summary>
     /// The time it should take to get to the target position.
     /// </summary>
     public float travelTime;
     Vector3 currentVelocity;
 
-    public override void Enable()
+    void Awake ()
+    {
+        originalPosition = targetPosition;
+    }
+    public override void Enable ()
     {
         base.Enable();
         targetPosition.x = 0f;
     }
 
-    protected override void Update()
+    protected override void Update ()
     {
         base.Update();
-        carrier.anchoredPosition = Vector3.SmoothDamp(carrier.anchoredPosition, targetPosition, ref currentVelocity, travelTime, Mathf.Infinity);
+        carrier.anchoredPosition = Vector3.SmoothDamp( carrier.anchoredPosition, targetPosition, ref currentVelocity, travelTime, Mathf.Infinity );
 
-        if (Mathf.Abs(carrier.anchoredPosition.x) > 1195f && Mathf.Abs(targetPosition.x) > 1195f)
+        if (Mathf.Abs( carrier.anchoredPosition.x ) > 1195f && Mathf.Abs( targetPosition.x ) > 1195f)
         {
             Disable();
         }

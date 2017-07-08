@@ -22,6 +22,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         base.Enable();
         Cameraman.SetBlurIntensity( 5f, 1f );
         reservedSpace = 1200f - addPlayerButton.GetComponent<Image>().rectTransform.rect.width;
+        carrier.anchoredPosition = originalPosition;
         if (panels == null)
         {
             panels = new List<PlayerPanel>();

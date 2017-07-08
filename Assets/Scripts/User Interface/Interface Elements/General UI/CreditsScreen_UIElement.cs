@@ -4,25 +4,26 @@ using UnityEngine;
 
 public class CreditsScreen_UIElement : Slidable_UIElement
 {
-    public override void Enable()
+    public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetBlurIntensity(5f, 1f);
+        Cameraman.SetBlurIntensity( 5f, 1f );
+        carrier.anchoredPosition = originalPosition;
     }
 
-    public override void Disable()
+    public override void Disable ()
     {
         base.Disable();
     }
 
-    protected override void Update()
+    protected override void Update ()
     {
         base.Update();
     }
 
-    protected override void OnBeginPress(Vector2 position)
+    protected override void OnBeginPress ( Vector2 position )
     {
-        base.OnBeginPress(position);
+        base.OnBeginPress( position );
         targetPosition.x = -1200f;
         UserInterface.elements[0].Enable();
         InputController.onBeginPress -= OnBeginPress;

@@ -57,28 +57,31 @@ public class ArtilleryTargeting_UIElement : UIElement
     {
         if (!confirmed)
         {
-            base.OnTap( position );
-            BoardTile tile = UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) );
-            if (tile != null)
+            if (UserInterface.managedBattle.selectedPlayer != null)
             {
-                if (tile == candidate)
+                base.OnTap( position );
+                BoardTile tile = UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) );
+                if (tile != null)
                 {
-                    confirmed = true;
-                    delay = 1;
-                    CreateIndicator( Master.vars.targetingConfirmedMaterial );
+                    if (tile == candidate)
+                    {
+                        confirmed = true;
+                        delay = 1;
+                        CreateIndicator( Master.vars.targetingConfirmedMaterial );
+                    }
+                    else
+                    {
+                        candidate = tile;
+                        CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
+                    }
+
+                    indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
                 }
                 else
                 {
-                    candidate = tile;
-                    CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
+                    Destroy( indicator );
+                    candidate = null;
                 }
-
-                indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
-            }
-            else
-            {
-                Destroy( indicator );
-                candidate = null;
             }
         }
     }

@@ -87,8 +87,16 @@ public class TacticalView_UIElement : UIElement
 
     public void BackToTitle ()
     {
-        Disable();
         Destroy( UserInterface.managedBattle.gameObject );
+        foreach (UIElement element in UserInterface.elements)
+        {
+            if (element != this)
+            {
+                element.Disable();
+            }
+        }
+
+        Disable();
         UserInterface.elements[0].Enable();
     }
 }
