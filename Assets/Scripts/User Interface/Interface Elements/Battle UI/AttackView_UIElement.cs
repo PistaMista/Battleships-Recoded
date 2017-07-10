@@ -23,7 +23,10 @@ public class AttackView_UIElement : UIElement
     {
         if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer || UserInterface.managedBattle.activePlayer == null)
         {
-            viewedPlayer.board.visualModules[2].Disable();
+            if (viewedPlayer != null)
+            {
+                viewedPlayer.board.visualModules[2].Disable();
+            }
             base.Disable();
         }
         else
@@ -35,7 +38,7 @@ public class AttackView_UIElement : UIElement
     public override void OnBattleChange ()
     {
         base.OnBattleChange();
-        if (UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy)
+        if (UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy && !UserInterface.managedBattle.activePlayer.AI)
         {
             Enable();
         }
@@ -48,7 +51,7 @@ public class AttackView_UIElement : UIElement
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
-        if (UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) ) == null)
+        if (UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) ) == null && ( (ArtilleryTargeting_UIElement)UserInterface.elements[6] ).candidate == null)
         {
             UserInterface.managedBattle.SelectPlayer( null );
         }

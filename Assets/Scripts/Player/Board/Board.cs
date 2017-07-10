@@ -81,7 +81,7 @@ public class Board : MonoBehaviour
     /// </summary>
     public void ReinitializeGrid ()
     {
-        Destroy( grid );
+        DisableGrid();
         grid = new GameObject( "Grid" );
         grid.transform.parent = visualParent.transform;
         grid.transform.localPosition = Vector3.up * 0.1f;
@@ -98,6 +98,14 @@ public class Board : MonoBehaviour
             float pos = -(float)sideLength / 2f + y;
             AddGridLine( new Vector3( 0f, 0f, pos ), true, sideLength + 0.3f );
         }
+    }
+
+    /// <summary>
+    /// Disables the grid.
+    /// </summary>
+    public void DisableGrid ()
+    {
+        Destroy( grid );
     }
 
     /// <summary>

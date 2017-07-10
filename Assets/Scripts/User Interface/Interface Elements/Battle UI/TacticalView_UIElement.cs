@@ -28,7 +28,17 @@ public class TacticalView_UIElement : UIElement
         }
         else if (( UserInterface.managedBattle.activePlayer == null || UserInterface.managedBattle.selectedPlayer != null ) && gameObject.activeInHierarchy)
         {
-            Disable();
+            if (UserInterface.managedBattle.activePlayer != null)
+            {
+                if (!UserInterface.managedBattle.activePlayer.AI)
+                {
+                    Disable();
+                }
+            }
+            else
+            {
+                Disable();
+            }
         }
 
         if (gameObject.activeInHierarchy)
@@ -40,7 +50,7 @@ public class TacticalView_UIElement : UIElement
 
             if (battle.activePlayer != null)
             {
-                if (battle.selectedPlayer == null)
+                if (battle.selectedPlayer == null || battle.activePlayer.AI)
                 {
                     Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 1.2f, Mathf.Infinity, 80f, false );
                     foreach (Player player in battle.combatants)

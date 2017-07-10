@@ -28,6 +28,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
     public override void Disable ()
     {
         base.Disable();
+        board.DisableGrid();
     }
 
     public override void Refresh ()

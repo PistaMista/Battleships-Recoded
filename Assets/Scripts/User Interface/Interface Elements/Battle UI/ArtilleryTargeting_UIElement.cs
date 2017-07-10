@@ -25,7 +25,7 @@ public class ArtilleryTargeting_UIElement : UIElement
     public override void OnBattleChange ()
     {
         base.OnBattleChange();
-        if (UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy)
+        if (UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy && !UserInterface.managedBattle.activePlayer.AI)
         {
             Enable();
         }
@@ -48,7 +48,7 @@ public class ArtilleryTargeting_UIElement : UIElement
         }
     }
 
-    BoardTile candidate;
+    public BoardTile candidate;
     DynamicStripedRectangle_GraphicsElement indicator;
     bool confirmed;
     float delay;
@@ -69,7 +69,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                         delay = 1;
                         CreateIndicator( Master.vars.targetingConfirmedMaterial );
                     }
-                    else
+                    else if (!tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ))
                     {
                         candidate = tile;
                         CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
@@ -79,7 +79,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                 }
                 else
                 {
-                    Destroy( indicator );
+                    Destroy( indicator.gameObject );
                     candidate = null;
                 }
             }
