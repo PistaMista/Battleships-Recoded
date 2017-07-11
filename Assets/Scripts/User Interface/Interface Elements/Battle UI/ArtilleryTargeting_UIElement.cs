@@ -68,14 +68,14 @@ public class ArtilleryTargeting_UIElement : UIElement
                         confirmed = true;
                         delay = 1;
                         CreateIndicator( Master.vars.targetingConfirmedMaterial );
+                        indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
                     }
                     else if (!tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ))
                     {
                         candidate = tile;
                         CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
+                        indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
                     }
-
-                    indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
                 }
                 else
                 {

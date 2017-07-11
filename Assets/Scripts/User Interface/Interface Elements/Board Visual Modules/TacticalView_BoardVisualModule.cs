@@ -46,7 +46,7 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
 
         float boardDimensions = Mathf.Sqrt( board.tiles.Length );
-        targetTagPosition = ( ( board.owner.battle.selectedPlayer == board.owner ) ? Vector3.forward * ( textBounds.extents.z * 1.2f + boardDimensions ) : Vector3.zero ) + visualParent.transform.position.y * Vector3.up;
+        targetTagPosition = ( ( board.owner.battle.selectedPlayer == board.owner && !board.owner.battle.activePlayer.AI ) ? Vector3.forward * ( textBounds.extents.z * 1.2f + boardDimensions ) : Vector3.zero ) + visualParent.transform.position.y * Vector3.up;
     }
 
     public override void Disable ()
