@@ -104,6 +104,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         }
 
         this.stripeWidth = stripeWidth;
+        this.stripeSpacing = stripeSpacing;
         this.stripeMovementSpeed = stripeMovementSpeed;
 
         BuildMesh();
@@ -278,7 +279,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
             }
         }
 
-        if (( stripes[0].position - initialPosition ).magnitude > 1.5f * stripeWidth + stripeSpacing)
+        if (( stripes[0].position - initialPosition ).magnitude > stripeSpacing + stripeWidth / 2f)
         {
             AddStripe();
         }
@@ -293,7 +294,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     {
         Stripe stripe;
         stripe.lineDirection = stripes[0].lineDirection;
-        stripe.position = initialPosition - stripe.lineDirection * ( stripeWidth / 2f - ( ( stripes[0].position - initialPosition ).magnitude - ( 1.5f * stripeWidth + stripeSpacing ) ) );
+        stripe.position = initialPosition - stripe.lineDirection * ( stripeWidth / 2f + ( ( stripes[0].position - initialPosition ).magnitude - ( stripeSpacing + stripeWidth / 2f ) ) );
         stripes.Insert( 0, stripe );
     }
 }

@@ -5,10 +5,28 @@ using UnityEngine;
 public class MainBattle : Battle
 {
     public Player lastSelectedPlayer;
+    public bool singleplayer;
+
     public override void Initialise ( Player[] combatants, bool functional )
     {
         base.Initialise( combatants, functional );
         UserInterface.managedBattle = this;
+        singleplayer = false;
+        foreach (Player player in combatants)
+        {
+            if (!player.AI)
+            {
+                if (!singleplayer)
+                {
+                    singleplayer = true;
+                }
+                else
+                {
+                    singleplayer = false;
+                    break;
+                }
+            }
+        }
     }
 
     public override void StartBattle ()
