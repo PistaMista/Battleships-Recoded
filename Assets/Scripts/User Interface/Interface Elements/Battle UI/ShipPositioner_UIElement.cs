@@ -10,6 +10,8 @@ public class ShipPositioner_UIElement : UIElement
     {
         base.Enable();
         canvas = GetComponent<Canvas>();
+        notificationTimeRemaining = 0;
+        MoveToCurrentPlayer();
     }
 
     public override void Disable ()

@@ -7,32 +7,21 @@ public class AttackView_UIElement : UIElement
     Player viewedPlayer;
     public override void Enable ()
     {
-        if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer)
-        {
-            viewedPlayer = UserInterface.managedBattle.selectedPlayer;
-            viewedPlayer.board.visualModules[2].Enable();
-            base.Enable();
-        }
-        else
-        {
 
-        }
+        viewedPlayer = UserInterface.managedBattle.selectedPlayer;
+        viewedPlayer.board.visualModules[2].Enable();
+        base.Enable();
     }
 
     public override void Disable ()
     {
-        if (UserInterface.managedBattle.activePlayer != UserInterface.managedBattle.selectedPlayer || UserInterface.managedBattle.activePlayer == null)
-        {
-            if (viewedPlayer != null)
-            {
-                viewedPlayer.board.visualModules[2].Disable();
-            }
-            base.Disable();
-        }
-        else
-        {
 
+        if (viewedPlayer != null)
+        {
+            viewedPlayer.board.visualModules[2].Disable();
         }
+        base.Disable();
+
     }
 
     public override void OnBattleChange ()

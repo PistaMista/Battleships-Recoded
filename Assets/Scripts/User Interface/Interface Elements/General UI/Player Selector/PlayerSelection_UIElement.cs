@@ -188,10 +188,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         {
             for (int x = 0; x < players.Length; x++)
             {
-                if (x != i)
-                {
-                    players[i].hits.Add( players[x], new Dictionary<BoardTile, TileHitInformation>() );
-                }
+                players[i].hits.Add( players[x], new Dictionary<BoardTile, TileHitInformation>() );
             }
         }
 

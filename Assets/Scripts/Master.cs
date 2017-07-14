@@ -45,10 +45,7 @@ public class Master : MonoBehaviour
         {
             for (int x = 0; x < playerAmount; x++)
             {
-                if (x != i)
-                {
-                    players[i].hits.Add( players[x], new Dictionary<BoardTile, TileHitInformation>() );
-                }
+                players[i].hits.Add( players[x], new Dictionary<BoardTile, TileHitInformation>() );
             }
         }
 
