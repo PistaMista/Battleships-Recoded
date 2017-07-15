@@ -38,7 +38,7 @@ public class Battle : MonoBehaviour
     /// </summary>
     /// <param name="combatants">The players to compete in this battle.</param>
     /// <param name="functional">Whether the battle should ignore all visual components.</param>
-    public virtual void Initialise(Player[] combatants, bool functional)
+    public virtual void Initialise ( Player[] combatants, bool functional )
     {
         this.combatants = combatants;
         for (int i = 0; i < combatants.Length; i++)
@@ -47,13 +47,13 @@ public class Battle : MonoBehaviour
             combatants[i].battle = this;
         }
 
-        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance("Test_BattleVisualModule");
+        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
         visualModule.battle = this;
 
-        ShipPositioner.AddShipsToBattle(this);
+        ShipPositioner.AddShipsToBattle( this );
     }
 
-    protected virtual void Awake()
+    protected virtual void Awake ()
     {
         turnLog = new List<PlayerTurnActionInformation>();
     }
@@ -65,7 +65,7 @@ public class Battle : MonoBehaviour
     /// Time left until the battle is ready for another phase.
     /// </summary>
     public float prepareTime;
-    protected virtual void Update()
+    protected virtual void Update ()
     {
         if (visualModule.running)
         {
@@ -77,7 +77,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Starts the battle.
     /// </summary>
-    public virtual void StartBattle()
+    public virtual void StartBattle ()
     {
         activePlayer = combatants[0];
         BeginTurn();
@@ -89,65 +89,65 @@ public class Battle : MonoBehaviour
     /// </summary>
     /// <param name="tile">Position of the tile to hit.</param>
     /// <returns>Hit successful.</returns>
-    public virtual bool ArtilleryAttack(BoardTile tile)
+    public virtual bool ArtilleryAttack ( BoardTile tile )
     {
         if (tile != null)
         {
-            if (!activePlayer.hits[selectedPlayer].ContainsKey(tile))
+            if (!activePlayer.hits[selectedPlayer].ContainsKey( tile ))
             {
                 turnLog[0].type = TurnActionType.ARTILLERY_ATTACK;
 
-                if (tile.containedShip && Random.Range(0, 10) == 0 && tile.containedShip.type != ShipType.AIRCRAFT_CARRIER)
+                if (tile.containedShip && Random.Range( 0, 10 ) == 0 && tile.containedShip.type != ShipType.AIRCRAFT_CARRIER)
                 {
-                    if (!tile.containedShip.eliminated)
+                    if (!tile.containedShip.destroyed)
                     {
                         foreach (BoardTile t in tile.containedShip.tiles)
                         {
-                            RegisterHitOnTile(t);
+                            RegisterHitOnTile( t );
                         }
                         //tile.containedShip.RevealTo(attackingPlayer);
                     }
                 }
                 else
                 {
-                    RegisterHitOnTile(tile);
+                    RegisterHitOnTile( tile );
                 }
 
                 EndTurn();
-                visualModule.ProcessArtilleryAttack(turnLog[0]);
+                visualModule.ProcessArtilleryAttack( turnLog[0] );
 
                 return true;
             }
         }
 
 
-        Debug.LogWarning("There was an attempt to shoot an invalid tile: " + tile + ". Things may break.");
+        Debug.LogWarning( "There was an attempt to shoot an invalid tile: " + tile + ". Things may break." );
         return false;
     }
 
     /// <summary>
     /// Registers a hit on a tile.
     /// </summary>
-    void RegisterHitOnTile(BoardTile tile)
+    void RegisterHitOnTile ( BoardTile tile )
     {
-        TileHitInformation hitInfo = (TileHitInformation)ScriptableObject.CreateInstance("TileHitInformation");
+        TileHitInformation hitInfo = (TileHitInformation)ScriptableObject.CreateInstance( "TileHitInformation" );
         hitInfo.hit = false;
 
         if (tile.containedShip)
         {
-            if (!tile.containedShip.eliminated)
+            if (!tile.containedShip.destroyed)
             {
-                turnLog[0].AddShipHit(tile.containedShip);
+                turnLog[0].AddShipHit( tile.containedShip );
                 if (tile.hitBy.Count == 0)
                 {
                     tile.containedShip.RegisterHit();
-                    if (tile.containedShip.eliminated)
+                    if (tile.containedShip.destroyed)
                     {
-                        turnLog[0].AddSunkShip(tile.containedShip);
+                        turnLog[0].AddSunkShip( tile.containedShip );
                     }
                     hitInfo.hit = true;
 
-                    if (tile.containedShip.owner.ships[0].eliminated)
+                    if (tile.containedShip.owner.ships[0].destroyed)
                     {
                         tile.containedShip.owner.alive = false;
                     }
@@ -156,8 +156,8 @@ public class Battle : MonoBehaviour
         }
 
         activePlayer.hits[selectedPlayer][tile] = hitInfo;
-        tile.hitBy.Add(activePlayer);
-        turnLog[0].AddTileHit(tile);
+        tile.hitBy.Add( activePlayer );
+        turnLog[0].AddTileHit( tile );
     }
 
 
@@ -165,21 +165,21 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Begins the turn for the active player.
     /// </summary>
-    protected virtual void BeginTurn()
+    protected virtual void BeginTurn ()
     {
-        PlayerTurnActionInformation turnInfo = (PlayerTurnActionInformation)ScriptableObject.CreateInstance("PlayerTurnActionInformation");
+        PlayerTurnActionInformation turnInfo = (PlayerTurnActionInformation)ScriptableObject.CreateInstance( "PlayerTurnActionInformation" );
 
         turnInfo.activePlayer = activePlayer;
         selectedPlayer = null;
 
-        turnLog.Insert(0, turnInfo);
+        turnLog.Insert( 0, turnInfo );
         activePlayer.OnBeginTurn();
     }
 
     /// <summary>
     /// Ends the turn for the active player.
     /// </summary>
-    protected virtual void EndTurn()
+    protected virtual void EndTurn ()
     {
         if (turnLog[0].type != TurnActionType.SKIP)
         {
@@ -194,9 +194,9 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Executed when the visual module finishes its job.
     /// </summary>
-    public virtual void OnVisualFinish()
+    public virtual void OnVisualFinish ()
     {
-        activePlayer = GetNextPlayer(turnLog[0].activePlayer);
+        activePlayer = GetNextPlayer( turnLog[0].activePlayer );
         if (activePlayer == null)
         {
             OnBattleFinish();
@@ -213,7 +213,7 @@ public class Battle : MonoBehaviour
     /// </summary>
     /// <param name="currentPlayer">The previous player.</param>
     /// <returns>The next player.</returns>
-    public Player GetNextPlayer(Player currentPlayer)
+    public Player GetNextPlayer ( Player currentPlayer )
     {
         if (currentPlayer == null)
         {
@@ -227,7 +227,7 @@ public class Battle : MonoBehaviour
                 {
                     for (int x = 1; x < combatants.Length; x++)
                     {
-                        Player candidate = combatants[(x + i) % combatants.Length];
+                        Player candidate = combatants[( x + i ) % combatants.Length];
                         if (candidate.alive)
                         {
                             return candidate;
@@ -244,7 +244,7 @@ public class Battle : MonoBehaviour
     /// Selects a player.
     /// </summary>
     /// <param name="player">Player to select.</param>
-    public virtual void SelectPlayer(Player player)
+    public virtual void SelectPlayer ( Player player )
     {
         selectedPlayer = player;
     }
@@ -253,7 +253,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Executed when the battle is finished.
     /// </summary>
-    protected virtual void OnBattleFinish()
+    protected virtual void OnBattleFinish ()
     {
         finished = true;
     }

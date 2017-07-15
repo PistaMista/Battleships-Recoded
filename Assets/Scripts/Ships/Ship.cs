@@ -24,9 +24,9 @@ public class Ship : MonoBehaviour
     /// </summary>
     public BoardTile[] tiles;
     /// <summary>
-    /// Whether this ship has been eliminated.
+    /// Whether this ship has been destroyed.
     /// </summary>
-    public bool eliminated = false;
+    public bool destroyed = false;
     /// <summary>
     /// The number of ship segments still intact.
     /// </summary>
@@ -58,7 +58,7 @@ public class Ship : MonoBehaviour
 
         if (lengthRemaining == 0)
         {
-            eliminated = true;
+            destroyed = true;
             int lastIntactIndex = 0;
             int thisShipIndex = 0;
             for (int i = 0; i < owner.ships.Length; i++)
@@ -69,7 +69,7 @@ public class Ship : MonoBehaviour
                 {
                     thisShipIndex = i;
                 }
-                else if (!ship.eliminated)
+                else if (!ship.destroyed)
                 {
                     lastIntactIndex = i;
                 }
