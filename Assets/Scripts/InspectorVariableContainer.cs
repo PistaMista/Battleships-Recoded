@@ -76,4 +76,16 @@ public class InspectorVariableContainer : MonoBehaviour
     /// The intact ship highlight material.
     /// </summary>
     public Material intactShipHighlightMaterial;
+    /// <summary>
+    /// The missed tile indicator material.
+    /// </summary>
+    public Material missedTileIndicatorMaterial;
+    /// <summary>
+    /// The hit tile indicator material.
+    /// </summary>
+    public Material hitTileIndicatorMaterial;
+    /// <summary>
+    /// The important hit tile indicator material.
+    /// </summary>
+    public Material justHitTileIndicatorMaterial;
 }

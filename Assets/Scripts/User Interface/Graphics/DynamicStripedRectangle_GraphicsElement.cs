@@ -5,12 +5,19 @@ using UnityEngine;
 public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
 {
     public Material material;
+
     public float stripeMovementSpeed;
     public float stripeWidth;
     public float stripeSpacing;
+
+    public float diagonalStripeMovementSpeed;
+    public float diagonalStripeWidth;
+    public float diagonalStripeSpacing;
     Rectangle_GraphicsElement baseRectangle;
+
     GameObject visualParent;
     Vector2 initialPosition;
+    Vector2 diagonalDirection;
 
     /// <summary>
     /// Stripe.
@@ -18,7 +25,6 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     struct Stripe
     {
         public Vector2 position;
-        public Vector2 lineDirection;
     }
 
     List<Stripe> stripes;
@@ -36,7 +42,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        if (stripes != null)
+        if (stripes != null && diagonalStripeMovementSpeed > 0)
         {
             MoveStripes();
         }
@@ -77,28 +83,32 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         stripeMesh = stripeObject.AddComponent<MeshFilter>().mesh;
         stripeMesh.MarkDynamic();
 
-        Renderer renderer = stripeObject.AddComponent<MeshRenderer>();
-        renderer.material = this.material;
+        Renderer render = stripeObject.AddComponent<MeshRenderer>();
+        render.material = this.material;
 
         stripes = new List<Stripe>();
         Vector2 insideSize = size - Vector2.one * sideWidth;
         initialPosition = new Vector2( -insideSize.x, insideSize.y ) / 2f;
-        Vector2 lineDirection = -initialPosition.normalized;
+        diagonalDirection = -initialPosition.normalized;
 
-        int stripeCount = (int)Mathf.Floor( initialPosition.magnitude * 2f / ( stripeWidth + stripeSpacing ) );
-        stripeSpacing += ( initialPosition.magnitude * 2f - stripeCount * ( stripeWidth + stripeSpacing ) ) / (float)stripeCount;
+        float projectionCoefficient = Vector3.Project( new Vector2( 1, -1 ).normalized, diagonalDirection ).magnitude;
+        diagonalStripeWidth = stripeWidth / projectionCoefficient;
+        diagonalStripeSpacing = stripeSpacing / projectionCoefficient;
+        diagonalStripeMovementSpeed = stripeMovementSpeed / projectionCoefficient;
+
+        int stripeCount = (int)Mathf.Floor( initialPosition.magnitude * 2f / ( diagonalStripeWidth + diagonalStripeSpacing ) );
+        diagonalStripeSpacing += ( initialPosition.magnitude * 2f - stripeCount * ( stripeWidth + stripeSpacing ) ) / (float)stripeCount;
 
         Debug.Log( stripeCount );
         float currentLinePosition = 0;
 
         for (int i = 0; i < stripeCount; i++)
         {
-            currentLinePosition += stripeSpacing / 2f + stripeWidth / 2f;
+            currentLinePosition += diagonalStripeSpacing / 2f + diagonalStripeWidth / 2f;
             Stripe stripe;
-            stripe.position = initialPosition + lineDirection * currentLinePosition;
-            stripe.lineDirection = lineDirection;
+            stripe.position = initialPosition + diagonalDirection * currentLinePosition;
 
-            currentLinePosition += stripeSpacing / 2f + stripeWidth / 2f;
+            currentLinePosition += diagonalStripeSpacing / 2f + diagonalStripeWidth / 2f;
 
             stripes.Add( stripe );
         }
@@ -123,10 +133,10 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
 
         foreach (Stripe stripe in stripes)
         {
-            Vector2 offset = stripe.lineDirection * stripeWidth / 2f;
+            Vector2 offset = new Vector2( 1, -1 ) * stripeWidth / 2f;
             Vector3[] points = new Vector3[4];
-            Vector2 endPoint = BorderRaycast( Vector2.zero, stripe.lineDirection, 2000f );
-            Vector2 startPoint = BorderRaycast( Vector2.zero, -stripe.lineDirection, 2000f );
+            Vector2 endPoint = BorderRaycast( Vector2.zero, diagonalDirection, 2000f );
+            Vector2 startPoint = BorderRaycast( Vector2.zero, -diagonalDirection, 2000f );
 
             if (( stripe.position + offset ).magnitude < defCorner.magnitude)
             {
@@ -269,7 +279,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         for (int i = 0; i < stripes.Count; i++)
         {
             Stripe stripe = stripes[i];
-            stripe.position += stripe.lineDirection.normalized * stripeMovementSpeed * Time.deltaTime;
+            stripe.position += diagonalDirection * diagonalStripeMovementSpeed * Time.deltaTime;
             stripes[i] = stripe;
 
             if (stripe.position.magnitude > baseRectangle.size.magnitude)
@@ -279,7 +289,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
             }
         }
 
-        if (( stripes[0].position - initialPosition ).magnitude > stripeSpacing + stripeWidth / 2f)
+        if (( stripes[0].position - initialPosition ).magnitude > diagonalStripeSpacing + diagonalStripeWidth / 2f)
         {
             AddStripe();
         }
@@ -293,8 +303,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     void AddStripe ()
     {
         Stripe stripe;
-        stripe.lineDirection = stripes[0].lineDirection;
-        stripe.position = initialPosition - stripe.lineDirection * ( stripeWidth / 2f + ( ( stripes[0].position - initialPosition ).magnitude - ( stripeSpacing + stripeWidth / 2f ) ) );
+        stripe.position = initialPosition - diagonalDirection * ( diagonalStripeWidth / 2f + ( ( stripes[0].position - initialPosition ).magnitude - ( diagonalStripeSpacing + diagonalStripeWidth / 2f ) ) );
         stripes.Insert( 0, stripe );
     }
 }

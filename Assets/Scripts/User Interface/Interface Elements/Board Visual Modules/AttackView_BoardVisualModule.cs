@@ -68,7 +68,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
 
                     for (int x = 0; x < types.Count; x++)
                     {
-                        Material material = types[x] ? Master.vars.targetingConfirmedMaterial : Master.vars.intactShipHighlightMaterial;
+                        Material material = types[x] ? Master.vars.hitTileIndicatorMaterial : Master.vars.intactShipHighlightMaterial;
                         Vector3 position = positions[x];
                         Vector2 size = sizes[x];
 
@@ -80,6 +80,29 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                         rectangle.Set( size, 0.1f, true, types[x] ? 0.1f : 0, 0.1f, 0.1f );
                     }
                 }
+            }
+        }
+
+        foreach (BoardTile tile in board.tiles)
+        {
+            bool activate = true;
+            if (tile.containedShip)
+            {
+                if (tile.containedShip.revealedBy.Contains( board.owner.battle.activePlayer ))
+                {
+                    activate = false;
+                }
+            }
+
+            if (activate && ( tile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && tile.hitBy.Count > 0 ) ))
+            {
+                GameObject indicator = GameObject.CreatePrimitive( PrimitiveType.Quad );
+                indicator.transform.SetParent( visualParent.transform );
+                indicator.transform.rotation = Quaternion.Euler( Vector3.right * 90 );
+                indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
+                indicator.transform.localScale = Vector3.one * 0.9f;
+
+                indicator.GetComponent<Renderer>().material = tile.containedShip == null ? Master.vars.missedTileIndicatorMaterial : Master.vars.hitTileIndicatorMaterial;
             }
         }
 
