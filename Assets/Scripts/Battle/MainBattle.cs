@@ -39,6 +39,7 @@ public class MainBattle : Battle
     {
         base.BeginTurn();
         UserInterface.RespondToBattleChanges();
+        resultsShown = false;
     }
 
     protected override void EndTurn ()
@@ -47,10 +48,19 @@ public class MainBattle : Battle
         UserInterface.RespondToBattleChanges();
     }
 
+    bool resultsShown;
     public override void OnVisualFinish ()
     {
-        base.OnVisualFinish();
-        UserInterface.RespondToBattleChanges();
+        if (( !turnLog[0].activePlayer.AI || !turnLog[0].attackedPlayer.AI ) && !resultsShown)
+        {
+            UserInterface.elements[6].Enable();
+            resultsShown = true;
+        }
+        else
+        {
+            base.OnVisualFinish();
+            UserInterface.RespondToBattleChanges();
+        }
     }
 
     public override void SelectPlayer ( Player player )
@@ -64,5 +74,14 @@ public class MainBattle : Battle
     {
         base.OnBattleFinish();
         UserInterface.elements[4].Disable();
+    }
+
+    public override bool ArtilleryAttack ( BoardTile tile )
+    {
+        foreach (Player player in UserInterface.managedBattle.combatants)
+        {
+            player.board.ResetVisualModules();
+        }
+        return base.ArtilleryAttack( tile );
     }
 }

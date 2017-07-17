@@ -70,7 +70,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                         CreateIndicator( Master.vars.targetingConfirmedMaterial );
                         indicator.transform.position = tile.transform.position + Vector3.up * 0.111f;
                     }
-                    else if (!tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ))
+                    else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ))
                     {
                         candidate = tile;
                         CreateIndicator( Master.vars.targetingUnconfirmedMaterial );

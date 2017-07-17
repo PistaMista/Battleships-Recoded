@@ -26,7 +26,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Logs all of the player's actions.
     /// </summary>
-    List<PlayerTurnActionInformation> turnLog;
+    public List<PlayerTurnActionInformation> turnLog;
     /// <summary>
     /// Whether the battle has ended and only one player is remaining.
     /// </summary>
@@ -105,7 +105,7 @@ public class Battle : MonoBehaviour
                         {
                             RegisterHitOnTile( t );
                         }
-                        //tile.containedShip.RevealTo(attackingPlayer);
+                        tile.containedShip.revealedBy.Add( activePlayer );
                     }
                 }
                 else
