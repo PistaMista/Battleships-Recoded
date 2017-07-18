@@ -169,6 +169,7 @@ public class Battle : MonoBehaviour
     {
         PlayerTurnActionInformation turnInfo = (PlayerTurnActionInformation)ScriptableObject.CreateInstance( "PlayerTurnActionInformation" );
 
+        turnInfo.Initialize();
         turnInfo.activePlayer = activePlayer;
         selectedPlayer = null;
 

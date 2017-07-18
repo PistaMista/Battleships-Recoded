@@ -88,4 +88,13 @@ public class MainBattle : Battle
         }
         return base.ArtilleryAttack( tile );
     }
+
+    protected override void Update ()
+    {
+        base.Update();
+        if (Input.GetKeyDown( KeyCode.Space ))
+        {
+            Debug.Log( BattleSaver.SaveCurrentBattle() );
+        }
+    }
 }

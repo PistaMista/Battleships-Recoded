@@ -12,6 +12,10 @@ public enum ShipType
 public class Ship : MonoBehaviour
 {
     /// <summary>
+    /// The identifier.
+    /// </summary>
+    public int ID;
+    /// <summary>
     /// The owner of this ship.
     /// </summary>
     public Player owner;

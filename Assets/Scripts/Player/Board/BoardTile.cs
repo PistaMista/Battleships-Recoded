@@ -5,6 +5,10 @@ using UnityEngine;
 public class BoardTile : MonoBehaviour
 {
     /// <summary>
+    /// The board coordinate.
+    /// </summary>
+    public Vector2 boardCoordinate;
+    /// <summary>
     /// The board which this tile is part of.
     /// </summary>
     public Board board;
@@ -21,7 +25,7 @@ public class BoardTile : MonoBehaviour
     /// </summary>
     public Ship containedShip;
 
-    public void Awake()
+    public void Awake ()
     {
         hitBy = new List<Player>();
         revealedBy = new List<Player>();

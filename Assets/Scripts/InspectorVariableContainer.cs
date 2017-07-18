@@ -5,6 +5,10 @@ using UnityEngine;
 public class InspectorVariableContainer : MonoBehaviour
 {
     /// <summary>
+    /// The name of the save file.
+    /// </summary>
+    public string saveFileName;
+    /// <summary>
     /// The ships each player gets at the start.
     /// </summary>
     public GameObject[] startingShipLoadout;

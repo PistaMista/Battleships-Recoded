@@ -41,66 +41,44 @@ public class PlayerTurnActionInformation : ScriptableObject
     public List<BoardTile> torpedoImpacts;
 
     /// <summary>
+    /// Initialize this instance.
+    /// </summary>
+    public void Initialize ()
+    {
+        hitTiles = new List<BoardTile>();
+        torpedoImpacts = new List<BoardTile>();
+        hitShips = new List<Ship>();
+        sunkShips = new List<Ship>();
+    }
+    /// <summary>
     /// Adds a tile hit.
     /// </summary>
-    public void AddTileHit(BoardTile tile)
+    public void AddTileHit ( BoardTile tile )
     {
-        if (hitTiles == null)
-        {
-            hitTiles = new List<BoardTile>();
-        }
-
-        if (!hitTiles.Contains(tile))
-        {
-            hitTiles.Add(tile);
-        }
+        hitTiles.Add( tile );
     }
 
     /// <summary>
     /// Adds a ship hit.
     /// </summary>
-    public void AddShipHit(Ship ship)
+    public void AddShipHit ( Ship ship )
     {
-        if (hitShips == null)
-        {
-            hitShips = new List<Ship>();
-        }
-
-        if (!hitShips.Contains(ship))
-        {
-            hitShips.Add(ship);
-        }
+        hitShips.Add( ship );
     }
 
     /// <summary>
     /// Adds a sunk ship.
     /// </summary>
-    public void AddSunkShip(Ship ship)
+    public void AddSunkShip ( Ship ship )
     {
-        if (sunkShips == null)
-        {
-            sunkShips = new List<Ship>();
-        }
-
-        if (!sunkShips.Contains(ship))
-        {
-            sunkShips.Add(ship);
-        }
+        sunkShips.Add( ship );
     }
 
     /// <summary>
     /// Adds a tile hit.
     /// </summary>
-    public void AddTorpedoHit(BoardTile tile)
+    public void AddTorpedoHit ( BoardTile tile )
     {
-        if (torpedoImpacts == null)
-        {
-            torpedoImpacts = new List<BoardTile>();
-        }
-
-        if (!torpedoImpacts.Contains(tile))
-        {
-            torpedoImpacts.Add(tile);
-        }
+        torpedoImpacts.Add( tile );
     }
 }

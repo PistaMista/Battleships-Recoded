@@ -163,6 +163,7 @@ public class Board : MonoBehaviour
                 tile.transform.parent = transform;
                 tile.transform.localPosition = initialPosition + new Vector3( x, 0, y );
                 tile.board = this;
+                tile.boardCoordinate = new Vector2( x, y );
                 tiles[x, y] = tile;
             }
         }
