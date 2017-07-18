@@ -16,8 +16,11 @@ public class AttackResultView_UIElement : UIElement
         if (gameObject.activeInHierarchy)
         {
             base.Disable();
-            UserInterface.managedBattle.turnLog[0].attackedPlayer.board.visualModules[3].Disable();
-            UserInterface.managedBattle.OnVisualFinish();
+            if (UserInterface.managedBattle != null)
+            {
+                UserInterface.managedBattle.turnLog[0].attackedPlayer.board.visualModules[3].Disable();
+                UserInterface.managedBattle.OnVisualFinish();
+            }
         }
     }
 

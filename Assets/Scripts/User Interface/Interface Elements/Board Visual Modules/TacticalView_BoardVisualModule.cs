@@ -34,7 +34,11 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         background.transform.localPosition = Vector3.zero;
 
         visualParent.transform.localPosition = Vector3.up * 3;
-
+        if (board.owner.battle.selectedPlayer == board.owner)
+        {
+            background.material = Master.vars.attackedPlayerTagBackgroundMaterial;
+        }
+        else
         if (board.owner.battle.activePlayer == board.owner)
         {
             background.material = Master.vars.activePlayerTagBackgroundMaterial;

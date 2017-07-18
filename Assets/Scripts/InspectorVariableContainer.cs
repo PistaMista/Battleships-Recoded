@@ -61,6 +61,10 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public Material activePlayerTagBackgroundMaterial;
     /// <summary>
+    /// The attacked player tag background material.
+    /// </summary>
+    public Material attackedPlayerTagBackgroundMaterial;
+    /// <summary>
     /// The targeting unconfirmed material.
     /// </summary>
     public Material targetingUnconfirmedMaterial;

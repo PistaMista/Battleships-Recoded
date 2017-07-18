@@ -8,15 +8,25 @@ public class CannonShell : Projectile
     public Vector3 velocity;
 
     // Update is called once per frame
-    void Update()
+    protected override void Update ()
     {
-        transform.Translate(velocity * Time.deltaTime, Space.World);
-        velocity.y -= Master.vars.gravity * Time.deltaTime;
-
-        transform.rotation = Quaternion.LookRotation(velocity);
-        if (transform.position.y < 0)
+        base.Update();
+        if (!terminated)
         {
-            Destroy(gameObject);
+            transform.Translate( velocity * Time.deltaTime, Space.World );
+            velocity.y -= Master.vars.gravity * Time.deltaTime;
+
+            transform.rotation = Quaternion.LookRotation( velocity );
+            if (transform.position.y < 0)
+            {
+                Terminate();
+            }
         }
+    }
+
+    protected override void Terminate ()
+    {
+        Terminate( 2 );
+
     }
 }

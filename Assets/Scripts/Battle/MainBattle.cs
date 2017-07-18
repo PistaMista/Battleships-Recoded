@@ -40,6 +40,10 @@ public class MainBattle : Battle
         base.BeginTurn();
         UserInterface.RespondToBattleChanges();
         resultsShown = false;
+        if (activePlayer.AI)
+        {
+            prepareTime = 2;
+        }
     }
 
     protected override void EndTurn ()

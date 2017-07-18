@@ -60,7 +60,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                         {
                             Vector3 relative = inspectedTile.transform.localPosition - rootTile.transform.localPosition;
 
-                            types.Add( rootTile.hitBy.Contains( board.owner.battle.activePlayer ) );
+                            types.Add( rootTile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && rootTile.hitBy.Count > 0 ) );
                             sizes.Add( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f );
                             positions.Add( rootTile.transform.position + relative / 2 );
                         }

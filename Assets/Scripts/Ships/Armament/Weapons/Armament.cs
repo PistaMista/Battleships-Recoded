@@ -11,10 +11,15 @@ public class Armament : MonoBehaviour
     public RotatableWeaponMounting mount;
 
     /// <summary>
+    /// The projectiles launched by this armament.
+    /// </summary>
+    public List<Projectile> launchedProjectiles;
+
+    /// <summary>
     /// Targets a position in the world.
     /// </summary>
     /// <param name="worldPosition">The position to target.</param>
-    public virtual void TargetPosition(Vector3 worldPosition)
+    public virtual void TargetPosition ( Vector3 worldPosition )
     {
 
     }
@@ -22,7 +27,7 @@ public class Armament : MonoBehaviour
     /// <summary>
     /// Fires the armament.
     /// </summary>
-    public virtual void Fire()
+    public virtual void Fire ()
     {
 
     }

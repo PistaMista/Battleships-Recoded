@@ -203,8 +203,8 @@ public class Battle : MonoBehaviour
         }
         else
         {
+            prepareTime = 0.8f;
             BeginTurn();
-            prepareTime = 1.2f;
         }
     }
 

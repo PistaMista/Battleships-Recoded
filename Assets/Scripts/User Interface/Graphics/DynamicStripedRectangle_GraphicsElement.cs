@@ -303,7 +303,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     void AddStripe ()
     {
         Stripe stripe;
-        stripe.position = initialPosition - diagonalDirection * ( diagonalStripeWidth / 2f + ( ( stripes[0].position - initialPosition ).magnitude - ( diagonalStripeSpacing + diagonalStripeWidth / 2f ) ) );
+        stripe.position = initialPosition - diagonalDirection * ( diagonalStripeWidth / 2f - ( ( stripes[0].position - initialPosition ).magnitude - ( diagonalStripeSpacing + diagonalStripeWidth / 2f ) ) );
         stripes.Insert( 0, stripe );
     }
 }
