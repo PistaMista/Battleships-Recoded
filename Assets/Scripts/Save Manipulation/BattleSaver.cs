@@ -17,6 +17,54 @@ public class BattleSaver : MonoBehaviour
     }
 
     [Serializable]
+    public struct Vector2Serializable
+    {
+        public float x;
+        public float y;
+
+        public Vector2Serializable ( float x, float y )
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        static public implicit operator Vector2 ( Vector2Serializable val )
+        {
+            return new Vector2( val.x, val.y );
+        }
+
+        static public implicit operator Vector2Serializable ( Vector2 val )
+        {
+            return new Vector2Serializable( val.x, val.y );
+        }
+    }
+
+    [Serializable]
+    public struct Vector3Serializable
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        public Vector3Serializable ( float x, float y, float z )
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        static public implicit operator Vector3 ( Vector3Serializable val )
+        {
+            return new Vector3( val.x, val.y, val.z );
+        }
+
+        static public implicit operator Vector3Serializable ( Vector3 val )
+        {
+            return new Vector3Serializable( val.x, val.y, val.z );
+        }
+    }
+
+    [Serializable]
     public struct MainBattleData
     {
         /// <summary>
@@ -67,11 +115,11 @@ public class BattleSaver : MonoBehaviour
         /// <summary>
         /// The tiles which were hit.
         /// </summary>
-        public Vector2[] hitTiles;
+        public Vector2Serializable[] hitTiles;
         /// <summary>
         /// The tiles which were hit directly by torpedo.
         /// </summary>
-        public Vector2[] torpedoImpacts;
+        public Vector2Serializable[] torpedoImpacts;
     }
 
     [Serializable]
@@ -131,7 +179,7 @@ public class BattleSaver : MonoBehaviour
         /// <summary>
         /// The board coordinate.
         /// </summary>
-        public Vector2 boardCoordinate;
+        public Vector2Serializable boardCoordinate;
         /// <summary>
         /// The list of players that have hit this tile.
         /// </summary>
@@ -177,7 +225,7 @@ public class BattleSaver : MonoBehaviour
         /// <summary>
         /// The positions on the board that this ship occupies.
         /// </summary>
-        public Vector2[] tilePositions;
+        public Vector2Serializable[] tilePositions;
         /// <summary>
         /// Whether this ship has been destroyed.
         /// </summary>
@@ -199,11 +247,11 @@ public class BattleSaver : MonoBehaviour
         /// <summary>
         /// The position of this ship on the board.
         /// </summary>
-        public Vector3 boardPosition;
+        public Vector3Serializable boardPosition;
         /// <summary>
         /// The rotation of this ship on the board.
         /// </summary>
-        public Vector3 boardRotation;
+        public Vector3Serializable boardRotation;
     }
 
 
@@ -242,8 +290,8 @@ public class BattleSaver : MonoBehaviour
             c.hitShips = new int[o.hitShips.Count];
             c.sunkShips = new int[o.sunkShips.Count];
 
-            c.hitTiles = new Vector2[o.hitTiles.Count];
-            c.torpedoImpacts = new Vector2[o.torpedoImpacts.Count];
+            c.hitTiles = new Vector2Serializable[o.hitTiles.Count];
+            c.torpedoImpacts = new Vector2Serializable[o.torpedoImpacts.Count];
 
 
 
@@ -301,7 +349,7 @@ public class BattleSaver : MonoBehaviour
                 y.length = x.length;
                 y.lengthRemaining = x.lengthRemaining;
                 y.type = x.type;
-                y.tilePositions = new Vector2[x.tiles.Length];
+                y.tilePositions = new Vector2Serializable[x.tiles.Length];
 
                 for (int ti = 0; ti < x.tiles.Length; ti++)
                 {
