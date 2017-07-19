@@ -10,6 +10,8 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     public float reservedSpace;
     public float paneSpacing;
     public RectTransform addPlayerButton;
+    public Button resumeLastBattleButton;
+    public Text saveFileCorruptedText;
     public GameObject panelPrefab;
     public List<PlayerPanel> panels;
 
@@ -28,6 +30,19 @@ public class PlayerSelection_UIElement : Slidable_UIElement
             panels = new List<PlayerPanel>();
         }
         RefreshGraphics();
+
+        resumeLastBattleButton.gameObject.SetActive( false );
+        saveFileCorruptedText.gameObject.SetActive( false );
+
+        switch (BattleLoader.LoadData())
+        {
+            case 0:
+                resumeLastBattleButton.gameObject.SetActive( true );
+                break;
+            case 2:
+                saveFileCorruptedText.gameObject.SetActive( true );
+                break;
+        }
     }
 
     public override void Disable ()
@@ -101,6 +116,14 @@ public class PlayerSelection_UIElement : Slidable_UIElement
             panels.Add( newPanel );
             RefreshGraphics();
         }
+    }
+
+    /// <summary>
+    /// Resumes the last battle.
+    /// </summary>
+    public void ResumeLastBattle ()
+    {
+        BattleLoader.ReconstructBattle();
     }
 
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )

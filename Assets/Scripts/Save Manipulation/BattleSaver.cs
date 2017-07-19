@@ -335,6 +335,7 @@ public class BattleSaver : MonoBehaviour
             c.ID = o.ID;
             c.label = o.label;
 
+
             //SHIP ARRAY CONSTRUCTION
             ShipData[] ships = new ShipData[o.ships.Length];
             for (int s = 0; s < ships.Length; s++)
@@ -387,6 +388,7 @@ public class BattleSaver : MonoBehaviour
                 }
             }
 
+            c.hits = hits;
             //BOARD DATA STRUCTURE CONSTRUCTION
             int boardDimensions = (int)Mathf.Sqrt( o.board.tiles.Length );
             c.board.tiles = new TileData[boardDimensions, boardDimensions];
@@ -416,12 +418,14 @@ public class BattleSaver : MonoBehaviour
                     c.board.tiles[x, y] = ct;
                 }
             }
+
+            combatants[i] = c;
         }
 
         saveData.combatants = combatants;
 
-        BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream( saveFilePath, FileMode.Create );
+        BinaryFormatter formatter = new BinaryFormatter();
 
         formatter.Serialize( stream, saveData );
 
