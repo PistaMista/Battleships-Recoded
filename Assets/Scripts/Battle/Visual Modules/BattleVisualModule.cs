@@ -17,12 +17,16 @@ public class BattleVisualModule : ScriptableObject
     /// How long has the module been running.
     /// </summary>
     public float uptime;
+    /// <summary>
+    /// The type of this visual module.
+    /// </summary>
+    public string type;
 
     /// <summary>
     /// Processes an artillery attack.
     /// </summary>
     /// <param name="turnInfo"></param>
-    public virtual void ProcessArtilleryAttack(PlayerTurnActionInformation turnInfo)
+    public virtual void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
         running = true;
     }
@@ -30,7 +34,7 @@ public class BattleVisualModule : ScriptableObject
     /// <summary>
     /// Finishes the job of the module.
     /// </summary>
-    protected virtual void Finish()
+    protected virtual void Finish ()
     {
         running = false;
         battle.OnVisualFinish();
@@ -40,7 +44,7 @@ public class BattleVisualModule : ScriptableObject
     /// <summary>
     /// Updates the module.
     /// </summary>
-    public virtual void Refresh()
+    public virtual void Refresh ()
     {
         uptime += Time.deltaTime;
     }

@@ -97,6 +97,7 @@ public class TacticalView_UIElement : UIElement
 
     public void BackToTitle ()
     {
+        BattleSaver.SaveCurrentBattle();
         Destroy( UserInterface.managedBattle.gameObject );
         foreach (UIElement element in UserInterface.elements)
         {

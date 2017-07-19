@@ -22,7 +22,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// The module which controls what the player sees.
     /// </summary>
-    BattleVisualModule visualModule;
+    public BattleVisualModule visualModule;
     /// <summary>
     /// Logs all of the player's actions.
     /// </summary>
@@ -165,7 +165,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Begins the turn for the active player.
     /// </summary>
-    protected virtual void BeginTurn ()
+    public virtual void BeginTurn ()
     {
         PlayerTurnActionInformation turnInfo = (PlayerTurnActionInformation)ScriptableObject.CreateInstance( "PlayerTurnActionInformation" );
 
@@ -180,7 +180,7 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Ends the turn for the active player.
     /// </summary>
-    protected virtual void EndTurn ()
+    public virtual void EndTurn ()
     {
         if (turnLog[0].type != TurnActionType.SKIP)
         {

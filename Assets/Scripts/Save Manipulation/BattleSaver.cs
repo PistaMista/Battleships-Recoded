@@ -205,7 +205,7 @@ public class BattleSaver : MonoBehaviour
         /// <summary>
         /// The tile coordinate that has been hit.
         /// </summary>
-        public Vector2 tileCoordinate;
+        public Vector2Serializable tileCoordinate;
     }
 
     [Serializable]
@@ -270,8 +270,23 @@ public class BattleSaver : MonoBehaviour
 
 
         MainBattleData saveData;
+        if (battle.activePlayer != null)
+        {
+            saveData.activePlayerID = battle.activePlayer.ID;
+        }
+        else
+        {
+            Player candidate = battle.GetNextPlayer( battle.turnLog[0].activePlayer );
+            if (candidate != null)
+            {
+                saveData.activePlayerID = candidate.ID;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-        saveData.activePlayerID = battle.activePlayer.ID;
         saveData.lastSelectedPlayer = battle.lastSelectedPlayer != null ? battle.lastSelectedPlayer.ID : -1;
 
         saveData.singleplayer = battle.singleplayer;
@@ -432,5 +447,13 @@ public class BattleSaver : MonoBehaviour
         stream.Close();
 
         return true;
+    }
+
+    void OnApplicationQuit ()
+    {
+        if (UserInterface.managedBattle != null)
+        {
+            SaveCurrentBattle();
+        }
     }
 }

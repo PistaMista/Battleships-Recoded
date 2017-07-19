@@ -9,7 +9,7 @@ using System.IO;
 public class BattleLoader : MonoBehaviour
 {
 
-    static BattleSaver.MainBattleData candidateData;
+    static BattleSaver.MainBattleData data;
 
     public static int LoadData ()
     {
@@ -19,7 +19,7 @@ public class BattleLoader : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             try
             {
-                candidateData = (BattleSaver.MainBattleData)formatter.Deserialize( stream );
+                data = (BattleSaver.MainBattleData)formatter.Deserialize( stream );
             }
             catch
             {
@@ -37,6 +37,212 @@ public class BattleLoader : MonoBehaviour
 
     public static void ReconstructBattle ()
     {
-        Debug.Log( candidateData.combatants[0].label );
+        MainBattle battle = new GameObject( "Main Battle" ).AddComponent<MainBattle>();
+        Player[] players = new Player[data.combatants.Length];
+        int humans = 0;
+        battle.singleplayer = data.singleplayer;
+        Test_BattleVisualModule visualModule = (Test_BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
+        visualModule.battle = battle;
+        battle.visualModule = visualModule;
+
+        //PLAYER INITIALIZATION
+        for (int i = 0; i < players.Length; i++)
+        {
+            BattleSaver.PlayerData playerData = data.combatants[i];
+            GameObject playerObject = new GameObject( "Player - " + playerData.label );
+
+            if (playerData.AI)
+            {
+                players[i] = playerObject.AddComponent<Player_AI>();
+            }
+            else
+            {
+                players[i] = playerObject.AddComponent<Player_Human>();
+                humans++;
+            }
+
+            players[i].AI = playerData.AI;
+            players[i].label = playerData.label;
+            players[i].alive = playerData.alive;
+            players[i].ID = playerData.ID;
+            players[i].battle = battle;
+            players[i].transform.SetParent( battle.transform );
+
+            if (players[i].label.Length == 0)
+            {
+                players[i].label = "Player " + ( i + 1 );
+            }
+
+            float angle = 360f / players.Length * i;
+            players[i].transform.position = new Vector3( Mathf.Cos( angle * Mathf.Deg2Rad ), 0, Mathf.Sin( angle * Mathf.Deg2Rad ) ) * Master.vars.mainBattleBoardDistance;
+        }
+
+        //PLAYER DATA MODIFICATION
+        for (int i = 0; i < players.Length; i++)
+        {
+            //BASICS
+
+            Player player = players[i];
+            BattleSaver.PlayerData playerData = data.combatants[i];
+
+
+            player.ships = new Ship[playerData.ships.Length];
+
+            //BOARD
+            int boardDimensions = (int)Mathf.Sqrt( data.combatants[i].board.tiles.Length );
+            player.board.InitialiseTiles( boardDimensions );
+
+            BattleSaver.BoardData boardData = data.combatants[i].board;
+
+            for (int x = 0; x < boardDimensions; x++)
+            {
+                for (int y = 0; y < boardDimensions; y++)
+                {
+                    BoardTile tile = player.board.tiles[x, y];
+                    BattleSaver.TileData tileData = boardData.tiles[x, y];
+
+                    tile.containedShip = tileData.containedShip >= 0 ? player.ships[tileData.containedShip] : null;
+
+                    for (int r = 0; r < tileData.revealedBy.Length; r++)
+                    {
+                        tile.revealedBy.Add( players[tileData.revealedBy[r]] );
+                    }
+
+                    for (int h = 0; h < tileData.hitBy.Length; h++)
+                    {
+                        tile.hitBy.Add( players[tileData.hitBy[h]] );
+                    }
+                }
+            }
+
+            //SHIPS
+            for (int s = 0; s < player.ships.Length; s++)
+            {
+                Ship ship;
+                BattleSaver.ShipData shipData = playerData.ships[s];
+
+                switch (shipData.type)
+                {
+                    case ShipType.BATTLESHIP:
+                        ship = Instantiate( Master.vars.battleshipPrefab ).GetComponent<Ship>();
+                        break;
+                    case ShipType.CRUISER:
+                        ship = Instantiate( Master.vars.cruiserPrefab ).GetComponent<Ship>();
+                        break;
+                    case ShipType.DESTROYER:
+                        ship = Instantiate( Master.vars.destroyerPrefab ).GetComponent<Ship>();
+                        break;
+                    case ShipType.AIRCRAFT_CARRIER:
+                        ship = Instantiate( Master.vars.aircraftCarrierPrefab ).GetComponent<Ship>();
+                        break;
+                    default:
+                        ship = Instantiate( Master.vars.battleshipPrefab ).GetComponent<Ship>();
+                        break;
+                }
+
+                ship.boardPosition = shipData.boardPosition;
+                ship.boardRotation = shipData.boardRotation;
+                ship.destroyed = shipData.destroyed;
+                ship.ID = shipData.ID;
+                ship.length = shipData.length;
+                ship.lengthRemaining = shipData.lengthRemaining;
+                ship.owner = player;
+                ship.type = shipData.type;
+                ship.transform.SetParent( player.transform );
+
+
+                ship.tiles = new BoardTile[shipData.tilePositions.Length];
+                for (int t = 0; t < ship.tiles.Length; t++)
+                {
+                    Vector2 pos = shipData.tilePositions[t];
+                    ship.tiles[t] = player.board.tiles[(int)pos.x, (int)pos.y];
+                }
+
+                ship.revealedBy = new List<Player>();
+                foreach (int id in shipData.revealedBy)
+                {
+                    ship.revealedBy.Add( players[id] );
+                }
+
+                ship.PositionOnBoard();
+                player.ships[s] = ship;
+            }
+
+
+        }
+
+        //HITS
+        for (int i = 0; i < players.Length; i++)
+        {
+            BattleSaver.TileHitData[][] hitsData = data.combatants[i].hits;
+            Dictionary<Player, Dictionary<BoardTile, TileHitInformation>> hits = new Dictionary<Player, Dictionary<BoardTile, TileHitInformation>>();
+
+            for (int hi = 0; hi < hitsData.Length; hi++)
+            {
+                Player target = players[hi];
+                Dictionary<BoardTile, TileHitInformation> targetHits = new Dictionary<BoardTile, TileHitInformation>();
+
+                foreach (BattleSaver.TileHitData targetHitData in hitsData[hi])
+                {
+                    TileHitInformation targetHit = (TileHitInformation)ScriptableObject.CreateInstance( "TileHitInformation" );
+                    targetHit.hit = targetHitData.hit;
+                    BoardTile tile = target.board.tiles[(int)targetHitData.tileCoordinate.x, (int)targetHitData.tileCoordinate.y];
+
+                    targetHits.Add( tile, targetHit );
+                }
+
+                hits.Add( target, targetHits );
+            }
+
+            players[i].hits = hits;
+        }
+
+
+
+
+
+        battle.combatants = players;
+        Debug.Log( data.activePlayerID );
+        battle.activePlayer = players[data.activePlayerID];
+        battle.lastSelectedPlayer = data.lastSelectedPlayer >= 0 ? players[data.lastSelectedPlayer] : null;
+
+        //TURN LOG INITIALIZATION
+        for (int i = 0; i < data.turnLog.Length; i++)
+        {
+            BattleSaver.PlayerTurnData dataEntry = data.turnLog[i];
+            PlayerTurnActionInformation logEntry = (PlayerTurnActionInformation)ScriptableObject.CreateInstance( "PlayerTurnActionInformation" );
+            logEntry.Initialize();
+
+            logEntry.type = dataEntry.type;
+            logEntry.activePlayer = players[dataEntry.activePlayerID];
+            logEntry.attackedPlayer = dataEntry.attackedPlayerID >= 0 ? players[dataEntry.attackedPlayerID] : null;
+
+            foreach (Vector2 hit in dataEntry.hitTiles)
+            {
+                logEntry.AddTileHit( logEntry.attackedPlayer.board.tiles[(int)hit.x, (int)hit.y] );
+            }
+
+            foreach (Vector2 torpedoHit in dataEntry.torpedoImpacts)
+            {
+                logEntry.AddTorpedoHit( logEntry.attackedPlayer.board.tiles[(int)torpedoHit.x, (int)torpedoHit.y] );
+            }
+
+            foreach (int shipID in dataEntry.hitShips)
+            {
+                logEntry.AddShipHit( logEntry.attackedPlayer.ships[shipID] );
+            }
+
+            foreach (int shipID in dataEntry.sunkShips)
+            {
+                logEntry.AddSunkShip( logEntry.attackedPlayer.ships[shipID] );
+            }
+
+            battle.turnLog.Insert( 0, logEntry );
+        }
+
+        UserInterface.managedBattle = battle;
+        UserInterface.RespondToBattleChanges();
+        Cameraman.SetBlurIntensity( 0f, 0.5f );
+        battle.BeginTurn();
     }
 }

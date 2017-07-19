@@ -298,6 +298,7 @@ public class ShipPositioner : MonoBehaviour
         {
             Ship ship = Instantiate( Master.vars.startingShipLoadout[i] ).GetComponent<Ship>();
             ship.owner = currentPlayer;
+            ship.ID = i;
             ship.revealedBy.Add( currentPlayer );
             currentPlayer.ships[i] = ship;
             shipsToPlace.Add( ship );

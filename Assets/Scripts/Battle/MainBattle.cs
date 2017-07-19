@@ -35,7 +35,7 @@ public class MainBattle : Battle
         UserInterface.RespondToBattleChanges();
     }
 
-    protected override void BeginTurn ()
+    public override void BeginTurn ()
     {
         base.BeginTurn();
         UserInterface.RespondToBattleChanges();
@@ -46,7 +46,7 @@ public class MainBattle : Battle
         }
     }
 
-    protected override void EndTurn ()
+    public override void EndTurn ()
     {
         base.EndTurn();
         UserInterface.RespondToBattleChanges();

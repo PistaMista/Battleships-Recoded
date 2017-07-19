@@ -13,6 +13,22 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public GameObject[] startingShipLoadout;
     /// <summary>
+    /// The battleship prefab.
+    /// </summary>
+    public GameObject battleshipPrefab;
+    /// <summary>
+    /// The cruiser prefab.
+    /// </summary>
+    public GameObject cruiserPrefab;
+    /// <summary>
+    /// The destroyer prefab.
+    /// </summary>
+    public GameObject destroyerPrefab;
+    /// <summary>
+    /// The aircraft carrier prefab.
+    /// </summary>
+    public GameObject aircraftCarrierPrefab;
+    /// <summary>
     /// The time table for secondary battle switch times.
     /// </summary>
     public float[] secondaryBattleTimetable;

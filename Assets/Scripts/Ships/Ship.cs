@@ -83,6 +83,10 @@ public class Ship : MonoBehaviour
                 }
             }
 
+            owner.ships[lastIntactIndex].ID = ID;
+            ID = lastIntactIndex;
+
+
             owner.ships[thisShipIndex] = owner.ships[lastIntactIndex];
             owner.ships[lastIntactIndex] = this;
         }

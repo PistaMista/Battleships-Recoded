@@ -124,6 +124,9 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     public void ResumeLastBattle ()
     {
         BattleLoader.ReconstructBattle();
+        resumeLastBattleButton.gameObject.SetActive( false );
+        LockInput();
+        targetPosition.x = -1200;
     }
 
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
@@ -152,12 +155,13 @@ public class PlayerSelection_UIElement : Slidable_UIElement
             }
             else if (panels.Count > 1)
             {
-                targetPosition.x = -1200f;
+                targetPosition.x = -1200;
 
                 InputController.onEndPress -= OnEndPress;
                 InputController.onDrag -= OnDrag;
 
                 StartBattle();
+                LockInput();
             }
             else
             {
@@ -193,6 +197,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
                 humans++;
             }
 
+            player.ID = i;
             player.AI = panels[i].AI.isOn;
             player.label = panels[i].name.text;
             if (player.label.Length == 0)
@@ -224,5 +229,13 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         {
             Cameraman.SetBlurIntensity( 0, 1f );
         }
+    }
+
+    void LockInput ()
+    {
+        InputController.onBeginPress -= OnBeginPress;
+        InputController.onTap -= OnTap;
+        InputController.onDrag -= OnDrag;
+        InputController.onEndPress -= OnEndPress;
     }
 }
