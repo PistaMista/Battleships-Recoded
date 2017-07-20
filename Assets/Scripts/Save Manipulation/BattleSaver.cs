@@ -13,7 +13,7 @@ public class BattleSaver : MonoBehaviour
 
     void Start ()
     {
-        saveFilePath = Path.Combine( Application.streamingAssetsPath, Master.vars.saveFileName );
+        saveFilePath = Path.Combine( Application.persistentDataPath, Master.vars.saveFileName );
     }
 
     [Serializable]
@@ -450,6 +450,14 @@ public class BattleSaver : MonoBehaviour
     }
 
     void OnApplicationQuit ()
+    {
+        if (UserInterface.managedBattle != null)
+        {
+            SaveCurrentBattle();
+        }
+    }
+
+    void OnApplicationPause ( bool pause )
     {
         if (UserInterface.managedBattle != null)
         {

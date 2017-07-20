@@ -23,24 +23,31 @@ public class Test_BattleVisualModule : BattleVisualModule
 
     public override void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
-        base.ProcessArtilleryAttack( turnInfo );
-        Ship[] ships = turnInfo.activePlayer.ships;
-
-        for (int i = 0; i < ships.Length; i++)
+        if (!( turnInfo.activePlayer.AI && turnInfo.attackedPlayer.AI ))
         {
-            Ship ship = ships[i];
-            if (!ship.destroyed)
+            base.ProcessArtilleryAttack( turnInfo );
+            Ship[] ships = turnInfo.activePlayer.ships;
+
+            for (int i = 0; i < ships.Length; i++)
             {
-                ship.gameObject.SetActive( true );
-                RotatableWeaponMounting[] turrets = ship.gunTurrets;
-                for (int x = 0; x < turrets.Length; x++)
+                Ship ship = ships[i];
+                if (!ship.destroyed)
                 {
-                    RotatableWeaponMounting turret = turrets[x];
-                    turret.RotateTowards( turnInfo.hitTiles[0].transform.position );
-                    turret.AimWeapons( turnInfo.hitTiles[0].transform.position );
-                    turret.fireAfterRotationFinishes = true;
+                    ship.gameObject.SetActive( true );
+                    RotatableWeaponMounting[] turrets = ship.gunTurrets;
+                    for (int x = 0; x < turrets.Length; x++)
+                    {
+                        RotatableWeaponMounting turret = turrets[x];
+                        turret.RotateTowards( turnInfo.hitTiles[0].transform.position );
+                        turret.AimWeapons( turnInfo.hitTiles[0].transform.position );
+                        turret.fireAfterRotationFinishes = true;
+                    }
                 }
             }
+        }
+        else
+        {
+            Finish();
         }
     }
 }

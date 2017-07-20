@@ -78,42 +78,21 @@ public class BattleLoader : MonoBehaviour
         }
 
         //PLAYER DATA MODIFICATION
+        //BOARD INIT
         for (int i = 0; i < players.Length; i++)
         {
-            //BASICS
-
+            Player player = players[i];
+            BattleSaver.PlayerData playerData = data.combatants[i];
+            int boardDimensions = (int)Mathf.Sqrt( data.combatants[i].board.tiles.Length );
+            player.board.InitialiseTiles( boardDimensions );
+        }
+        //SHIP INIT
+        for (int i = 0; i < players.Length; i++)
+        {
             Player player = players[i];
             BattleSaver.PlayerData playerData = data.combatants[i];
 
-
             player.ships = new Ship[playerData.ships.Length];
-
-            //BOARD
-            int boardDimensions = (int)Mathf.Sqrt( data.combatants[i].board.tiles.Length );
-            player.board.InitialiseTiles( boardDimensions );
-
-            BattleSaver.BoardData boardData = data.combatants[i].board;
-
-            for (int x = 0; x < boardDimensions; x++)
-            {
-                for (int y = 0; y < boardDimensions; y++)
-                {
-                    BoardTile tile = player.board.tiles[x, y];
-                    BattleSaver.TileData tileData = boardData.tiles[x, y];
-
-                    tile.containedShip = tileData.containedShip >= 0 ? player.ships[tileData.containedShip] : null;
-
-                    for (int r = 0; r < tileData.revealedBy.Length; r++)
-                    {
-                        tile.revealedBy.Add( players[tileData.revealedBy[r]] );
-                    }
-
-                    for (int h = 0; h < tileData.hitBy.Length; h++)
-                    {
-                        tile.hitBy.Add( players[tileData.hitBy[h]] );
-                    }
-                }
-            }
 
             //SHIPS
             for (int s = 0; s < player.ships.Length; s++)
@@ -140,6 +119,51 @@ public class BattleLoader : MonoBehaviour
                         break;
                 }
 
+                player.ships[s] = ship;
+            }
+        }
+        //BOARD MOD
+        for (int i = 0; i < players.Length; i++)
+        {
+            Player player = players[i];
+            BattleSaver.PlayerData playerData = data.combatants[i];
+
+            int boardDimensions = (int)Mathf.Sqrt( data.combatants[i].board.tiles.Length );
+            BattleSaver.BoardData boardData = data.combatants[i].board;
+
+            for (int x = 0; x < boardDimensions; x++)
+            {
+                for (int y = 0; y < boardDimensions; y++)
+                {
+                    BoardTile tile = player.board.tiles[x, y];
+                    BattleSaver.TileData tileData = boardData.tiles[x, y];
+
+                    tile.containedShip = tileData.containedShip >= 0 ? player.ships[tileData.containedShip] : null;
+
+                    for (int r = 0; r < tileData.revealedBy.Length; r++)
+                    {
+                        tile.revealedBy.Add( players[tileData.revealedBy[r]] );
+                    }
+
+                    for (int h = 0; h < tileData.hitBy.Length; h++)
+                    {
+                        tile.hitBy.Add( players[tileData.hitBy[h]] );
+                        Debug.Log( h );
+                        Debug.Log( players[tileData.hitBy[h]].label );
+                    }
+                }
+            }
+        }
+        //SHIP MOD
+        for (int i = 0; i < players.Length; i++)
+        {
+            Player player = players[i];
+            BattleSaver.PlayerData playerData = data.combatants[i];
+            for (int s = 0; s < player.ships.Length; s++)
+            {
+                Ship ship = player.ships[s];
+                BattleSaver.ShipData shipData = playerData.ships[s];
+
                 ship.boardPosition = shipData.boardPosition;
                 ship.boardRotation = shipData.boardRotation;
                 ship.destroyed = shipData.destroyed;
@@ -165,10 +189,7 @@ public class BattleLoader : MonoBehaviour
                 }
 
                 ship.PositionOnBoard();
-                player.ships[s] = ship;
             }
-
-
         }
 
         //HITS

@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Cinematic_BattleVisualModule : BattleVisualModule
 {
-
-    // Use this for initialization
-    void Start()
+    public override void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
-
+        base.ProcessArtilleryAttack( turnInfo );
     }
 
-    // Update is called once per frame
-    public override void Refresh()
+    public override void Refresh ()
     {
         base.Refresh();
+    }
 
+    protected override void Finish ()
+    {
+        base.Finish();
     }
 }

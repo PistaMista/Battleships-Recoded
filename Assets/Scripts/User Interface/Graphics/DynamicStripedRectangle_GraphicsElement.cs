@@ -42,10 +42,10 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        if (stripes != null && diagonalStripeMovementSpeed > 0)
-        {
-            MoveStripes();
-        }
+        //if (stripes != null && diagonalStripeMovementSpeed > 0)
+        //{
+        //    MoveStripes();
+        //}
     }
 
     /// <summary>
