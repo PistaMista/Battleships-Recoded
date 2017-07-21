@@ -17,7 +17,7 @@ public class Cinematic_test : Cinematic
             return false;
         }
 
-        if (Object.ReferenceEquals( arguments[0].GetType(), steps.GetType() ))
+        if (ReferenceEquals( arguments[0].GetType(), steps.GetType() ))
         {
             steps = (int)arguments[0];
 

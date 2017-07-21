@@ -40,7 +40,7 @@ public class Test_BattleVisualModule : BattleVisualModule
                         RotatableWeaponMounting turret = turrets[x];
                         turret.RotateTowards( turnInfo.hitTiles[0].transform.position );
                         turret.AimWeapons( turnInfo.hitTiles[0].transform.position );
-                        turret.fireAfterRotationFinishes = true;
+                        turret.autoFirePrecisionRating = 3;
                     }
                 }
             }

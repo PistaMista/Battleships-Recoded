@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Armament : MonoBehaviour
 {
+    /// <summary>
+    /// On activation.
+    /// </summary>
+    public delegate void OnActivation ();
+
+    public OnActivation onActivation;
 
     /// <summary>
 	/// The mount this armament is mounted in.
@@ -14,6 +20,11 @@ public class Armament : MonoBehaviour
     /// The projectiles launched by this armament.
     /// </summary>
     public List<Projectile> launchedProjectiles;
+
+    /// <summary>
+    /// Whether this armament is ready to activate.
+    /// </summary>
+    public bool ready;
 
     /// <summary>
     /// Targets a position in the world.
@@ -29,7 +40,10 @@ public class Armament : MonoBehaviour
     /// </summary>
     public virtual void Fire ()
     {
-
+        if (onActivation != null)
+        {
+            onActivation();
+        }
     }
 
 }

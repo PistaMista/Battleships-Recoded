@@ -29,7 +29,6 @@ public class Cannon : Armament
 
     public override void Fire ()
     {
-        base.Fire();
         Vector3 barrelRelativePosition = barrel.position - transform.position;
         CannonShell shell = Instantiate( Master.vars.cannonShellPrefabs[0] ).GetComponent<CannonShell>();
         launchedProjectiles.Add( shell );
@@ -37,11 +36,13 @@ public class Cannon : Armament
         shell.transform.position = barrel.position;
         barrel.transform.Translate( Vector3.back * barrelRelativePosition.magnitude / 1.2f );
         visualEffect.Play();
+        base.Fire();
     }
 
     void Update ()
     {
         currentAngle = Mathf.SmoothDamp( currentAngle, targetAngle, ref currentElevationRate, 0.3f, 20f );
+        ready = Mathf.Abs( currentAngle - targetAngle ) < 0.25f / mount.autoFirePrecisionRating;
         transform.localRotation = Quaternion.Euler( Vector3.right * currentAngle );
         barrel.transform.localPosition = Vector3.MoveTowards( barrel.transform.localPosition, defaultBarrelPosition, 0.1f * Time.deltaTime );
     }

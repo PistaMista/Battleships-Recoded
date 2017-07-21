@@ -37,6 +37,14 @@ public class BattleVisualModule : ScriptableObject
     protected virtual void Finish ()
     {
         running = false;
+        foreach (Player player in battle.combatants)
+        {
+            foreach (Ship ship in player.ships)
+            {
+                ship.PositionOnBoard();
+                ship.gameObject.SetActive( false );
+            }
+        }
         battle.OnVisualFinish();
         uptime = 0;
     }
