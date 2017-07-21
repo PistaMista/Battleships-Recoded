@@ -29,6 +29,7 @@ public class BattleVisualModule : ScriptableObject
     public virtual void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
         running = true;
+        InputController.onTap += Skip;
     }
 
     /// <summary>
@@ -47,6 +48,7 @@ public class BattleVisualModule : ScriptableObject
         }
         battle.OnVisualFinish();
         uptime = 0;
+        InputController.onTap -= Skip;
     }
 
     /// <summary>
@@ -55,5 +57,15 @@ public class BattleVisualModule : ScriptableObject
     public virtual void Refresh ()
     {
         uptime += Time.deltaTime;
+    }
+
+
+    void Skip ( Vector2 position )
+    {
+        Finish();
+        if (Cineman.currentlyPlaying != null)
+        {
+            Cineman.currentlyPlaying.End();
+        }
     }
 }

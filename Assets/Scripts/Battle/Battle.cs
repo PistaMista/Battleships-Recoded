@@ -47,7 +47,7 @@ public class Battle : MonoBehaviour
             combatants[i].battle = this;
         }
 
-        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
+        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Cinematic_BattleVisualModule" );
         visualModule.battle = this;
 
         ShipPositioner.AddShipsToBattle( this );
