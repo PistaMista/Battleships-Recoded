@@ -56,6 +56,8 @@ public class Battle : MonoBehaviour
     protected virtual void Awake ()
     {
         turnLog = new List<PlayerTurnActionInformation>();
+
+        turnLog.Find( log => log.hitTiles.Count == 2 );
     }
 
 

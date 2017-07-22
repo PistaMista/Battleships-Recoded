@@ -42,10 +42,10 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        //if (stripes != null && diagonalStripeMovementSpeed > 0)
-        //{
-        //    MoveStripes();
-        //}
+        if (stripes != null && diagonalStripeMovementSpeed > 0)
+        {
+            MoveStripes();
+        }
     }
 
     /// <summary>
@@ -81,7 +81,6 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         stripeObject.transform.localPosition = Vector3.zero;
 
         stripeMesh = stripeObject.AddComponent<MeshFilter>().mesh;
-        stripeMesh.MarkDynamic();
 
         Renderer render = stripeObject.AddComponent<MeshRenderer>();
         render.material = this.material;
@@ -231,6 +230,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
             normals.Add( Vector3.up );
         }
 
+        stripeMesh.MarkDynamic();
         stripeMesh.Clear();
         stripeMesh.SetVertices( vertices );
         stripeMesh.triangles = triangles.ToArray();

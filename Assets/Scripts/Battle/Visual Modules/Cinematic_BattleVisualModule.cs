@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Cinematic_BattleVisualModule : BattleVisualModule
 {
+    int stage;
+    RotatableWeaponMounting selectedTurret;
+
     public override void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
         base.ProcessArtilleryAttack( turnInfo );
@@ -32,16 +35,35 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
 
             turret.RotateTowards( position );
             turret.AimWeapons( position );
+
+            if (turret.IsWithinFiringAngles())
+            {
+                selectedTurret = turret;
+            }
         }
+
+        stage = 1;
+        Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 5f, 2f } );
     }
 
     public override void Refresh ()
     {
         base.Refresh();
+        switch (stage)
+        {
+            case 1:
+
+                break;
+        }
     }
 
     protected override void Finish ()
     {
         base.Finish();
+    }
+
+    void OnTurretPanFinish ()
+    {
+
     }
 }
