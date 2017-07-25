@@ -167,7 +167,7 @@ public class AttackResultView_BoardVisualModule : BoardVisualModule
 
         float boardSide = Mathf.Sqrt( board.tiles.Length );
         float elevation = 0.5f + ( boardSide / 2f ) / Mathf.Atan( Camera.main.fieldOfView / 2f * Mathf.Deg2Rad );
-        Cameraman.AddWaypoint( board.owner.transform.position + Vector3.up * elevation, Vector3.down, 0.3f, Mathf.Infinity, 90f, true );
+        Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( board.owner.transform.position + Vector3.up * elevation, 0.3f, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( Vector3.down, 0.4f, Mathf.Infinity ), 90f, true );
     }
 
     public override void Disable ()

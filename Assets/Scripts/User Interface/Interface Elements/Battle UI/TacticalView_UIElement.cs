@@ -52,7 +52,7 @@ public class TacticalView_UIElement : UIElement
             {
                 if (battle.selectedPlayer == null || battle.activePlayer.AI)
                 {
-                    Cameraman.AddWaypoint( overheadCameraPosition, Vector3.down, 1.2f, Mathf.Infinity, 0, false );
+                    Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( overheadCameraPosition, 1.2f, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( Vector3.down, 1.2f, Mathf.Infinity ), 0, false );
                     foreach (Player player in battle.combatants)
                     {
                         player.board.visualModules[1].Enable();

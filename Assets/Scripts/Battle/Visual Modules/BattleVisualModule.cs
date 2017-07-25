@@ -62,10 +62,11 @@ public class BattleVisualModule : ScriptableObject
 
     void Skip ( Vector2 position )
     {
-        Finish();
         if (Cineman.currentlyPlaying != null)
         {
             Cineman.currentlyPlaying.End();
         }
+        Cameraman.ResetWaypoints();
+        Finish();
     }
 }

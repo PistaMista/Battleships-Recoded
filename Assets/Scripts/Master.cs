@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class Master : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Master : MonoBehaviour
     void Start ()
     {
         vars = gameObject.GetComponent<InspectorVariableContainer>();
-        Cameraman.AddWaypoint( Vector3.up * 100f, Vector3.down, 0, Mathf.Infinity, 0, true );
+        Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( Vector3.up * 100f, 0, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( Vector3.down, 0, Mathf.Infinity ), 0, true );
     }
 
 

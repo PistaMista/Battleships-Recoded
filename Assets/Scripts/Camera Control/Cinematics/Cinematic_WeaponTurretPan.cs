@@ -48,7 +48,7 @@ public class Cinematic_WeaponTurretPan : Cinematic
             Vector3 worldPosition = turret.transform.TransformPoint( localPos );
             Vector3 lookDirection = turret.transform.position - worldPosition;
 
-            Cameraman.AddWaypoint( worldPosition, lookDirection, 0.01f, cycles == 0 ? Mathf.Infinity : 100f / time, 85f, cycles == 0 );
+            Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( worldPosition, 0.01f, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( lookDirection, 0.01f, Mathf.Infinity ), 90f, cycles == 0 );
             cycles++;
         }
     }

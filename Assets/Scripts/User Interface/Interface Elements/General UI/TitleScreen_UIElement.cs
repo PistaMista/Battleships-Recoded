@@ -7,16 +7,16 @@ public class TitleScreen_UIElement : Slidable_UIElement
     /// <summary>
     /// Enables the UI element.
     /// </summary>
-    public override void Enable()
+    public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetAuxiliaryParameter(0f, 0.5f);
+        Cameraman.SetAuxiliaryParameter( CameramanAuxParameter.BLUR, 0, 0.5f, Mathf.Infinity );
     }
 
     /// <summary>
     /// Disables the UI element.
     /// </summary>
-    public override void Disable()
+    public override void Disable ()
     {
         base.Disable();
     }
@@ -24,7 +24,7 @@ public class TitleScreen_UIElement : Slidable_UIElement
     /// <summary>
     /// Responds to battle updates.
     /// </summary>
-    public override void OnBattleChange()
+    public override void OnBattleChange ()
     {
         base.OnBattleChange();
     }
@@ -32,22 +32,22 @@ public class TitleScreen_UIElement : Slidable_UIElement
     /// <summary>
     /// The update function.
     /// </summary>
-    protected override void Update()
+    protected override void Update ()
     {
         base.Update();
     }
 
-    protected override void OnDrag(Vector2 initialPosition, Vector2 currentPosition)
+    protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
-        base.OnDrag(initialPosition, currentPosition);
-        targetPosition.x = (currentPosition.x - initialPosition.x);
+        base.OnDrag( initialPosition, currentPosition );
+        targetPosition.x = ( currentPosition.x - initialPosition.x );
     }
 
-    protected override void OnEndPress(Vector2 initialPosition, Vector2 currentPosition)
+    protected override void OnEndPress ( Vector2 initialPosition, Vector2 currentPosition )
     {
-        base.OnEndPress(initialPosition, currentPosition);
+        base.OnEndPress( initialPosition, currentPosition );
         float rawDistance = currentPosition.x - initialPosition.x;
-        if (Mathf.Abs(rawDistance) > Screen.width / 3.5f)
+        if (Mathf.Abs( rawDistance ) > Screen.width / 3.5f)
         {
             if (rawDistance > 0)
             {

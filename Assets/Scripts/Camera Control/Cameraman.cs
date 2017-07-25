@@ -10,8 +10,7 @@ public enum CameramanAuxParameter
     BLUR,
     NOISE,
     FADE,
-    SHAKE,
-    ROLL
+    SHAKE
 }
 
 public class Cameraman : MonoBehaviour
@@ -44,6 +43,13 @@ public class Cameraman : MonoBehaviour
         public Vector3 target;
         public float transitionTime;
         public float transitionSpeedLimit;
+
+        public TargetCameraVector3Value ( Vector3 target, float transitionTime, float transitionSpeedLimit )
+        {
+            this.target = target;
+            this.transitionTime = transitionTime;
+            this.transitionSpeedLimit = transitionSpeedLimit;
+        }
     }
 
     struct CameraAuxiliaryValue
@@ -112,6 +118,22 @@ public class Cameraman : MonoBehaviour
             //currentBlurIntensity = Mathf.SmoothDamp( currentBlurIntensity, targetBlurIntensity, ref blurChangeRate, blurChangeTime, Mathf.Infinity );
             //blur.blurSize = currentBlurIntensity;
             //blur.enabled = currentBlurIntensity > 0.1f;
+
+
+        }
+
+        for (int i = 0; i < auxiliaryParameters.Length; i++)
+        {
+            CameraAuxiliaryValue val = auxiliaryParameters[i];
+            val.current = Mathf.SmoothDamp( val.current, val.target, ref val.transitionSpeed, val.transitionTime, val.transitionSpeedLimit );
+            switch (i)
+            {
+                case 0:
+                    blur.blurSize = val.current;
+                    blur.enabled = val.current > 0.1f;
+                    break;
+            }
+            auxiliaryParameters[i] = val;
         }
         Move();
     }
@@ -122,11 +144,7 @@ public class Cameraman : MonoBehaviour
     void Move ()
     {
         Camera.main.transform.position = position.current;
-        Vector3 dir = direction.current;
-        Vector3 rotation = new Vector3( Mathf.Atan2( -dir.y, dir.z ) * Mathf.Rad2Deg, Mathf.Atan2( -dir.x, dir.z ) * Mathf.Rad2Deg, auxiliaryParameters[4].current );
-
-        Camera.main.transform.localRotation = Quaternion.Euler( rotation );
-        Debug.Log( rotation );
+        Camera.main.transform.rotation = Quaternion.LookRotation( direction.current );
     }
 
 
@@ -159,7 +177,9 @@ public class Cameraman : MonoBehaviour
 
     public static void SetAuxiliaryParameter ( CameramanAuxParameter parameter, float targetValue, float transitionTime, float transitionSpeedLimit )
     {
-
-
+        int i = (int)parameter;
+        auxiliaryParameters[i].target = targetValue;
+        auxiliaryParameters[i].transitionTime = transitionTime;
+        auxiliaryParameters[i].transitionSpeedLimit = transitionSpeedLimit;
     }
 }

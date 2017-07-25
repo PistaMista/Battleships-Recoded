@@ -263,7 +263,7 @@ public class BattleLoader : MonoBehaviour
 
         UserInterface.managedBattle = battle;
         UserInterface.RespondToBattleChanges();
-        Cameraman.SetAuxiliaryParameter( 0f, 0.5f );
+        Cameraman.SetAuxiliaryParameter( CameramanAuxParameter.BLUR, 0, 0.5f, Mathf.Infinity );
         battle.BeginTurn();
     }
 }

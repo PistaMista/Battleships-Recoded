@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class Cinematic_BattleVisualModule : BattleVisualModule
 {
@@ -46,13 +47,18 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
         Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 0.5f, 2f } );
     }
 
+    float time;
     public override void Refresh ()
     {
         base.Refresh();
         switch (stage)
         {
-            case 1:
+            case 2:
+                time += Time.deltaTime;
+                if (time > 0.3f)
+                {
 
+                }
                 break;
         }
     }
@@ -64,6 +70,11 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
 
     void OnTurretPanFinish ()
     {
-
+        foreach (RotatableWeaponMounting turret in selectedTurret.ship.gunTurrets)
+        {
+            turret.autoFirePrecisionRating = 0.7f;
+        }
+        stage = 2;
+        time = 0;
     }
 }

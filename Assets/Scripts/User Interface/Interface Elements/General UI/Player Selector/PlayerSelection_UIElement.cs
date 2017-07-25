@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Security.Cryptography.X509Certificates;
 
 public class PlayerSelection_UIElement : Slidable_UIElement
 {
@@ -22,7 +23,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetAuxiliaryParameter( 5f, 1f );
+        Cameraman.SetAuxiliaryParameter( CameramanAuxParameter.BLUR, 5f, 1f, Mathf.Infinity );
         reservedSpace = 1200f - addPlayerButton.GetComponent<Image>().rectTransform.rect.width;
         carrier.anchoredPosition = originalPosition;
         if (panels == null)
@@ -227,7 +228,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         }
         else
         {
-            Cameraman.SetAuxiliaryParameter( 0, 1f );
+            Cameraman.SetAuxiliaryParameter( CameramanAuxParameter.BLUR, 0, 1, Mathf.Infinity );
         }
     }
 

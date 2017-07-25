@@ -41,8 +41,7 @@ public class Cinematic_test : Cinematic
             Vector3 position = new Vector3( Mathf.Cos( angularIncrease * i * Mathf.Deg2Rad ) * 30f, 10f, Mathf.Sin( angularIncrease * i * Mathf.Deg2Rad ) * 30f );
             Vector3 direction = -position;
 
-            Cameraman.AddWaypoint( position, direction, 0f, 40000f, 95f, false );
-
+            Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( position, 0, 40000f ), new Cameraman.TargetCameraVector3Value( direction, 0, 40000f ), 95f, false );
         }
     }
 
