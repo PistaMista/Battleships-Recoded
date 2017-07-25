@@ -7,7 +7,7 @@ public class CreditsScreen_UIElement : Slidable_UIElement
     public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetBlurIntensity( 5f, 1f );
+        Cameraman.SetAuxiliaryParameter( 5f, 1f );
         carrier.anchoredPosition = originalPosition;
     }
 

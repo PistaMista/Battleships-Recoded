@@ -34,7 +34,7 @@ public class ShipPositioner_UIElement : UIElement
                 notificationTimeRemaining -= Time.deltaTime;
                 if (notificationTimeRemaining <= 1f)
                 {
-                    Cameraman.SetBlurIntensity( 0f, 0.5f );
+                    Cameraman.SetAuxiliaryParameter( 0f, 0.5f );
                 }
             }
         }
@@ -135,13 +135,13 @@ public class ShipPositioner_UIElement : UIElement
         {
             playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.down * ( canvas.GetComponent<RectTransform>().rect.height / 2f - playerNameText.rectTransform.rect.height / 2f ), ref nameTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
             instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.up * ( canvas.GetComponent<RectTransform>().rect.height / 2f - instructionText.rectTransform.rect.height / 2f ), ref instructionTextVelocity, 0.65f, Mathf.Infinity, Time.deltaTime );
-            Cameraman.SetBlurIntensity( 5f, 0.3f );
+            Cameraman.SetAuxiliaryParameter( 5f, 0.3f );
         }
         else
         {
             playerNameText.rectTransform.anchoredPosition = Vector2.SmoothDamp( playerNameText.rectTransform.anchoredPosition, Vector2.down * playerNameText.rectTransform.rect.height / 1.5f, ref nameTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
             instructionText.rectTransform.anchoredPosition = Vector2.SmoothDamp( instructionText.rectTransform.anchoredPosition, Vector2.up * instructionText.rectTransform.rect.height / 1.5f, ref instructionTextVelocity, 0.15f, Mathf.Infinity, Time.deltaTime );
-            Cameraman.SetBlurIntensity( 0f, 0.3f );
+            Cameraman.SetAuxiliaryParameter( 0f, 0.3f );
         }
     }
 

@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.ImageEffects;
+using UnityEngine.Serialization;
+using System.Security.Cryptography;
+
+public enum CameramanAuxParameter
+{
+    BLUR,
+    NOISE,
+    FADE,
+    SHAKE,
+    ROLL
+}
 
 public class Cameraman : MonoBehaviour
 {
     struct CameraWaypoint
     {
-        public Vector3 targetPosition;
-        public Vector3 targetDirection;
-        public float transitionTime;
-        public float transitionSpeedLimit;
+        public TargetCameraVector3Value targetPosition;
+        public TargetCameraVector3Value targetDirection;
         public float switchThreshold;
         public bool teleporting;
     }
@@ -22,17 +31,43 @@ public class Cameraman : MonoBehaviour
         get { return waypoints.Count; }
     }
 
-    static Vector3 initialPosition;
-    static Vector3 initialDirection = Vector3.forward;
-    static Vector3 currentDirection;
-    static Vector3 currentPosition;
-    static float transitionProgress = 0;
-    static float transitionSpeed = 0f;
-    static BlurOptimized blur;
+    struct CameraVector3Value
+    {
+        public Vector3 initial;
+        public Vector3 current;
+        public float transitionProgress;
+        public float transitionSpeed;
+    }
 
+    public struct TargetCameraVector3Value
+    {
+        public Vector3 target;
+        public float transitionTime;
+        public float transitionSpeedLimit;
+    }
+
+    struct CameraAuxiliaryValue
+    {
+        public float current;
+        public float target;
+        public float transitionTime;
+        public float transitionSpeed;
+        public float transitionSpeedLimit;
+    }
+
+    static CameraVector3Value position;
+    static CameraVector3Value direction;
+
+    static CameraAuxiliaryValue[] auxiliaryParameters;
+
+
+
+    static BlurOptimized blur;
     void Awake ()
     {
+        auxiliaryParameters = new CameraAuxiliaryValue[5];
         waypoints = new List<CameraWaypoint>();
+
         blur = Camera.main.GetComponent<BlurOptimized>();
     }
 
@@ -41,27 +76,42 @@ public class Cameraman : MonoBehaviour
     {
         if (waypoints.Count > 0)
         {
-            if (transitionProgress > waypoints[0].switchThreshold && waypoints.Count > 1)
+            if (position.transitionProgress > waypoints[0].switchThreshold && waypoints.Count > 1)
             {
                 NextWaypoint();
             }
 
-            transitionProgress = Mathf.SmoothDamp( transitionProgress, 100f, ref transitionSpeed, waypoints[0].transitionTime, waypoints[0].transitionSpeedLimit );
+            for (int i = 0; i < 2; i++)
+            {
+                CameraVector3Value val = i == 0 ? position : direction;
 
-            float interpolation = waypoints[0].teleporting ? ( transitionProgress > 90 ? 100f : 0f ) : transitionProgress;
-            currentPosition = Vector3.Lerp( initialPosition, waypoints[0].targetPosition, interpolation / 100f );
-            currentDirection = Vector3.Slerp( initialDirection, waypoints[0].targetDirection, interpolation / 100f );
+                float transitionTime = i == 0 ? waypoints[0].targetPosition.transitionTime : waypoints[0].targetDirection.transitionTime;
+                float transitionSpeedLimit = i == 0 ? waypoints[0].targetPosition.transitionSpeedLimit : waypoints[0].targetDirection.transitionSpeedLimit;
+                Vector3 target = i == 0 ? waypoints[0].targetPosition.target : waypoints[0].targetDirection.target;
 
-            currentBlurIntensity = Mathf.SmoothDamp( currentBlurIntensity, targetBlurIntensity, ref blurChangeRate, blurChangeTime, Mathf.Infinity );
-            blur.blurSize = currentBlurIntensity;
-            blur.enabled = currentBlurIntensity > 0.1f;
-        }
-        else
-        {
-            transitionProgress = 0f;
+                val.transitionProgress = waypoints[0].teleporting ? 100 : Mathf.SmoothDamp( val.transitionProgress, 100, ref val.transitionSpeed, transitionTime, transitionSpeedLimit );
+                float currentProgress = val.transitionProgress / 100f;
 
-            initialPosition = currentPosition;
-            initialDirection = currentDirection;
+                val.current = i == 0 ? Vector3.Lerp( val.current, target, currentProgress ) : Vector3.Slerp( val.current, target, currentProgress );
+
+                if (i == 0)
+                {
+                    position = val;
+                }
+                else
+                {
+                    direction = val;
+                }
+            }
+            //transitionProgress = Mathf.SmoothDamp( transitionProgress, 100f, ref transitionSpeed, waypoints[0].transitionTime, waypoints[0].transitionSpeedLimit );
+
+            //float interpolation = waypoints[0].teleporting ? ( transitionProgress > 90 ? 100f : 0f ) : transitionProgress;
+            //currentPosition = Vector3.Lerp( initialPosition, waypoints[0].targetPosition, interpolation / 100f );
+            //currentDirection = Vector3.Slerp( initialDirection, waypoints[0].targetDirection, interpolation / 100f );
+
+            //currentBlurIntensity = Mathf.SmoothDamp( currentBlurIntensity, targetBlurIntensity, ref blurChangeRate, blurChangeTime, Mathf.Infinity );
+            //blur.blurSize = currentBlurIntensity;
+            //blur.enabled = currentBlurIntensity > 0.1f;
         }
         Move();
     }
@@ -71,44 +121,45 @@ public class Cameraman : MonoBehaviour
     /// </summary>
     void Move ()
     {
-        Camera.main.transform.position = currentPosition;
-        Camera.main.transform.rotation = Quaternion.LookRotation( currentDirection );
+        Camera.main.transform.position = position.current;
+        Vector3 dir = direction.current;
+        Vector3 rotation = new Vector3( Mathf.Atan2( -dir.y, dir.z ) * Mathf.Rad2Deg, Mathf.Atan2( -dir.x, dir.z ) * Mathf.Rad2Deg, auxiliaryParameters[4].current );
+
+        Camera.main.transform.localRotation = Quaternion.Euler( rotation );
+        Debug.Log( rotation );
     }
 
 
-    public static void AddWaypoint ( Vector3 position, Vector3 direction, float transitionTime, float transitionSpeedLimit, float switchThreshold, bool teleporting )
+    public static void AddWaypoint ( TargetCameraVector3Value targetPosition, TargetCameraVector3Value targetDirection, float switchThreshold, bool teleporting )
     {
         CameraWaypoint waypoint;
-        waypoint.targetPosition = position;
-        waypoint.targetDirection = direction;
-        waypoint.transitionTime = transitionTime;
-        waypoint.transitionSpeedLimit = transitionSpeedLimit;
+        waypoint.targetPosition = targetPosition;
+        waypoint.targetDirection = targetDirection;
         waypoint.switchThreshold = switchThreshold;
         waypoint.teleporting = teleporting;
 
         waypoints.Add( waypoint );
     }
 
+    public static void ResetWaypoints ()
+    {
+        waypoints = new List<CameraWaypoint>();
+    }
+
     static void NextWaypoint ()
     {
         waypoints.RemoveAt( 0 );
-        transitionProgress = 0f;
+        position.transitionProgress = 0;
+        direction.transitionProgress = 0;
 
-        initialPosition = currentPosition;
-        initialDirection = currentDirection;
+        position.initial = position.current;
+        direction.initial = position.current;
     }
 
-    static float currentBlurIntensity = 0f;
-    static float targetBlurIntensity = 0f;
-    static float blurChangeRate;
-    static float blurChangeTime;
-    /// <summary>
-    /// Sets the blur effect of the camera.
-    /// </summary>
-    /// <param name="intensity">The intensity of the blur.</param>
-    public static void SetBlurIntensity ( float intensity, float transitionTime )
+
+    public static void SetAuxiliaryParameter ( CameramanAuxParameter parameter, float targetValue, float transitionTime, float transitionSpeedLimit )
     {
-        targetBlurIntensity = intensity;
-        blurChangeTime = transitionTime;
+
+
     }
 }

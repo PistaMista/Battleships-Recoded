@@ -22,7 +22,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
     public override void Enable ()
     {
         base.Enable();
-        Cameraman.SetBlurIntensity( 5f, 1f );
+        Cameraman.SetAuxiliaryParameter( 5f, 1f );
         reservedSpace = 1200f - addPlayerButton.GetComponent<Image>().rectTransform.rect.width;
         carrier.anchoredPosition = originalPosition;
         if (panels == null)
@@ -227,7 +227,7 @@ public class PlayerSelection_UIElement : Slidable_UIElement
         }
         else
         {
-            Cameraman.SetBlurIntensity( 0, 1f );
+            Cameraman.SetAuxiliaryParameter( 0, 1f );
         }
     }
 

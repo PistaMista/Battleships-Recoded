@@ -27,7 +27,7 @@ public class Cinematic_WeaponTurretPan : Cinematic
     public override void Begin ()
     {
         base.Begin();
-        float density = 4;
+        float density = 1;
         float arc = 120;
         float lowerLimit = Mathf.Clamp( turret.targetRotation - arc / 2, -turret.leftRotationLimit, turret.rightRotationLimit );
         float upperLimit = Mathf.Clamp( turret.targetRotation + arc / 2, -turret.leftRotationLimit, turret.rightRotationLimit );
@@ -48,7 +48,7 @@ public class Cinematic_WeaponTurretPan : Cinematic
             Vector3 worldPosition = turret.transform.TransformPoint( localPos );
             Vector3 lookDirection = turret.transform.position - worldPosition;
 
-            Cameraman.AddWaypoint( worldPosition, lookDirection, 0.01f, 100f / time, 85f, cycles == 0 );
+            Cameraman.AddWaypoint( worldPosition, lookDirection, 0.01f, cycles == 0 ? Mathf.Infinity : 100f / time, 85f, cycles == 0 );
             cycles++;
         }
     }

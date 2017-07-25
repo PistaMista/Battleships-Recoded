@@ -10,7 +10,7 @@ public class TitleScreen_UIElement : Slidable_UIElement
     public override void Enable()
     {
         base.Enable();
-        Cameraman.SetBlurIntensity(0f, 0.5f);
+        Cameraman.SetAuxiliaryParameter(0f, 0.5f);
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
         }
 
         stage = 1;
-        Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 5f, 2f } );
+        Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 0.5f, 2f } );
     }
 
     public override void Refresh ()

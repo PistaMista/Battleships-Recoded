@@ -263,7 +263,7 @@ public class BattleLoader : MonoBehaviour
 
         UserInterface.managedBattle = battle;
         UserInterface.RespondToBattleChanges();
-        Cameraman.SetBlurIntensity( 0f, 0.5f );
+        Cameraman.SetAuxiliaryParameter( 0f, 0.5f );
         battle.BeginTurn();
     }
 }
