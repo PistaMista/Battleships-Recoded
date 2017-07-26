@@ -29,8 +29,8 @@ public class Cinematic_WeaponTurretPan : Cinematic
         base.Begin();
         float density = 1;
         float arc = 120;
-        float lowerLimit = Mathf.Clamp( turret.targetRotation - arc / 2, -turret.leftRotationLimit, turret.rightRotationLimit );
-        float upperLimit = Mathf.Clamp( turret.targetRotation + arc / 2, -turret.leftRotationLimit, turret.rightRotationLimit );
+        float lowerLimit = Mathf.Clamp( -arc / 2, -turret.rightRotationLimit - turret.targetRotation, turret.leftRotationLimit - turret.targetRotation );
+        float upperLimit = Mathf.Clamp( arc / ( 2 * Random.Range( 1.0f, 3.0f ) ), -turret.rightRotationLimit - turret.targetRotation, turret.leftRotationLimit - turret.targetRotation );
         arc = Mathf.Abs( lowerLimit - upperLimit );
 
 
@@ -42,13 +42,13 @@ public class Cinematic_WeaponTurretPan : Cinematic
         for (float i = lowerLimit; i < upperLimit; i += density)
         {
             float time = panTime / count;
-            float angle = i * Mathf.Deg2Rad;
+            float angle = ( i + ( turret.targetRotation - turret.currentRotation ) ) * Mathf.Deg2Rad;
 
             Vector3 localPos = new Vector3( Mathf.Sin( angle ), elevation, Mathf.Cos( angle ) ) * distance;
             Vector3 worldPosition = turret.transform.TransformPoint( localPos );
             Vector3 lookDirection = turret.transform.position - worldPosition;
 
-            Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( worldPosition, 0.01f, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( lookDirection, 0.01f, Mathf.Infinity ), 90f, cycles == 0 );
+            Cameraman.AddWaypoint( new Cameraman.TargetCameraVector3Value( worldPosition, time, Mathf.Infinity ), new Cameraman.TargetCameraVector3Value( lookDirection, time, Mathf.Infinity ), 90f, cycles == 0 );
             cycles++;
         }
     }

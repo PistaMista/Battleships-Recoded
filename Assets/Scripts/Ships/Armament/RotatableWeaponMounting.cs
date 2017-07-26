@@ -12,7 +12,7 @@ public class RotatableWeaponMounting : MonoBehaviour
     /// <summary>
     /// The default rotation angle.
     /// </summary>
-    float defaultRotation = 0f;
+    public float defaultRotation = 0f;
     /// <summary>
     /// The current rotation angle.
     /// </summary>

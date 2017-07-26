@@ -29,7 +29,7 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         text.anchor = TextAnchor.MiddleCenter;
 
         textBounds = text.GetComponent<Renderer>().bounds;
-        DynamicStripedRectangle_GraphicsElement background = new GameObject( "Background" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
+        Rectangle_GraphicsElement background = new GameObject( "Background" ).AddComponent<Rectangle_GraphicsElement>();
         background.transform.parent = visualParent.transform;
         background.transform.localPosition = Vector3.zero;
 
@@ -47,7 +47,8 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         {
             background.material = Master.vars.playerTagBackgroundMaterial;
         }
-        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
+        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true );
+        //background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
 
         float boardDimensions = Mathf.Sqrt( board.tiles.Length );
         targetTagPosition = ( ( board.owner.battle.selectedPlayer == board.owner && !board.owner.battle.activePlayer.AI ) ? Vector3.forward * ( textBounds.extents.z * 1.2f + boardDimensions ) : Vector3.zero ) + visualParent.transform.position.y * Vector3.up;

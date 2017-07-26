@@ -44,7 +44,7 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
         }
 
         stage = 1;
-        Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 0.5f, 2f } );
+        Cineman.StartCinematic( "WeaponTurretPan", OnTurretPanFinish, new object[] { selectedTurret, 1f, 2f } );
     }
 
     float time;
@@ -57,8 +57,14 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
                 time += Time.deltaTime;
                 if (time > 0.3f)
                 {
-
+                    foreach (RotatableWeaponMounting turret in selectedTurret.ship.gunTurrets)
+                    {
+                        turret.autoFirePrecisionRating = 0.7f;
+                    }
+                    stage = 3;
                 }
+                break;
+            case 3:
                 break;
         }
     }
@@ -70,10 +76,7 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
 
     void OnTurretPanFinish ()
     {
-        foreach (RotatableWeaponMounting turret in selectedTurret.ship.gunTurrets)
-        {
-            turret.autoFirePrecisionRating = 0.7f;
-        }
+
         stage = 2;
         time = 0;
     }
