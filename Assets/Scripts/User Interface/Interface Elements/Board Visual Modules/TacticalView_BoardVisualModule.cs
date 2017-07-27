@@ -47,7 +47,7 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         {
             background.material = Master.vars.playerTagBackgroundMaterial;
         }
-        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true );
+        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, 0.4f );
         //background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
 
         float boardDimensions = Mathf.Sqrt( board.tiles.Length );
@@ -63,6 +63,6 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
     public override void Refresh ()
     {
         base.Refresh();
-        visualParent.transform.localPosition = Vector3.SmoothDamp( visualParent.transform.localPosition, targetTagPosition, ref currentVelocity, 0.3f, Mathf.Infinity );
+        visualParent.transform.localPosition = Vector3.SmoothDamp( visualParent.transform.localPosition, targetTagPosition, ref currentVelocity, 0.125f, Mathf.Infinity );
     }
 }

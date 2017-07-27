@@ -63,7 +63,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     /// <param name="stripeMovementSpeed">Stripe movement speed.</param>
     /// <param name="stripeWidth">Stripe width.</param>
     /// <param name="stripeSpacing">Stripe spacing.</param>
-    public void Set ( Vector2 size, float sideWidth, bool flat, float stripeMovementSpeed, float stripeWidth, float stripeSpacing )
+    public void Set ( Vector2 size, float sideWidth, bool flat, float backgroundAlpha, float stripeMovementSpeed, float stripeWidth, float stripeSpacing )
     {
         Destroy( visualParent );
         visualParent = new GameObject( "Visual Parent" );
@@ -74,7 +74,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         baseRectangle.material = material;
         baseRectangle.transform.parent = visualParent.transform;
         baseRectangle.transform.localPosition = Vector3.zero;
-        baseRectangle.Set( size, sideWidth, false );
+        baseRectangle.Set( size, sideWidth, false, backgroundAlpha );
 
         GameObject stripeObject = new GameObject( "Stripes" );
         stripeObject.transform.parent = visualParent.transform;

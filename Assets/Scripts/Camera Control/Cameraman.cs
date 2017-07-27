@@ -95,7 +95,7 @@ public class Cameraman : MonoBehaviour
                 float transitionSpeedLimit = i == 0 ? waypoints[0].targetPosition.transitionSpeedLimit : waypoints[0].targetDirection.transitionSpeedLimit;
                 Vector3 target = i == 0 ? waypoints[0].targetPosition.target : waypoints[0].targetDirection.target;
 
-                val.transitionProgress = waypoints[0].teleporting ? 100 : Mathf.SmoothDamp( val.transitionProgress, 100, ref val.transitionSpeed, transitionTime, transitionSpeedLimit );
+                val.transitionProgress = waypoints[0].teleporting ? 100f : Mathf.SmoothDamp( val.transitionProgress, 100f, ref val.transitionSpeed, transitionTime, transitionSpeedLimit );
                 float currentProgress = val.transitionProgress / 100f;
 
                 val.current = i == 0 ? Vector3.Lerp( val.current, target, currentProgress ) : Vector3.Slerp( val.current, target, currentProgress );

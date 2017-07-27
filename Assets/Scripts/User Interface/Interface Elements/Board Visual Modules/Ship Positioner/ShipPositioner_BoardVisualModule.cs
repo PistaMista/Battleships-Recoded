@@ -55,7 +55,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 Vector3 relative = selectedTiles[selectedTiles.Count - 1].transform.position - selectedTiles[0].transform.position;
                 indicator.transform.position = relative / 2f + selectedTiles[0].transform.position + Vector3.up * 0.12f;
 
-                indicator.Set( new Vector2( Mathf.Clamp( Mathf.Abs( relative.x ) + 1, 1, Mathf.Infinity ), Mathf.Clamp( Mathf.Abs( relative.z ) + 1, 1, Mathf.Infinity ) ), 0.1f, true, 0.5f, 0.1f, 0.1f );
+                indicator.Set( new Vector2( Mathf.Clamp( Mathf.Abs( relative.x ) + 1, 1, Mathf.Infinity ), Mathf.Clamp( Mathf.Abs( relative.z ) + 1, 1, Mathf.Infinity ) ), 0.1f, true, 0.2f, 0.5f, 0.1f, 0.1f );
             }
             else
             {
@@ -86,7 +86,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                     rectangle.material = Master.vars.shipPlacementIndicatorMaterial;
 
                     float modifier = 1f - 0.1f;
-                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * modifier, 0.1f, true );
+                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * modifier, 0.1f, true, 0.2f );
                 }
             }
             previouslyPlacedShips = ShipPositioner.shipsToPlace.Count;

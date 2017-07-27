@@ -122,7 +122,7 @@ public class AttackResultView_BoardVisualModule : BoardVisualModule
                             break;
                     }
 
-                    rectangle.Set( size, 0.1f, true, ( types[x] > 1 ) ? ( types[x] == 2 ? 0.1f : 0.5f ) : 0, 0.1f, 0.1f );
+                    rectangle.Set( size + ( types[x] == 3 ? Vector2.one * 0.3f : Vector2.zero ), 0.1f + ( types[x] == 3 ? 0.15f : 0 ), true, 0.1f, ( types[x] > 1 ) ? ( types[x] == 2 ? 0.1f : 0.5f ) : 0, 0.1f, 0.1f );
                 }
             }
         }
@@ -144,11 +144,11 @@ public class AttackResultView_BoardVisualModule : BoardVisualModule
                 {
                     DynamicStripedRectangle_GraphicsElement indicator = new GameObject( "Just Hit Tile Indicator" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
                     indicator.transform.SetParent( visualParent.transform );
-                    indicator.transform.position = tile.transform.position + Vector3.up * 0.1f;
+                    indicator.transform.position = tile.transform.position + Vector3.up * 0.15f;
 
                     indicator.material = ( tile.containedShip == null ? Master.vars.missedTileIndicatorMaterial : Master.vars.justHitTileIndicatorMaterial );
 
-                    indicator.Set( Vector2.one * 0.9f, 0.1f, true, 0.5f, 0.1f, 0.1f );
+                    indicator.Set( Vector2.one * 1.2f, 0.1f, true, 0.05f, 0.5f, 0.1f, 0.1f );
 
 
                 }
