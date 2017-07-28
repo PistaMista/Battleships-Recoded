@@ -122,7 +122,7 @@ public class AttackResultView_BoardVisualModule : BoardVisualModule
                             break;
                     }
 
-                    rectangle.Set( size + ( types[x] == 3 ? Vector2.one * 0.3f : Vector2.zero ), 0.1f + ( types[x] == 3 ? 0.15f : 0 ), true, 0.1f, ( types[x] > 1 ) ? ( types[x] == 2 ? 0.1f : 0.5f ) : 0, 0.1f, 0.1f );
+                    rectangle.Set( size + ( types[x] == 3 ? Vector2.one * 0.3f : Vector2.zero ), 0.1f + ( types[x] == 3 ? 0.15f : 0 ), true, 0, ( types[x] > 1 ) ? ( types[x] == 2 ? 0.1f : 0.5f ) : 0, 0.1f, 0.1f );
                 }
             }
         }

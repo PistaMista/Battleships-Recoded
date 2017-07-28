@@ -48,7 +48,7 @@ public class ArtilleryTargeting_UIElement : UIElement
         }
     }
 
-    public BoardTile candidate;
+    public static BoardTile candidate;
     DynamicStripedRectangle_GraphicsElement indicator;
     bool confirmed;
     float delay;
@@ -70,7 +70,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                         CreateIndicator( Master.vars.targetingConfirmedMaterial );
                         indicator.transform.position = tile.transform.position + Vector3.up * 0.111f;
                     }
-                    else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ))
+                    else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ) && TorpedoTargeting_UIElement.candidate == Vector3.zero)
                     {
                         candidate = tile;
                         CreateIndicator( Master.vars.targetingUnconfirmedMaterial );

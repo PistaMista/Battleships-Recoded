@@ -25,8 +25,18 @@ public class BattleVisualModule : ScriptableObject
     /// <summary>
     /// Processes an artillery attack.
     /// </summary>
-    /// <param name="turnInfo"></param>
+    /// <param name="turnInfo">Turn info.</param>
     public virtual void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
+    {
+        running = true;
+        InputController.onTap += Skip;
+    }
+
+    /// <summary>
+    /// Processes a torpedo attack.
+    /// </summary>
+    /// <param name="turnInfo">Turn info.</param>
+    public virtual void ProcessTorpedoAttack ( PlayerTurnActionInformation turnInfo )
     {
         running = true;
         InputController.onTap += Skip;

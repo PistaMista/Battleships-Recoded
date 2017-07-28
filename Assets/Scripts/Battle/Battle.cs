@@ -128,6 +128,48 @@ public class Battle : MonoBehaviour
     }
 
     /// <summary>
+    /// The torpedo launch position.
+    /// </summary>
+    public Vector3 torpedoLaunchPosition;
+    /// <summary>
+    /// Executes a torpedo attack in the given direction.
+    /// </summary>
+    /// <param name="direction">Direction.</param>
+    public virtual void TorpedoAttack ( Vector3 direction )
+    {
+
+    }
+
+    /// <summary>
+    /// Gets the torpedo hits in a given direction.
+    /// </summary>
+    /// <returns>The torpedo hits.</returns>
+    /// <param name="direction">Direction.</param>
+    public BoardTile[] GetTorpedoPath ( Vector3 direction )
+    {
+        List<BoardTile> path = new List<BoardTile>();
+        int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
+        float diagonal = Mathf.Sqrt( Mathf.Pow( boardDimensions, 2 ) + Mathf.Pow( boardDimensions * 1.1f, 2 ) );
+
+        for (float i = 0; i < diagonal + 2; i++)
+        {
+            Vector3 position = torpedoLaunchPosition + direction * i;
+            path.Add( selectedPlayer.board.GetTileAtWorldPosition( position ) );
+        }
+
+        return path.ToArray();
+    }
+
+    /// <summary>
+    /// Calculates the torpedo launch position.
+    /// </summary>
+    void CalculateTorpedoLaunchPosition ()
+    {
+        int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
+        torpedoLaunchPosition = selectedPlayer.transform.position + Vector3.back * boardDimensions * 0.6f;
+    }
+
+    /// <summary>
     /// Registers a hit on a tile.
     /// </summary>
     void RegisterHitOnTile ( BoardTile tile )
@@ -250,6 +292,10 @@ public class Battle : MonoBehaviour
     public virtual void SelectPlayer ( Player player )
     {
         selectedPlayer = player;
+        if (selectedPlayer != null)
+        {
+            CalculateTorpedoLaunchPosition();
+        }
     }
 
     //BATTLE FINALISATION
