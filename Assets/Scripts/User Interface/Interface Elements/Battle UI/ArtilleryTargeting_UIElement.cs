@@ -100,6 +100,6 @@ public class ArtilleryTargeting_UIElement : UIElement
         indicator = new GameObject( "Candidate Target Indicator" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
         indicator.transform.SetParent( transform );
         indicator.material = material;
-        indicator.Set( Vector2.one * 0.9f, 0.05f, true, 0.1f, 0.3f, 0.05f, 0.05f );
+        indicator.Set( Vector2.one * 0.9f, 0.05f, true, 0, 0.3f, 0.05f, 0.05f );
     }
 }

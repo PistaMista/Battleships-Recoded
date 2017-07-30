@@ -6,7 +6,9 @@ public enum ShipType
     CRUISER,
     BATTLESHIP,
     DESTROYER,
-    AIRCRAFT_CARRIER
+    AIRCRAFT_CARRIER,
+    LARGE_PATROL_BOAT,
+    SMALL_PATROL_BOAT
 }
 
 public class Ship : MonoBehaviour
@@ -64,20 +66,16 @@ public class Ship : MonoBehaviour
         {
             destroyed = true;
             int lastIntactIndex = 0;
-            int thisShipIndex = 0;
+            int thisShipIndex = ID;
             for (int i = 0; i < owner.ships.Length; i++)
             {
 
                 Ship ship = owner.ships[i];
-                if (ship == this)
-                {
-                    thisShipIndex = i;
-                }
-                else if (!ship.destroyed)
+                if (!ship.destroyed)
                 {
                     lastIntactIndex = i;
                 }
-                else
+                else if (i != thisShipIndex)
                 {
                     break;
                 }
@@ -116,7 +114,42 @@ public class Ship : MonoBehaviour
     /// </summary>
     public RotatableWeaponMounting[] gunTurrets;
 
-    void Update ()
+    /// <summary>
+    /// Executed when the battle begins.
+    /// </summary>
+    public virtual void OnBattleBegin ()
+    {
+
+    }
+
+    /// <summary>
+    /// Executes when the turn of the owner begins.
+    /// </summary>
+    public virtual void OnTurnBegin ()
+    {
+
+    }
+
+    /// <summary>
+    /// Executed when the owner's turn ends.
+    /// </summary>
+    public virtual void OnTurnEnd ()
+    {
+
+    }
+
+    /// <summary>
+    /// Executed when any turn, except for the owner's, begins.
+    /// </summary>
+    public virtual void OnGeneralTurnBegin ()
+    {
+
+    }
+
+    /// <summary>
+    /// Executed when any turn, except for the owner's, ends.
+    /// </summary>
+    public virtual void OnGeneralTurnEnd ()
     {
 
     }

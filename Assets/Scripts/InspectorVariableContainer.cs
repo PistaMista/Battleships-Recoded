@@ -29,6 +29,14 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public GameObject aircraftCarrierPrefab;
     /// <summary>
+    /// The large patrol boat prefab.
+    /// </summary>
+    public GameObject largePatrolBoatPrefab;
+    /// <summary>
+    /// The small patrol boat prefab.
+    /// </summary>
+    public GameObject smallPatrolBoatPrefab;
+    /// <summary>
     /// The time table for secondary battle switch times.
     /// </summary>
     public float[] secondaryBattleTimetable;
@@ -72,6 +80,10 @@ public class InspectorVariableContainer : MonoBehaviour
     /// The material for the ship placement indicator.
     /// </summary>
     public Material shipPlacementIndicatorMaterial;
+    /// <summary>
+    /// The ship placement restriction material.
+    /// </summary>
+    public Material shipPlacementRestrictionMaterial;
     /// <summary>
     /// The material for player tag backgrounds.
     /// </summary>

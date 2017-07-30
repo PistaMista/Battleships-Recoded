@@ -9,6 +9,7 @@ public class TorpedoTargeting_UIElement : UIElement
     bool confirmed;
     float delay;
     float tileHighlightRefreshAngle;
+    float lastAngle;
 
     public override void Enable ()
     {
@@ -26,10 +27,7 @@ public class TorpedoTargeting_UIElement : UIElement
     public override void Disable ()
     {
         base.Disable();
-        if (indicator != null)
-        {
-            Destroy( indicator.gameObject );
-        }
+        Destroy( indicator );
     }
 
     public override void OnBattleChange ()
@@ -53,7 +51,7 @@ public class TorpedoTargeting_UIElement : UIElement
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
-                //UserInterface.managedBattle.( candidate );
+                UserInterface.managedBattle.TorpedoAttack( candidate );
             }
         }
     }
@@ -61,29 +59,55 @@ public class TorpedoTargeting_UIElement : UIElement
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnDrag( initialPosition, currentPosition );
-        candidate = InputController.ConvertToWorldPoint( currentPosition, Camera.main.transform.position.y ) - UserInterface.managedBattle.torpedoLaunchPosition;
+        if (!UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1)
+        {
+            candidate = ( InputController.ConvertToWorldPoint( currentPosition, Camera.main.transform.position.y ) - UserInterface.managedBattle.torpedoLaunchPosition ).normalized;
+            candidate.y = 0;
 
+            if (indicator == null)
+            {
+                CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
+            }
 
+            indicator.transform.rotation = Quaternion.LookRotation( candidate );
+        }
     }
 
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
+        if (indicator != null && !confirmed)
+        {
+            Vector3 worldPos = InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y );
+
+            Vector3 processed = indicator.transform.InverseTransformPoint( worldPos );
+
+            if (Mathf.Abs( processed.x ) < 1)
+            {
+                confirmed = true;
+                delay = 1;
+                InputController.onDrag -= OnDrag;
+                Destroy( indicator );
+                CreateIndicator( Master.vars.targetingConfirmedMaterial );
+                indicator.transform.rotation = Quaternion.LookRotation( candidate );
+            }
+        }
     }
 
-    void CreateIndicator ()
+    void CreateIndicator ( Material material )
     {
         Destroy( indicator );
 
         indicator = new GameObject( "Torpedo Targeting Indicator" );
         indicator.transform.SetParent( gameObject.transform );
-        indicator.transform.position = UserInterface.managedBattle.torpedoLaunchPosition;
+        indicator.transform.position = UserInterface.managedBattle.torpedoLaunchPosition + Vector3.up * 0.111f;
 
         DynamicStripedRectangle_GraphicsElement line = new GameObject( "Line" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
         line.transform.SetParent( indicator.transform );
         float lineLength = 25f;
 
+        line.material = material;
         line.transform.localPosition = Vector3.forward * lineLength / 2f;
-        line.Set( new Vector2( 0.8f, lineLength ), 0.25f, true, 0.1f, 0.3f, 0.1f, 0.1f );
+        line.Set( new Vector2( 0.8f, lineLength ), 0.25f, true, 0, 0.3f, 0.1f, 0.1f );
     }
 }

@@ -78,7 +78,7 @@ public class ShipPositioner : MonoBehaviour
         }
     }
 
-
+    static List<BoardTile> restrictedTiles;
     public static List<BoardTile> validTiles;
     static List<BoardTile> processedTiles;
     public static List<BoardTile> selectedTiles;
@@ -88,6 +88,30 @@ public class ShipPositioner : MonoBehaviour
     /// </summary>
     public static void ValidateTiles ()
     {
+        restrictedTiles = new List<BoardTile>();
+        int boardDimensions = (int)Mathf.Sqrt( currentPlayer.board.tiles.Length );
+        foreach (BoardTile tile in currentPlayer.board.tiles)
+        {
+            if (tile.containedShip != null)
+            {
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        if (!( x == 0 && y == 0 ))
+                        {
+                            int ax = (int)tile.boardCoordinate.x + x;
+                            int ay = (int)tile.boardCoordinate.y + y;
+                            if (ay >= 0 && ay < boardDimensions && ax >= 0 && ax < boardDimensions)
+                            {
+                                restrictedTiles.Add( currentPlayer.board.tiles[ax, ay] );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (shipsToPlace.Count > 0)
         {
             Vector3[] cardinals = new Vector3[] { Vector3.forward, Vector3.back, Vector3.right, Vector3.left };
@@ -158,6 +182,8 @@ public class ShipPositioner : MonoBehaviour
                     }
                 }
             }
+
+
         }
         else
         {
@@ -187,7 +213,7 @@ public class ShipPositioner : MonoBehaviour
                     {
                         processedTiles.Add( candidate );
                     }
-                    if (candidate.containedShip == null)
+                    if (candidate.containedShip == null && !restrictedTiles.Contains( candidate ))
                     {
                         if (!candidateTiles.Contains( candidate ))
                         {

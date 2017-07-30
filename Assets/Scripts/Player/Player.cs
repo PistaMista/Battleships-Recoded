@@ -35,6 +35,10 @@ public class Player : MonoBehaviour
     /// </summary>
     public AircraftCarrier aircraftCarrier;
     /// <summary>
+    /// This player's destroyer.
+    /// </summary>
+    public Destroyer destroyer;
+    /// <summary>
     /// The battle this player is taking part in.
     /// </summary>
     public Battle battle;
@@ -44,9 +48,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public Dictionary<Player, Dictionary<BoardTile, TileHitInformation>> hits;
 
-    void Awake()
+    void Awake ()
     {
-        board = new GameObject("Board").AddComponent<Board>();
+        board = new GameObject( "Board" ).AddComponent<Board>();
         board.owner = this;
         board.transform.parent = transform;
         hits = new Dictionary<Player, Dictionary<BoardTile, TileHitInformation>>();
@@ -55,7 +59,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Executed when a turn begins.
     /// </summary>
-    public virtual void OnBeginTurn()
+    public virtual void OnBeginTurn ()
     {
 
     }
@@ -63,7 +67,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Executed when a turn ends.
     /// </summary>
-    public virtual void OnEndTurn()
+    public virtual void OnEndTurn ()
     {
 
     }

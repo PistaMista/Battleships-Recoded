@@ -5,15 +5,9 @@ using UnityEngine;
 public class AircraftCarrier : Ship
 {
 
-    // Use this for initialization
-    void Start()
+    public override void OnBattleBegin ()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        base.OnBattleBegin();
+        owner.aircraftCarrier = this;
     }
 }

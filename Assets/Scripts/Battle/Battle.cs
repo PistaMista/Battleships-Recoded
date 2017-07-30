@@ -82,6 +82,13 @@ public class Battle : MonoBehaviour
     public virtual void StartBattle ()
     {
         activePlayer = combatants[0];
+        foreach (Player player in combatants)
+        {
+            foreach (Ship ship in player.ships)
+            {
+                ship.OnBattleBegin();
+            }
+        }
         BeginTurn();
     }
 
@@ -138,6 +145,8 @@ public class Battle : MonoBehaviour
     public virtual void TorpedoAttack ( Vector3 direction )
     {
 
+        EndTurn();
+        visualModule.ProcessTorpedoAttack( turnLog[0] );
     }
 
     /// <summary>
@@ -149,7 +158,7 @@ public class Battle : MonoBehaviour
     {
         List<BoardTile> path = new List<BoardTile>();
         int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
-        float diagonal = Mathf.Sqrt( Mathf.Pow( boardDimensions, 2 ) + Mathf.Pow( boardDimensions * 1.1f, 2 ) );
+        float diagonal = Mathf.Sqrt( Mathf.Pow( boardDimensions, 2 ) + Mathf.Pow( boardDimensions * 0.5f + Vector3.Distance( selectedPlayer.transform.position, torpedoLaunchPosition ), 2 ) );
 
         for (float i = 0; i < diagonal + 2; i++)
         {
@@ -166,7 +175,7 @@ public class Battle : MonoBehaviour
     void CalculateTorpedoLaunchPosition ()
     {
         int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
-        torpedoLaunchPosition = selectedPlayer.transform.position + Vector3.back * boardDimensions * 0.6f;
+        torpedoLaunchPosition = selectedPlayer.transform.position + Vector3.back * boardDimensions * 1.2f;
     }
 
     /// <summary>
@@ -217,6 +226,21 @@ public class Battle : MonoBehaviour
         turnInfo.activePlayer = activePlayer;
         selectedPlayer = null;
 
+        foreach (Player player in combatants)
+        {
+            foreach (Ship ship in player.ships)
+            {
+                if (player != activePlayer)
+                {
+                    ship.OnGeneralTurnBegin();
+                }
+                else
+                {
+                    ship.OnTurnBegin();
+                }
+            }
+        }
+
         turnLog.Insert( 0, turnInfo );
         activePlayer.OnBeginTurn();
     }
@@ -229,6 +253,21 @@ public class Battle : MonoBehaviour
         if (turnLog[0].type != TurnActionType.SKIP)
         {
             turnLog[0].attackedPlayer = selectedPlayer;
+        }
+
+        foreach (Player player in combatants)
+        {
+            foreach (Ship ship in player.ships)
+            {
+                if (player != activePlayer)
+                {
+                    ship.OnGeneralTurnEnd();
+                }
+                else
+                {
+                    ship.OnTurnEnd();
+                }
+            }
         }
 
         selectedPlayer = null;
@@ -292,7 +331,7 @@ public class Battle : MonoBehaviour
     public virtual void SelectPlayer ( Player player )
     {
         selectedPlayer = player;
-        if (selectedPlayer != null)
+        if (selectedPlayer != null && !activePlayer.destroyer.destroyed && activePlayer.destroyer.torpedoes >= 1)
         {
             CalculateTorpedoLaunchPosition();
         }
