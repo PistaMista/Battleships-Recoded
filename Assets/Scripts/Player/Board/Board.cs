@@ -20,6 +20,10 @@ public class Board : MonoBehaviour
     /// All of the modules that handle visual elements of the board.
     /// </summary>
     public BoardVisualModule[] visualModules;
+    /// <summary>
+    /// The width/height of the board.
+    /// </summary>
+    public int sideTileLength;
 
     /// <summary>
     /// Update this instance.
@@ -154,6 +158,7 @@ public class Board : MonoBehaviour
     {
         Vector3 initialPosition = -( new Vector3( 1, 0, 1 ) * ( dimensions / 2f - 0.5f ) );
         tiles = new BoardTile[dimensions, dimensions];
+        sideTileLength = dimensions;
 
         for (int x = 0; x < dimensions; x++)
         {

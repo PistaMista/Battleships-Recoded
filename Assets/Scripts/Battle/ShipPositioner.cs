@@ -89,7 +89,7 @@ public class ShipPositioner : MonoBehaviour
     public static void ValidateTiles ()
     {
         restrictedTiles = new List<BoardTile>();
-        int boardDimensions = (int)Mathf.Sqrt( currentPlayer.board.tiles.Length );
+        int boardDimensions = currentPlayer.board.sideTileLength;
         foreach (BoardTile tile in currentPlayer.board.tiles)
         {
             if (tile.containedShip != null)

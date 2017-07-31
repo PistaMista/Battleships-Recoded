@@ -100,22 +100,15 @@ public class BattleLoader : MonoBehaviour
                 Ship ship;
                 BattleSaver.ShipData shipData = playerData.ships[s];
 
-                switch (shipData.type)
+                ship = Instantiate( Master.vars.shipPrefabs[(int)shipData.type] ).GetComponent<Ship>();
+
+                switch (ship.type)
                 {
-                    case ShipType.BATTLESHIP:
-                        ship = Instantiate( Master.vars.battleshipPrefab ).GetComponent<Ship>();
-                        break;
-                    case ShipType.CRUISER:
-                        ship = Instantiate( Master.vars.cruiserPrefab ).GetComponent<Ship>();
+                    case ShipType.AIRCRAFT_CARRIER:
+                        player.aircraftCarrier = (AircraftCarrier)ship;
                         break;
                     case ShipType.DESTROYER:
-                        ship = Instantiate( Master.vars.destroyerPrefab ).GetComponent<Ship>();
-                        break;
-                    case ShipType.AIRCRAFT_CARRIER:
-                        ship = Instantiate( Master.vars.aircraftCarrierPrefab ).GetComponent<Ship>();
-                        break;
-                    default:
-                        ship = Instantiate( Master.vars.battleshipPrefab ).GetComponent<Ship>();
+                        player.destroyer = (Destroyer)ship;
                         break;
                 }
 

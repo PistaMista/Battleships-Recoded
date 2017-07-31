@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum ShipType
 {
-    CRUISER,
     BATTLESHIP,
-    DESTROYER,
     AIRCRAFT_CARRIER,
+    CRUISER,
+    DESTROYER,
     LARGE_PATROL_BOAT,
     SMALL_PATROL_BOAT
 }

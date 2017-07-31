@@ -22,10 +22,11 @@ public class Destroyer : Ship
     {
         base.OnBattleBegin();
         owner.destroyer = this;
-        float boardDimensions = Mathf.Sqrt( owner.board.tiles.Length );
+        float boardDimensions = owner.board.sideTileLength;
         float distance = Vector3.Distance( transform.position, owner.aircraftCarrier.transform.position );
         reloadRate = 1.2f / Mathf.Pow( distance, 0.8f );
     }
+
     public override void OnTurnBegin ()
     {
         base.OnTurnBegin();

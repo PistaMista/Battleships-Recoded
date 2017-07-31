@@ -154,6 +154,9 @@ public class BattleSaver : MonoBehaviour
         //AIRCRAFT CARRIER ASSIGNED BY LOADER USING LOGIC
 
 
+        //DESTROYER ASSIGNED BY LOADER USING LOGIC
+
+
         //BATTLE REFERENCE ASSIGNED BY LOADER
 
         /// <summary>
@@ -405,7 +408,7 @@ public class BattleSaver : MonoBehaviour
 
             c.hits = hits;
             //BOARD DATA STRUCTURE CONSTRUCTION
-            int boardDimensions = (int)Mathf.Sqrt( o.board.tiles.Length );
+            int boardDimensions = o.board.sideTileLength;
             c.board.tiles = new TileData[boardDimensions, boardDimensions];
 
             for (int x = 0; x < boardDimensions; x++)

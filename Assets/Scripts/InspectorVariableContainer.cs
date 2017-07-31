@@ -13,29 +13,9 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public GameObject[] startingShipLoadout;
     /// <summary>
-    /// The battleship prefab.
+    /// The ship prefabs.
     /// </summary>
-    public GameObject battleshipPrefab;
-    /// <summary>
-    /// The cruiser prefab.
-    /// </summary>
-    public GameObject cruiserPrefab;
-    /// <summary>
-    /// The destroyer prefab.
-    /// </summary>
-    public GameObject destroyerPrefab;
-    /// <summary>
-    /// The aircraft carrier prefab.
-    /// </summary>
-    public GameObject aircraftCarrierPrefab;
-    /// <summary>
-    /// The large patrol boat prefab.
-    /// </summary>
-    public GameObject largePatrolBoatPrefab;
-    /// <summary>
-    /// The small patrol boat prefab.
-    /// </summary>
-    public GameObject smallPatrolBoatPrefab;
+    public GameObject[] shipPrefabs;
     /// <summary>
     /// The time table for secondary battle switch times.
     /// </summary>
@@ -85,6 +65,14 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public Material shipPlacementRestrictionMaterial;
     /// <summary>
+    /// The ship placement selected ship material.
+    /// </summary>
+    public Material shipPlacementSelectedShipMaterial;
+    /// <summary>
+    /// The ship placement not selected ship material.
+    /// </summary>
+    public Material shipPlacementNotSelectedShipMaterial;
+    /// <summary>
     /// The material for player tag backgrounds.
     /// </summary>
     public Material playerTagBackgroundMaterial;
@@ -124,4 +112,12 @@ public class InspectorVariableContainer : MonoBehaviour
     /// The important hit tile indicator material.
     /// </summary>
     public Material justHitTileIndicatorMaterial;
+    /// <summary>
+    /// The font material.
+    /// </summary>
+    public Material fontMaterial;
+    /// <summary>
+    /// The default font.
+    /// </summary>
+    public Font defaultFont;
 }

@@ -157,8 +157,7 @@ public class Battle : MonoBehaviour
     public BoardTile[] GetTorpedoPath ( Vector3 direction )
     {
         List<BoardTile> path = new List<BoardTile>();
-        int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
-        float diagonal = Mathf.Sqrt( Mathf.Pow( boardDimensions, 2 ) + Mathf.Pow( boardDimensions * 0.5f + Vector3.Distance( selectedPlayer.transform.position, torpedoLaunchPosition ), 2 ) );
+        float diagonal = Mathf.Sqrt( Mathf.Pow( selectedPlayer.board.sideTileLength, 2 ) + Mathf.Pow( selectedPlayer.board.sideTileLength * 0.5f + Vector3.Distance( selectedPlayer.transform.position, torpedoLaunchPosition ), 2 ) );
 
         for (float i = 0; i < diagonal + 2; i++)
         {
@@ -174,8 +173,7 @@ public class Battle : MonoBehaviour
     /// </summary>
     void CalculateTorpedoLaunchPosition ()
     {
-        int boardDimensions = (int)Mathf.Sqrt( selectedPlayer.board.tiles.Length );
-        torpedoLaunchPosition = selectedPlayer.transform.position + Vector3.back * boardDimensions * 1.2f;
+        torpedoLaunchPosition = selectedPlayer.transform.position + Vector3.back * selectedPlayer.board.sideTileLength * 1.2f;
     }
 
     /// <summary>

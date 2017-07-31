@@ -25,7 +25,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
         Destroy( indicator );
     }
 
-
+    ShipType lastSelectedType;
     public override void Refresh ()
     {
         base.Refresh();
@@ -49,6 +49,12 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 previouslyPlacedShips = ShipPositioner.shipsToPlace.Count;
             }
             DrawShipPlacementIndicator();
+        }
+
+        if (lastSelectedType != ShipPositioner_UIElement.selectedShipType)
+        {
+            HighlightInvalidTiles();
+            lastSelectedType = ShipPositioner_UIElement.selectedShipType;
         }
     }
 
