@@ -5,17 +5,18 @@ using UnityEngine;
 public class TorpedoTargeting_UIElement : UIElement
 {
     public static Vector3 candidate;
+    public static int candidateTorpedoCount;
     GameObject indicator;
     bool confirmed;
     float delay;
     float tileHighlightRefreshAngle;
-    float lastAngle;
 
     public override void Enable ()
     {
         base.Enable();
         confirmed = false;
         candidate = Vector3.zero;
+        canFire = true;
         delay = 0;
 
         Vector3 measurementPosition = UserInterface.managedBattle.selectedPlayer.transform.position + Vector3.forward * Mathf.Sqrt( UserInterface.managedBattle.selectedPlayer.board.tiles.Length );
@@ -51,22 +52,30 @@ public class TorpedoTargeting_UIElement : UIElement
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
-                UserInterface.managedBattle.TorpedoAttack( candidate );
+                UserInterface.managedBattle.TorpedoAttack( candidate, candidateTorpedoCount );
             }
         }
     }
 
+    bool canFire = true;
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnDrag( initialPosition, currentPosition );
-        if (!UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1)
+        if (!UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1 && ArtilleryTargeting_UIElement.candidate == null)
         {
             candidate = ( InputController.ConvertToWorldPoint( currentPosition, Camera.main.transform.position.y ) - UserInterface.managedBattle.torpedoLaunchPosition ).normalized;
             candidate.y = 0;
 
             if (indicator == null)
             {
-                CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
+                CreateIndicator( canFire ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingFailedMaterial );
+            }
+
+            bool lineOfFireFree = UserInterface.managedBattle.activePlayer.destroyer.CheckLineOfFire( Mathf.Atan2( candidate.z, candidate.x ) * Mathf.Rad2Deg );
+            if (lineOfFireFree != canFire)
+            {
+                canFire = lineOfFireFree;
+                CreateIndicator( canFire ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingFailedMaterial );
             }
 
             indicator.transform.rotation = Quaternion.LookRotation( candidate );
@@ -82,7 +91,7 @@ public class TorpedoTargeting_UIElement : UIElement
 
             Vector3 processed = indicator.transform.InverseTransformPoint( worldPos );
 
-            if (Mathf.Abs( processed.x ) < 1)
+            if (Mathf.Abs( processed.x ) < 1 && canFire)
             {
                 confirmed = true;
                 delay = 1;
@@ -90,6 +99,11 @@ public class TorpedoTargeting_UIElement : UIElement
                 Destroy( indicator );
                 CreateIndicator( Master.vars.targetingConfirmedMaterial );
                 indicator.transform.rotation = Quaternion.LookRotation( candidate );
+            }
+            else
+            {
+                candidate = Vector3.zero;
+                Destroy( indicator );
             }
         }
     }
@@ -104,7 +118,7 @@ public class TorpedoTargeting_UIElement : UIElement
 
         DynamicStripedRectangle_GraphicsElement line = new GameObject( "Line" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
         line.transform.SetParent( indicator.transform );
-        float lineLength = 25f;
+        float lineLength = 50f;
 
         line.material = material;
         line.transform.localPosition = Vector3.forward * lineLength / 2f;

@@ -79,7 +79,10 @@ public class ArtilleryTargeting_UIElement : UIElement
                 }
                 else
                 {
-                    Destroy( indicator.gameObject );
+                    if (indicator != null)
+                    {
+                        Destroy( indicator.gameObject );
+                    }
                     candidate = null;
                 }
             }

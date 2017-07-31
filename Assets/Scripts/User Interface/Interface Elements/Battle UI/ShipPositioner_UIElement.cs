@@ -20,7 +20,7 @@ public class ShipPositioner_UIElement : UIElement
         canvas = GetComponent<Canvas>();
         notificationTimeRemaining = 0;
         MoveToCurrentPlayer();
-        DrawShipPalette();
+        SelectShipType( selectedShipType );
     }
 
     public override void Disable ()
@@ -99,9 +99,9 @@ public class ShipPositioner_UIElement : UIElement
                 if (tile.containedShip != null)
                 {
                     tile.containedShip.transform.position = Vector3.zero;
-                    ShipPositioner.RemoveShip( tile.containedShip );
                     nextPlayerButton.gameObject.SetActive( false );
                     SelectShipType( tile.containedShip.type );
+                    ShipPositioner.RemoveShip( tile.containedShip );
                 }
                 else if (ShipPositioner.shipsToPlace.Count > 0)
                 {

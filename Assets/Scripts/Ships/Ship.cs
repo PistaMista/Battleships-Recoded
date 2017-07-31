@@ -153,4 +153,21 @@ public class Ship : MonoBehaviour
     {
 
     }
+
+    /// <summary>
+    /// Executed when a ship is placed on the board.
+    /// </summary>
+    public virtual void OnShipPlace ( Ship ship )
+    {
+        owner.destroyer.UpdateFiringArc();
+    }
+
+    /// <summary>
+    /// Executed when a ship is removed from the board.
+    /// </summary>
+    /// <param name="ship">Ship.</param>
+    public virtual void OnShipRemove ( Ship ship )
+    {
+        owner.destroyer.UpdateFiringArc();
+    }
 }

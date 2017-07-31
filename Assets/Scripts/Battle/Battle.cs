@@ -142,9 +142,9 @@ public class Battle : MonoBehaviour
     /// Executes a torpedo attack in the given direction.
     /// </summary>
     /// <param name="direction">Direction.</param>
-    public virtual void TorpedoAttack ( Vector3 direction )
+    public virtual void TorpedoAttack ( Vector3 direction, int torpedoCount )
     {
-
+        turnLog[0].type = TurnActionType.TORPEDO_ATTACK;
         EndTurn();
         visualModule.ProcessTorpedoAttack( turnLog[0] );
     }

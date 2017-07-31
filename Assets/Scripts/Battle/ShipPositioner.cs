@@ -309,7 +309,16 @@ public class ShipPositioner : MonoBehaviour
 
         ship.gameObject.SetActive( true );
         ship.PositionOnBoard();
+
         shipsToPlace.RemoveAt( 0 );
+
+        foreach (Ship sh in currentPlayer.ships)
+        {
+            if (!shipsToPlace.Contains( sh ))
+            {
+                sh.OnShipPlace( ship );
+            }
+        }
     }
 
     /// <summary>
@@ -323,6 +332,15 @@ public class ShipPositioner : MonoBehaviour
         for (int i = 0; i < Master.vars.startingShipLoadout.Length; i++)
         {
             Ship ship = Instantiate( Master.vars.startingShipLoadout[i] ).GetComponent<Ship>();
+            switch (ship.type)
+            {
+                case ShipType.DESTROYER:
+                    currentPlayer.destroyer = (Destroyer)ship;
+                    break;
+                case ShipType.AIRCRAFT_CARRIER:
+                    currentPlayer.aircraftCarrier = (AircraftCarrier)ship;
+                    break;
+            }
             ship.owner = currentPlayer;
             ship.ID = i;
             ship.revealedBy.Add( currentPlayer );
@@ -376,5 +394,14 @@ public class ShipPositioner : MonoBehaviour
 
         ship.gameObject.SetActive( false );
         shipsToPlace.Insert( 0, ship );
+
+
+        foreach (Ship sh in currentPlayer.ships)
+        {
+            if (!shipsToPlace.Contains( sh ))
+            {
+                sh.OnShipRemove( ship );
+            }
+        }
     }
 }

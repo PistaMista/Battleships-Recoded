@@ -93,6 +93,10 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public Material targetingConfirmedMaterial;
     /// <summary>
+    /// The targeting failed material.
+    /// </summary>
+    public Material targetingFailedMaterial;
+    /// <summary>
     /// The destroyed ship highlight material.
     /// </summary>
     public Material destroyedShipHighlightMaterial;
