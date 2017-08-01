@@ -72,6 +72,7 @@ public class Cinematic_BattleVisualModule : BattleVisualModule
     protected override void Finish ()
     {
         base.Finish();
+        stage = 1;
     }
 
     void OnTurretPanFinish ()

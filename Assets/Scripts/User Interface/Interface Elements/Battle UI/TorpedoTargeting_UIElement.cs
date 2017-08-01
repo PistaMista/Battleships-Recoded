@@ -71,7 +71,7 @@ public class TorpedoTargeting_UIElement : UIElement
                 CreateIndicator( canFire ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingFailedMaterial );
             }
 
-            bool lineOfFireFree = UserInterface.managedBattle.activePlayer.destroyer.CheckLineOfFire( Mathf.Atan2( candidate.z, candidate.x ) * Mathf.Rad2Deg );
+            bool lineOfFireFree = UserInterface.managedBattle.activePlayer.destroyer.CheckLineOfFire( Mathf.Atan2( candidate.x, candidate.z ) * Mathf.Rad2Deg );
             if (lineOfFireFree != canFire)
             {
                 canFire = lineOfFireFree;
@@ -79,6 +79,9 @@ public class TorpedoTargeting_UIElement : UIElement
             }
 
             indicator.transform.rotation = Quaternion.LookRotation( candidate );
+
+            candidateTorpedoCount = Mathf.CeilToInt( ( currentPosition.y / Screen.height ) * Mathf.Floor( UserInterface.managedBattle.activePlayer.destroyer.torpedoes ) );
+            Debug.Log( candidateTorpedoCount + " torpedoes will fire." );
         }
     }
 

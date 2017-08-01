@@ -145,6 +145,33 @@ public class Battle : MonoBehaviour
     public virtual void TorpedoAttack ( Vector3 direction, int torpedoCount )
     {
         turnLog[0].type = TurnActionType.TORPEDO_ATTACK;
+
+        BoardTile[] path = GetTorpedoPath( direction );
+        foreach (BoardTile pathTile in path)
+        {
+            if (pathTile != null)
+            {
+                if (pathTile.containedShip)
+                {
+                    if (!pathTile.containedShip.destroyed)
+                    {
+                        float chance = 100f / pathTile.containedShip.length;
+                        foreach (BoardTile shipTile in pathTile.containedShip.tiles)
+                        {
+                            if (Random.Range( 0, 100 ) < chance)
+                            {
+                                RegisterHitOnTile( shipTile );
+                            }
+                        }
+
+                        turnLog[0].torpedoImpacts.Add( pathTile );
+                        torpedoCount--;
+                    }
+                }
+            }
+        }
+
+
         EndTurn();
         visualModule.ProcessTorpedoAttack( turnLog[0] );
     }

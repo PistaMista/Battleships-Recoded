@@ -64,6 +64,7 @@ public class Ship : MonoBehaviour
 
         if (lengthRemaining == 0)
         {
+            revealedBy.Add( owner.battle.turnLog[0].activePlayer );
             destroyed = true;
             int lastIntactIndex = 0;
             int thisShipIndex = ID;

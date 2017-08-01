@@ -16,7 +16,7 @@ public class Destroyer : Ship
     /// <summary>
     /// The amount of torpedoes resupplied each turn.
     /// </summary>
-    public float reloadRate;
+    public float torpedoReloadRate;
     /// <summary>
     /// The firing angles.
     /// </summary>
@@ -32,7 +32,7 @@ public class Destroyer : Ship
     public override void OnTurnBegin ()
     {
         base.OnTurnBegin();
-        torpedoes = Mathf.Clamp( torpedoes + reloadRate, 0, torpedoCap );
+        torpedoes = Mathf.Clamp( torpedoes + torpedoReloadRate, 0, torpedoCap );
     }
 
     public override void OnShipPlace ( Ship ship )
@@ -48,7 +48,7 @@ public class Destroyer : Ship
     {
         float boardDimensions = owner.board.sideTileLength;
         float distance = Vector3.Distance( transform.position, owner.aircraftCarrier.transform.position );
-        reloadRate = 1.2f / Mathf.Pow( distance, 0.8f );
+        torpedoReloadRate = 1.2f / Mathf.Pow( distance, 0.8f );
     }
 
     public void UpdateFiringArc ()
