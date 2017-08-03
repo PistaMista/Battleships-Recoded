@@ -40,7 +40,7 @@ public class AttackView_UIElement : UIElement
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
-        if (UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) ) == null && ArtilleryTargeting_UIElement.candidate == null && TorpedoTargeting_UIElement.candidate == Vector3.zero)
+        if (UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) ) == null && ArtilleryTargeting_UIElement.candidates.Count == 0 && TorpedoTargeting_UIElement.candidate == Vector3.zero)
         {
             UserInterface.managedBattle.SelectPlayer( null );
         }

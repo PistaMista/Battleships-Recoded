@@ -96,16 +96,17 @@ public class Battle : MonoBehaviour
     /// <summary>
     /// Executes an artillery attack on the target tile of the defending player's board.
     /// </summary>
-    /// <param name="tile">Position of the tile to hit.</param>
+    /// <param name="tiles">The tiles to hit.</param>
     /// <returns>Hit successful.</returns>
-    public virtual bool ArtilleryAttack ( BoardTile tile )
+    public virtual void ArtilleryAttack ( BoardTile[] tiles )
     {
-        if (tile != null)
+        turnLog[0].type = TurnActionType.ARTILLERY_ATTACK;
+
+        for (int i = 0; i < tiles.Length && i < activePlayer.shotCapacity; i++)
         {
+            BoardTile tile = tiles[i];
             if (!activePlayer.hits[selectedPlayer].ContainsKey( tile ))
             {
-                turnLog[0].type = TurnActionType.ARTILLERY_ATTACK;
-
                 if (tile.containedShip && Random.Range( 0, 10 ) == 0 && tile.containedShip.type != ShipType.AIRCRAFT_CARRIER)
                 {
                     if (!tile.containedShip.destroyed)
@@ -121,17 +122,11 @@ public class Battle : MonoBehaviour
                 {
                     RegisterHitOnTile( tile );
                 }
-
-                EndTurn();
-                visualModule.ProcessArtilleryAttack( turnLog[0] );
-
-                return true;
             }
         }
 
-
-        Debug.LogWarning( "There was an attempt to shoot an invalid tile: " + tile + ". Things may break." );
-        return false;
+        EndTurn();
+        visualModule.ProcessArtilleryAttack( turnLog[0] );
     }
 
     /// <summary>
@@ -170,7 +165,6 @@ public class Battle : MonoBehaviour
                 }
             }
         }
-
 
         EndTurn();
         visualModule.ProcessTorpedoAttack( turnLog[0] );

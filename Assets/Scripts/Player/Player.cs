@@ -23,6 +23,10 @@ public class Player : MonoBehaviour
     public bool AI;
 
     /// <summary>
+    /// Determines the amount of tiles this player can target in one turn.
+    /// </summary>
+    public int shotCapacity = 1;
+    /// <summary>
     /// This player's board.
     /// </summary>
     public Board board;

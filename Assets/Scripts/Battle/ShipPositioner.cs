@@ -393,9 +393,6 @@ public class ShipPositioner : MonoBehaviour
         }
 
         ship.gameObject.SetActive( false );
-        shipsToPlace.Insert( 0, ship );
-
-
         foreach (Ship sh in currentPlayer.ships)
         {
             if (!shipsToPlace.Contains( sh ))
@@ -403,5 +400,7 @@ public class ShipPositioner : MonoBehaviour
                 sh.OnShipRemove( ship );
             }
         }
+
+        shipsToPlace.Insert( 0, ship );
     }
 }

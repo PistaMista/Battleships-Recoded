@@ -50,18 +50,26 @@ public class Player_AI : Player
 
     void ArtilleryAttack ()
     {
-        battle.ArtilleryAttack( ChooseTileToShoot() );
+        battle.ArtilleryAttack( ChooseTilesToShoot() );
     }
 
-    BoardTile ChooseTileToShoot ()
+    BoardTile[] ChooseTilesToShoot ()
     {
+        List<BoardTile> results = new List<BoardTile>();
         Dictionary<BoardTile, TileHitInformation> hits = this.hits[battle.selectedPlayer];
 
         foreach (BoardTile tile in battle.selectedPlayer.board.tiles)
         {
-            if (tile.revealedBy.Contains( this ) && !( hits.ContainsKey( tile ) ))
+            if (results.Count < shotCapacity)
             {
-                return tile;
+                if (tile.revealedBy.Contains( this ) && !( hits.ContainsKey( tile ) ))
+                {
+                    results.Add( tile );
+                }
+            }
+            else
+            {
+                return results.ToArray();
             }
         }
 
@@ -183,21 +191,29 @@ public class Player_AI : Player
             }
         }
 
-        BoardTile result = null;
-        //Choose a tile to attack
-        int targetRank = Random.Range( 0, highestRank - 1 );
-        //Choose a rank to pick a tile from
-        for (int i = 1; i <= 10; i++)
+        for (int i = 0; i < shotCapacity * 2 && results.Count < shotCapacity; i++)
         {
-            if (targetRank < i && rankedTiles[i].Count > 0)
+            int targetRank = Random.Range( 0, highestRank - 1 );
+            //Choose a rank to pick a tile from
+            for (int r = 1; r <= 10; r++)
             {
-                targetRank = i;
-                break;
+                if (targetRank < r && rankedTiles[r].Count > 0)
+                {
+                    targetRank = r;
+                    break;
+                }
+            }
+
+            BoardTile pick = rankedTiles[targetRank][Random.Range( 0, rankedTiles[targetRank].Count - 1 )];
+            if (!results.Contains( pick ))
+            {
+                results.Add( pick );
             }
         }
 
-        result = rankedTiles[targetRank][Random.Range( 0, rankedTiles[targetRank].Count - 1 )];
-        return result;
+
+
+        return results.ToArray();
     }
 
     void TorpedoAttack ()

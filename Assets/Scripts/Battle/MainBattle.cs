@@ -80,13 +80,13 @@ public class MainBattle : Battle
         UserInterface.elements[4].Disable();
     }
 
-    public override bool ArtilleryAttack ( BoardTile tile )
+    public override void ArtilleryAttack ( BoardTile[] tiles )
     {
         foreach (Player player in UserInterface.managedBattle.combatants)
         {
             player.board.ResetVisualModules();
         }
-        return base.ArtilleryAttack( tile );
+        base.ArtilleryAttack( tiles );
     }
 
     protected override void Update ()

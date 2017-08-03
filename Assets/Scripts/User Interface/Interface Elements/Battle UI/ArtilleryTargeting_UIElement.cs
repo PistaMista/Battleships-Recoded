@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 public class ArtilleryTargeting_UIElement : UIElement
 {
+    void Start ()
+    {
+        candidates = new List<BoardTile>();
+    }
+
     public override void Enable ()
     {
         base.Enable();
         confirmed = false;
-        candidate = null;
+        candidates = new List<BoardTile>();
         delay = 0;
     }
 
@@ -43,13 +48,13 @@ public class ArtilleryTargeting_UIElement : UIElement
             delay -= Time.deltaTime;
             if (delay <= 0)
             {
-                UserInterface.managedBattle.ArtilleryAttack( candidate );
+                UserInterface.managedBattle.ArtilleryAttack( candidates.ToArray() );
             }
         }
     }
 
-    public static BoardTile candidate;
-    DynamicStripedRectangle_GraphicsElement indicator;
+    public static List<BoardTile> candidates;
+    GameObject indicator;
     bool confirmed;
     float delay;
 
@@ -63,27 +68,30 @@ public class ArtilleryTargeting_UIElement : UIElement
                 BoardTile tile = UserInterface.managedBattle.selectedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 0.1f ) );
                 if (tile != null)
                 {
-                    if (tile == candidate)
+                    if (candidates.Contains( tile ))
                     {
                         confirmed = true;
                         delay = 1;
-                        CreateIndicator( Master.vars.targetingConfirmedMaterial );
                         indicator.transform.position = tile.transform.position + Vector3.up * 0.111f;
+
+                        UpdateIndicators();
                     }
                     else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ) && TorpedoTargeting_UIElement.candidate == Vector3.zero)
                     {
-                        candidate = tile;
-                        CreateIndicator( Master.vars.targetingUnconfirmedMaterial );
-                        indicator.transform.position = tile.transform.position + Vector3.up * 0.111f;
+                        if (candidates.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
+                        {
+                            candidates.Add( tile );
+                        }
+                        UpdateIndicators();
                     }
                 }
                 else
                 {
-                    if (indicator != null)
+                    if (candidates.Count > 0)
                     {
-                        Destroy( indicator.gameObject );
+                        candidates.RemoveAt( candidates.Count - 1 );
+                        UpdateIndicators();
                     }
-                    candidate = null;
                 }
             }
         }
@@ -94,15 +102,21 @@ public class ArtilleryTargeting_UIElement : UIElement
         base.OnDrag( initialPosition, currentPosition );
     }
 
-    void CreateIndicator ( Material material )
+    void UpdateIndicators ()
     {
-        if (indicator != null)
+        Destroy( indicator );
+
+        if (candidates.Count > 0)
         {
-            Destroy( indicator.gameObject );
+            indicator = new GameObject( "Artillery Targeting Indicator" );
+            foreach (BoardTile tile in candidates)
+            {
+                DynamicStripedRectangle_GraphicsElement tmp = new GameObject( "Candidate Target Indicator" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
+                tmp.transform.SetParent( indicator.transform );
+                tmp.transform.position = tile.transform.position + Vector3.up * 0.111f;
+                tmp.material = confirmed ? Master.vars.targetingConfirmedMaterial : Master.vars.targetingUnconfirmedMaterial;
+                tmp.Set( Vector2.one * 0.9f, 0.05f, true, 0, 0.3f, 0.05f, 0.05f );
+            }
         }
-        indicator = new GameObject( "Candidate Target Indicator" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
-        indicator.transform.SetParent( transform );
-        indicator.material = material;
-        indicator.Set( Vector2.one * 0.9f, 0.05f, true, 0, 0.3f, 0.05f, 0.05f );
     }
 }

@@ -64,30 +64,10 @@ public class Ship : MonoBehaviour
 
         if (lengthRemaining == 0)
         {
-            revealedBy.Add( owner.battle.turnLog[0].activePlayer );
-            destroyed = true;
-            int lastIntactIndex = 0;
-            int thisShipIndex = ID;
-            for (int i = 0; i < owner.ships.Length; i++)
+            foreach (Ship ship in owner.ships)
             {
-
-                Ship ship = owner.ships[i];
-                if (!ship.destroyed)
-                {
-                    lastIntactIndex = i;
-                }
-                else if (i != thisShipIndex)
-                {
-                    break;
-                }
+                ship.OnShipDestroyed( this );
             }
-
-            owner.ships[lastIntactIndex].ID = ID;
-            ID = lastIntactIndex;
-
-
-            owner.ships[thisShipIndex] = owner.ships[lastIntactIndex];
-            owner.ships[lastIntactIndex] = this;
         }
     }
 
@@ -170,5 +150,42 @@ public class Ship : MonoBehaviour
     public virtual void OnShipRemove ( Ship ship )
     {
         owner.destroyer.UpdateFiringArc();
+    }
+
+
+    /// <summary>
+    /// Executed when a friendly ship is destroyed.
+    /// </summary>
+    /// <param name="ship">Ship.</param>
+    public virtual void OnShipDestroyed ( Ship ship )
+    {
+        if (ship == this)
+        {
+            revealedBy.Add( owner.battle.turnLog[0].activePlayer );
+            destroyed = true;
+
+            int lastIntactIndex = 0;
+            int thisShipIndex = ID;
+            for (int i = 0; i < owner.ships.Length; i++)
+            {
+
+                Ship sh = owner.ships[i];
+                if (!sh.destroyed)
+                {
+                    lastIntactIndex = i;
+                }
+                else if (i != thisShipIndex)
+                {
+                    break;
+                }
+            }
+
+            owner.ships[lastIntactIndex].ID = ID;
+            ID = lastIntactIndex;
+
+
+            owner.ships[thisShipIndex] = owner.ships[lastIntactIndex];
+            owner.ships[lastIntactIndex] = this;
+        }
     }
 }
