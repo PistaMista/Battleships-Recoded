@@ -65,7 +65,6 @@ public class TacticalView_UIElement : UIElement
     protected override void OnTap ( Vector2 position )
     {
         base.OnTap( position );
-        Debug.Log( "Tap" );
         if (battle.selectedPlayer == null)
         {
             Vector3 worldPosition = InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - 1 );
@@ -87,7 +86,6 @@ public class TacticalView_UIElement : UIElement
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnDrag( initialPosition, currentPosition );
-        Debug.Log( "Drag" );
     }
 
     protected override void Update ()

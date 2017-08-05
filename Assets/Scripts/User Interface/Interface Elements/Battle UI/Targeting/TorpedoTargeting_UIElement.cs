@@ -61,7 +61,7 @@ public class TorpedoTargeting_UIElement : UIElement
     protected override void OnDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnDrag( initialPosition, currentPosition );
-        if (!UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1 && ArtilleryTargeting_UIElement.candidates.Count == 0)
+        if (!UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1 && ArtilleryTargeting_UIElement.candidates.Count == 0 && !AircraftTargeting_UIElement.initialSelectionLock && !AircraftTargeting_UIElement.afterCancelLock && InputController.screenInputPoints == 1)
         {
             candidate = ( InputController.ConvertToWorldPoint( currentPosition, Camera.main.transform.position.y ) - UserInterface.managedBattle.torpedoLaunchPosition ).normalized;
             candidate.y = 0;

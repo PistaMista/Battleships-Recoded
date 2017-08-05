@@ -344,6 +344,11 @@ public class ShipPositioner : MonoBehaviour
             ship.owner = currentPlayer;
             ship.ID = i;
             ship.revealedBy.Add( currentPlayer );
+            //foreach (Player item in battle.combatants)
+            //{
+            //    ship.revealedBy.Add( item );
+            //}
+
             currentPlayer.ships[i] = ship;
             shipsToPlace.Add( ship );
         }

@@ -64,9 +64,13 @@ public class Ship : MonoBehaviour
 
         if (lengthRemaining == 0)
         {
+            OnShipDestroyed( this );
             foreach (Ship ship in owner.ships)
             {
-                ship.OnShipDestroyed( this );
+                if (ship != this)
+                {
+                    ship.OnShipDestroyed( this );
+                }
             }
         }
     }

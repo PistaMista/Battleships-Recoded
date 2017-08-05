@@ -33,12 +33,12 @@ public class AircraftCarrier : Ship
         if (player != null)
         {
             flightTime = time;
-        }
-        else
-        {
             this.sweepDirection = sweepDirection;
             sweepStep = player.board.sideTileLength / (float)time;
             sweepPosition = -player.board.sideTileLength / 2.0f;
+        }
+        else
+        {
             flightTime = 0;
         }
 

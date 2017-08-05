@@ -49,6 +49,10 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public int defaultSecondaryBattleBoardDimensions;
     /// <summary>
+    /// The maximum aircraft flight time.
+    /// </summary>
+    public int maximumAircraftFlightTime;
+    /// <summary>
     /// All of the UI elements.
     /// </summary>
     public UIElement[] UIElements;

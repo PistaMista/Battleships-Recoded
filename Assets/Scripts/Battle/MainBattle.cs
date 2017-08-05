@@ -48,6 +48,7 @@ public class MainBattle : Battle
 
     public override void EndTurn ()
     {
+        AircraftTargeting_UIElement.FinalizeTargeting();
         base.EndTurn();
         UserInterface.RespondToBattleChanges();
     }

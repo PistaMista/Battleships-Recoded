@@ -11,6 +11,10 @@ public class InputController : MonoBehaviour
     /// </summary>
     public static float referenceY;
     /// <summary>
+    /// The amount of screen input points (e.g. fingers on screen).
+    /// </summary>
+    public static int screenInputPoints;
+    /// <summary>
     /// The current input screen position.
     /// </summary>
     static Vector3 currentScreenInputPosition;
@@ -100,6 +104,8 @@ public class InputController : MonoBehaviour
             endPress = Input.GetMouseButtonUp( 0 );
         }
         pressed = Input.GetMouseButton( 0 );
+
+        screenInputPoints = Input.GetKey( KeyCode.Space ) ? 2 : 1;
     }
 
 
@@ -110,6 +116,7 @@ public class InputController : MonoBehaviour
     void MobileInput ()
     {
         float clippingDistance = Camera.main.transform.position.y - referenceY;
+        screenInputPoints = Input.touchCount;
         if (Input.touchCount > 0)
         {
             pressed = true;
