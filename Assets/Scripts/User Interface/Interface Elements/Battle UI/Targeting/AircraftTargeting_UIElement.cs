@@ -6,18 +6,29 @@ public class AircraftTargeting_UIElement : UIElement
 {
     static Player managedPlayer;
     static Player candidateAircraftTarget;
-    static int candidateAircraftFlightTime = 10;
+    static int candidateAircraftFlightTime = 0;
     static string candidateDirection = "NONE";
 
     public override void Enable ()
     {
         base.Enable();
         managedPlayer = UserInterface.managedBattle.activePlayer;
+        flashTime = 0;
+        UpdateSweepPreview();
     }
 
     public override void Disable ()
     {
         base.Disable();
+        if (indicators != null)
+        {
+            foreach (GameObject indicator in indicators)
+            {
+                Destroy( indicator );
+            }
+        }
+
+        indicators = null;
     }
 
     public static bool afterCancelLock;
@@ -69,12 +80,13 @@ public class AircraftTargeting_UIElement : UIElement
             else
             {
                 float distance = Vector2.Distance( initialPosition, currentPosition ) / ( direction == "HORIZONTAL" ? Screen.width : Screen.height ) * 1.25f;
-                int time = (int)( distance * Master.vars.maximumAircraftFlightTime );
+                int time = (int)Mathf.Clamp( distance * Master.vars.maximumAircraftFlightTime, 1, Master.vars.maximumAircraftFlightTime );
                 if (candidateAircraftFlightTime != time)
                 {
+                    candidateAircraftFlightTime = time;
+
                     UpdateSweepPreview();
                 }
-                candidateAircraftFlightTime = time;
 
                 Debug.Log( "SELECTING FLIGHT TIME " + candidateAircraftFlightTime );
             }
@@ -86,6 +98,7 @@ public class AircraftTargeting_UIElement : UIElement
         base.OnEndPress( initialPosition, currentPosition );
         afterCancelLock = false;
         initialSelectionLock = false;
+        UpdateSweepPreview();
     }
 
     public override void OnBattleChange ()
@@ -113,8 +126,65 @@ public class AircraftTargeting_UIElement : UIElement
         candidateDirection = "NONE";
     }
 
+    public float previewCycleTime;
+    float flashTime;
+    GameObject[] indicators;
     void UpdateSweepPreview ()
     {
+        if (indicators != null)
+        {
+            foreach (GameObject indicator in indicators)
+            {
+                Destroy( indicator );
+            }
+            indicators = null;
+        }
 
+        if (candidateAircraftFlightTime > 0)
+        {
+            indicators = new GameObject[candidateAircraftFlightTime];
+
+            Vector3 initialPosition = ( candidateDirection == "HORIZONTAL" ? Vector3.left : Vector3.back ) * candidateAircraftTarget.board.sideTileLength / 2;
+            Vector3 movementStep = -initialPosition.normalized * ( candidateAircraftTarget.board.sideTileLength / (float)candidateAircraftFlightTime );
+
+            for (int i = 0; i < indicators.Length; i++)
+            {
+                Vector3 position = initialPosition + movementStep * ( i + 1 ) + Vector3.up * 0.110f + candidateAircraftTarget.transform.position;
+                Vector3 rotation = new Vector3( 90, 0, candidateDirection == "HORIZONTAL" ? 90 : 0 );
+                Vector3 scale = new Vector3( candidateAircraftTarget.board.sideTileLength + 2, 0.15f, 1 );
+
+                GameObject indicator = GameObject.CreatePrimitive( PrimitiveType.Quad );
+                indicator.GetComponent<Renderer>().material = initialSelectionLock ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingConfirmedMaterial;
+
+                indicator.transform.SetParent( transform );
+                indicator.transform.position = position;
+                indicator.transform.rotation = Quaternion.Euler( rotation );
+                indicator.transform.localScale = scale;
+
+                indicators[i] = indicator;
+            }
+        }
+    }
+
+    protected override void Update ()
+    {
+        base.Update();
+        if (indicators != null)
+        {
+            for (int i = 0; i < indicators.Length; i++)
+            {
+                float offset = i * ( previewCycleTime / indicators.Length );
+                float opacity = Mathf.Sin( Mathf.PI * ( flashTime - offset ) / previewCycleTime );
+
+                MaterialPropertyBlock block = new MaterialPropertyBlock();
+                Color color = ( initialSelectionLock ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingConfirmedMaterial ).GetColor( "_EmissionColor" ) * opacity;
+                block.SetColor( "_EmissionColor", color );
+
+                Renderer rnd = indicators[i].GetComponent<Renderer>();
+                rnd.SetPropertyBlock( block );
+            }
+
+            flashTime += Time.deltaTime;
+        }
     }
 }
