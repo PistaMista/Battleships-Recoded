@@ -166,7 +166,7 @@ public class AircraftTargeting_UIElement : UIElement
                 Vector3 scale = new Vector3( candidateAircraftTarget.board.sideTileLength + 2, 0.15f, 1 );
 
                 GameObject indicator = GameObject.CreatePrimitive( PrimitiveType.Quad );
-                indicator.GetComponent<Renderer>().material = initialSelectionLock ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingConfirmedMaterial;
+                indicator.GetComponent<Renderer>().material = Master.vars.aircraftSweepLineMaterial;
 
                 indicator.transform.SetParent( transform );
                 indicator.transform.position = position;
