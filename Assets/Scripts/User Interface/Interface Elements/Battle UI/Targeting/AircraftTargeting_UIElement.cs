@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.Remoting.Messaging;
 
 public class AircraftTargeting_UIElement : UIElement
 {
@@ -31,6 +32,7 @@ public class AircraftTargeting_UIElement : UIElement
                 Destroy( indicator );
             }
         }
+        Destroy( sweepLine );
 
         indicators = null;
     }
@@ -176,10 +178,21 @@ public class AircraftTargeting_UIElement : UIElement
         }
     }
 
-
+    GameObject sweepLine;
     void AddSweepLine ()
     {
+        Destroy( sweepLine );
+        sweepLine = new GameObject( "Sweep Line" );
 
+        AircraftSweepLine_GraphicsElement graphic = sweepLine.AddComponent<AircraftSweepLine_GraphicsElement>();
+        graphic.material = Master.vars.aircraftSweepLineMaterial;
+
+        graphic.Set( managedPlayer.aircraftCarrier.aircraftTarget.board.sideTileLength + 2, 0.3f, 0.3f, 0.5f, 0.72f, 0.7f, ( x ) => { return 1 - Mathf.Clamp( x - 0.5f, 0, 1 ) * 2.0f; } );
+        sweepLine.transform.SetParent( transform );
+
+        sweepLine.transform.position = managedPlayer.aircraftCarrier.sweepPosition + managedPlayer.aircraftCarrier.aircraftTarget.transform.position + Vector3.up * 1.120f;
+
+        sweepLine.transform.Rotate( Vector3.up * ( ( managedPlayer.aircraftCarrier.sweepIndication == 1 ? 0 : 180 ) + 90 * Mathf.Abs( managedPlayer.aircraftCarrier.sweepDirection.z ) ) );
     }
 
     protected override void Update ()

@@ -101,6 +101,10 @@ public class InspectorVariableContainer : MonoBehaviour
     /// </summary>
     public Material targetingFailedMaterial;
     /// <summary>
+    /// The aircraft sweep line material.
+    /// </summary>
+    public Material aircraftSweepLineMaterial;
+    /// <summary>
     /// The destroyed ship highlight material.
     /// </summary>
     public Material destroyedShipHighlightMaterial;
