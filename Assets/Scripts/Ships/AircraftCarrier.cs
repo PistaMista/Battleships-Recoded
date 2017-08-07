@@ -8,9 +8,9 @@ public class AircraftCarrier : Ship
 {
     public Player aircraftTarget;
     public int flightTime;
-    public string sweepDirection;
-    public float sweepPosition;
-    public float sweepStep;
+    public Vector3 sweepDirection;
+    public Vector3 sweepPosition;
+    public Vector3 sweepStep;
     public int sweepIndication;
 
     public override void OnShipPlace ( Ship ship )
@@ -22,7 +22,7 @@ public class AircraftCarrier : Ship
         }
     }
 
-    public bool SendAircraftToPlayer ( Player player, int time, string sweepDirection )
+    public bool SendAircraftToPlayer ( Player player, int time, Vector3 sweepDirection )
     {
         if (flightTime > 0 || destroyed)
         {
@@ -34,8 +34,8 @@ public class AircraftCarrier : Ship
         {
             flightTime = time;
             this.sweepDirection = sweepDirection;
-            sweepStep = player.board.sideTileLength / (float)time;
-            sweepPosition = -player.board.sideTileLength / 2.0f;
+            sweepStep = player.board.sideTileLength / (float)time * sweepDirection;
+            sweepPosition = -player.board.sideTileLength / 2.0f * sweepDirection;
         }
         else
         {
@@ -61,8 +61,9 @@ public class AircraftCarrier : Ship
                 {
                     if (!ship.destroyed)
                     {
-                        Vector3 relativePos = ship.transform.localPosition - Vector3.one * sweepPosition;
-                        float difference = sweepDirection == "HORIZONTAL" ? relativePos.x : relativePos.z;
+                        Vector3 relativePos = ship.transform.localPosition - sweepPosition;
+                        Vector3 directional = Vector3.Scale( relativePos, sweepDirection );
+                        float difference = directional.x + directional.z;
                         float distance = Mathf.Abs( difference );
                         if (distance < minimumDistance)
                         {
@@ -77,7 +78,7 @@ public class AircraftCarrier : Ship
             }
             else
             {
-                SendAircraftToPlayer( null, 0, "HORIZONTAL" );
+                SendAircraftToPlayer( null, 0, Vector3.zero );
             }
         }
     }

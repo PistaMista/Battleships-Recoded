@@ -7,7 +7,7 @@ public class AircraftTargeting_UIElement : UIElement
     static Player managedPlayer;
     static Player candidateAircraftTarget;
     static int candidateAircraftFlightTime = 0;
-    static string candidateDirection = "NONE";
+    static Vector3 candidateDirection;
 
     public override void Enable ()
     {
@@ -15,6 +15,10 @@ public class AircraftTargeting_UIElement : UIElement
         managedPlayer = UserInterface.managedBattle.activePlayer;
         flashTime = 0;
         UpdateSweepPreview();
+        if (!managedPlayer.aircraftCarrier.destroyed && managedPlayer.aircraftCarrier.aircraftTarget != null)
+        {
+            AddSweepLine();
+        }
     }
 
     public override void Disable ()
@@ -52,10 +56,13 @@ public class AircraftTargeting_UIElement : UIElement
         //}
 
 
-        if (InputController.screenInputPoints == 2 && !afterCancelLock && TorpedoTargeting_UIElement.candidate == Vector3.zero)
+        if (InputController.screenInputPoints == 2 && !afterCancelLock && TorpedoTargeting_UIElement.candidate == Vector3.zero && managedPlayer.aircraftCarrier.flightTime == 0 && !managedPlayer.aircraftCarrier.destroyed)
         {
-            Vector2 relativePosition = currentPosition - initialPosition;
-            string direction = Mathf.Abs( relativePosition.x ) > Mathf.Abs( relativePosition.y ) ? "HORIZONTAL" : "VERTICAL";
+            Vector3 relativePosition = currentPosition - initialPosition;
+            relativePosition.z = relativePosition.y;
+            relativePosition.y = 0;
+            //string direction = Mathf.Abs( relativePosition.x ) > Mathf.Abs( relativePosition.y ) ? "HORIZONTAL" : "VERTICAL";
+            Vector3 direction = Vector3.Scale( relativePosition, ( Mathf.Abs( relativePosition.x ) > Mathf.Abs( relativePosition.z ) ? Vector3.right : Vector3.forward ) ).normalized;
             if (!initialSelectionLock)
             {
                 if (direction == candidateDirection)
@@ -65,7 +72,7 @@ public class AircraftTargeting_UIElement : UIElement
                     afterCancelLock = true;
                     candidateAircraftTarget = null;
                     candidateAircraftFlightTime = 0;
-                    candidateDirection = "NONE";
+                    candidateDirection = Vector3.zero;
                     UpdateSweepPreview();
                 }
                 else
@@ -79,7 +86,7 @@ public class AircraftTargeting_UIElement : UIElement
             }
             else
             {
-                float distance = Vector2.Distance( initialPosition, currentPosition ) / ( direction == "HORIZONTAL" ? Screen.width : Screen.height ) * 1.25f;
+                float distance = Vector2.Distance( initialPosition, currentPosition ) / ( direction.x != 0 ? Screen.width : Screen.height ) * 1.25f;
                 int time = (int)Mathf.Clamp( distance * Master.vars.maximumAircraftFlightTime, 1, Master.vars.maximumAircraftFlightTime );
                 if (candidateAircraftFlightTime != time)
                 {
@@ -116,14 +123,17 @@ public class AircraftTargeting_UIElement : UIElement
 
     public static void FinalizeTargeting ()
     {
-        if (!managedPlayer.aircraftCarrier.destroyed && candidateAircraftTarget != null)
+        if (managedPlayer != null)
         {
-            managedPlayer.aircraftCarrier.SendAircraftToPlayer( candidateAircraftTarget, candidateAircraftFlightTime, candidateDirection );
-        }
+            if (!managedPlayer.aircraftCarrier.destroyed && candidateAircraftTarget != null)
+            {
+                managedPlayer.aircraftCarrier.SendAircraftToPlayer( candidateAircraftTarget, candidateAircraftFlightTime, candidateDirection );
+            }
 
-        candidateAircraftTarget = null;
-        candidateAircraftFlightTime = 0;
-        candidateDirection = "NONE";
+            candidateAircraftTarget = null;
+            candidateAircraftFlightTime = 0;
+            candidateDirection = Vector3.zero;
+        }
     }
 
     public float previewCycleTime;
@@ -144,13 +154,13 @@ public class AircraftTargeting_UIElement : UIElement
         {
             indicators = new GameObject[candidateAircraftFlightTime];
 
-            Vector3 initialPosition = ( candidateDirection == "HORIZONTAL" ? Vector3.left : Vector3.back ) * candidateAircraftTarget.board.sideTileLength / 2;
-            Vector3 movementStep = -initialPosition.normalized * ( candidateAircraftTarget.board.sideTileLength / (float)candidateAircraftFlightTime );
+            Vector3 initialPosition = -( candidateDirection ) * candidateAircraftTarget.board.sideTileLength / 2;
+            Vector3 movementStep = candidateDirection * ( candidateAircraftTarget.board.sideTileLength / (float)candidateAircraftFlightTime );
 
             for (int i = 0; i < indicators.Length; i++)
             {
-                Vector3 position = initialPosition + movementStep * ( i + 1 ) + Vector3.up * 0.110f + candidateAircraftTarget.transform.position;
-                Vector3 rotation = new Vector3( 90, 0, candidateDirection == "HORIZONTAL" ? 90 : 0 );
+                Vector3 position = initialPosition + movementStep * ( i + 1 ) + Vector3.up * 0.112f + candidateAircraftTarget.transform.position;
+                Vector3 rotation = new Vector3( 90, 0, candidateDirection.x != 0 ? 90 : 0 );
                 Vector3 scale = new Vector3( candidateAircraftTarget.board.sideTileLength + 2, 0.15f, 1 );
 
                 GameObject indicator = GameObject.CreatePrimitive( PrimitiveType.Quad );
@@ -166,6 +176,12 @@ public class AircraftTargeting_UIElement : UIElement
         }
     }
 
+
+    void AddSweepLine ()
+    {
+
+    }
+
     protected override void Update ()
     {
         base.Update();
@@ -177,8 +193,9 @@ public class AircraftTargeting_UIElement : UIElement
                 float opacity = Mathf.Sin( Mathf.PI * ( flashTime - offset ) / previewCycleTime );
 
                 MaterialPropertyBlock block = new MaterialPropertyBlock();
-                Color color = ( initialSelectionLock ? Master.vars.targetingUnconfirmedMaterial : Master.vars.targetingConfirmedMaterial ).GetColor( "_EmissionColor" ) * opacity;
-                block.SetColor( "_EmissionColor", color );
+                Color color = Color.black;
+                color.a *= Mathf.Clamp( opacity, 0.4f, 1.0f );
+                block.SetColor( "_Color", color );
 
                 Renderer rnd = indicators[i].GetComponent<Renderer>();
                 rnd.SetPropertyBlock( block );
