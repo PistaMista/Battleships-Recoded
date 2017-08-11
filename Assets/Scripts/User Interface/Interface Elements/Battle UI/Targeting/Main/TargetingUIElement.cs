@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Security.Cryptography;
 
 public class TargetingUIElement : AttackViewUIElement
 {
@@ -77,6 +78,10 @@ public class TargetingUIElement : AttackViewUIElement
     {
         target.OnRemove();
         targetMarkers.Remove( target );
+        if (targetMarkers.Count == 0)
+        {
+            activeTargetingElements.Remove( this );
+        }
     }
 
     protected override void OnFocusedTap ( Vector2 position )
@@ -114,9 +119,17 @@ public class TargetingUIElement : AttackViewUIElement
 
     public void OnFireButtonPress ()
     {
-        if (targetMarkers.Count > 0)
+        if (targetMarkers != null)
         {
-            ConfirmTargeting();
+            if (targetMarkers.Count > 0)
+            {
+                ConfirmTargeting();
+            }
+        }
+
+        if (gameObject.activeInHierarchy)
+        {
+            Disable();
         }
     }
 

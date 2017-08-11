@@ -21,12 +21,20 @@ public class AttackViewUIElement : UIElement
     public override void Disable ()
     {
         base.Disable();
+        Unfocus();
     }
 
     public sealed override void OnBattleChange ()
     {
         base.OnBattleChange();
-        if (!UserInterface.managedBattle.activePlayer.AI && UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy)
+        if (UserInterface.managedBattle.activePlayer == null)
+        {
+            if (gameObject.activeInHierarchy)
+            {
+                Disable();
+            }
+        }
+        else if (!UserInterface.managedBattle.activePlayer.AI && UserInterface.managedBattle.selectedPlayer != null && !gameObject.activeInHierarchy)
         {
             Enable();
         }
