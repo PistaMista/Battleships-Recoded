@@ -12,12 +12,17 @@ public class AttackView_BoardVisualModule : BoardVisualModule
     public override void Enable ()
     {
         base.Enable();
-        board.visualModules[1].Enable();
+        //board.visualModules[1].Enable();
         board.ReinitializeGrid();
+        Player observer = UserInterface.managedBattle.activePlayer;
+        if (observer == null)
+        {
+            observer = ( UserInterface.managedBattle.singleplayer && !board.owner.battle.turnLog[0].attackedPlayer.AI ) ? board.owner.battle.turnLog[0].attackedPlayer : board.owner.battle.turnLog[0].activePlayer;
+        }
 
         foreach (Ship ship in board.owner.ships)
         {
-            bool revealed = ship.revealedBy.Contains( UserInterface.managedBattle.activePlayer );
+            bool revealed = ship.revealedBy.Contains( observer );
             ship.gameObject.SetActive( !ship.destroyed && revealed );
 
             if (revealed)
@@ -29,9 +34,9 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                     rectangle.transform.SetParent( visualParent.transform );
                     rectangle.transform.position = ship.transform.position + Vector3.up * 0.11f;
 
-                    rectangle.material = Master.vars.destroyedShipHighlightMaterial;
+                    rectangle.material = Master.vars.hitTileIndicatorMaterial;
 
-                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f, 0.1f, true, 0.1f, 0, 0.1f, 0.1f );
+                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f, 0.1f, true, 0, 0, 0.1f, 0.1f );
                 }
                 else
                 {
@@ -44,12 +49,12 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                     {
                         BoardTile inspectedTile = ship.tiles[i];
 
-                        if (( inspectedTile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && inspectedTile.hitBy.Count > 0 ) ) != ( rootTile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && rootTile.hitBy.Count > 0 ) ))
+                        if (( inspectedTile.hitBy.Contains( observer ) || ( observer == board.owner && inspectedTile.hitBy.Count > 0 ) ) != ( rootTile.hitBy.Contains( observer ) || ( observer == board.owner && rootTile.hitBy.Count > 0 ) ))
                         {
                             BoardTile secondTile = ship.tiles[i - 1];
                             Vector3 relative = secondTile.transform.localPosition - rootTile.transform.localPosition;
 
-                            types.Add( rootTile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && rootTile.hitBy.Count > 0 ) );
+                            types.Add( rootTile.hitBy.Contains( observer ) || ( observer == board.owner && rootTile.hitBy.Count > 0 ) );
                             sizes.Add( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f );
                             positions.Add( rootTile.transform.position + relative / 2 );
 
@@ -60,7 +65,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                         {
                             Vector3 relative = inspectedTile.transform.localPosition - rootTile.transform.localPosition;
 
-                            types.Add( rootTile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && rootTile.hitBy.Count > 0 ) );
+                            types.Add( rootTile.hitBy.Contains( observer ) || ( observer == board.owner && rootTile.hitBy.Count > 0 ) );
                             sizes.Add( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f );
                             positions.Add( rootTile.transform.position + relative / 2 );
                         }
@@ -77,7 +82,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                         rectangle.transform.position = position + Vector3.up * 0.11f;
                         rectangle.material = material;
 
-                        rectangle.Set( size, 0.1f, true, 0, types[x] ? 0.1f : 0, 0.1f, 0.1f );
+                        rectangle.Set( size, 0.1f, true, 0, types[x] ? 0 : 0.1f, 0.1f, 0.1f );
                     }
                 }
             }
@@ -88,13 +93,13 @@ public class AttackView_BoardVisualModule : BoardVisualModule
             bool activate = true;
             if (tile.containedShip)
             {
-                if (tile.containedShip.revealedBy.Contains( board.owner.battle.activePlayer ))
+                if (tile.containedShip.revealedBy.Contains( observer ))
                 {
                     activate = false;
                 }
             }
 
-            if (activate && ( tile.hitBy.Contains( board.owner.battle.activePlayer ) || ( board.owner.battle.activePlayer == board.owner && tile.hitBy.Count > 0 ) ))
+            if (activate && ( tile.hitBy.Contains( observer ) || ( observer == board.owner && tile.hitBy.Count > 0 ) ))
             {
                 GameObject indicator = GameObject.CreatePrimitive( PrimitiveType.Quad );
                 indicator.transform.SetParent( visualParent.transform );
