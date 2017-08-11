@@ -11,18 +11,26 @@ public class TargetingUIElement : AttackViewUIElement
 
     public TargetingUIElement[] incompatibleWith;
 
-    public List<object> targets;
+    public List<TargetMarker> targetMarkers;
+
+    public TargetMarker selectedTargetMarker;
+
 
     public override void Enable ()
     {
         base.Enable();
         activeTargetingElements = new List<TargetingUIElement>();
-        targets = new List<object>();
+        targetMarkers = new List<TargetMarker>();
     }
 
     public override void Disable ()
     {
         base.Disable();
+        foreach (TargetMarker targetMarker in targetMarkers)
+        {
+            targetMarker.OnRemove();
+        }
+        targetMarkers = null;
     }
 
     protected sealed override bool IsFocusable ()
@@ -38,11 +46,21 @@ public class TargetingUIElement : AttackViewUIElement
         return base.IsFocusable();
     }
 
-    protected virtual void AddTarget ( object target )
+    protected override void Unfocus ()
     {
-        if (!targets.Contains( target ))
+        base.Unfocus();
+        selectedTargetMarker = null;
+    }
+
+    protected void AddTarget ( object target )
+    {
+        if (!targetMarkers.Find( ( TargetMarker obj ) => obj.target == target ))
         {
-            targets.Add( target );
+            TargetMarker targetMarker = AddTargetMarker( target );
+            targetMarker.target = target;
+            targetMarker.transform.SetParent( transform );
+            targetMarker.SetUp();
+            targetMarkers.Add( targetMarker );
             if (!activeTargetingElements.Contains( this ))
             {
                 activeTargetingElements.Add( this );
@@ -50,28 +68,43 @@ public class TargetingUIElement : AttackViewUIElement
         }
     }
 
-    protected void RemoveTarget ( object target )
+    protected virtual TargetMarker AddTargetMarker ( object target )
     {
-        targets.Remove( target );
-        if (targets.Count == 0)
-        {
-            activeTargetingElements.Remove( this );
-        }
+        return null;
+    }
+
+    protected virtual void RemoveTargetMarker ( TargetMarker target )
+    {
+        target.OnRemove();
+        targetMarkers.Remove( target );
     }
 
     protected override void OnFocusedTap ( Vector2 position )
     {
         base.OnFocusedTap( position );
+        if (selectedTargetMarker != null)
+        {
+            RemoveTargetMarker( selectedTargetMarker );
+        }
     }
 
     protected override void OnFocusedBeginPress ( Vector2 position )
     {
         base.OnFocusedBeginPress( position );
+        foreach (TargetMarker targetMarker in targetMarkers)
+        {
+            if (targetMarker.PositionIntersects( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - targetMarker.transform.position.y ) ))
+            {
+                selectedTargetMarker = targetMarker;
+                break;
+            }
+        }
     }
 
     protected override void OnFocusedEndPress ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnFocusedEndPress( initialPosition, currentPosition );
+        selectedTargetMarker = null;
     }
 
     protected override void OnFocusedDrag ( Vector2 initialPosition, Vector2 currentPosition )
@@ -81,7 +114,7 @@ public class TargetingUIElement : AttackViewUIElement
 
     public void OnFireButtonPress ()
     {
-        if (targets.Count > 0)
+        if (targetMarkers.Count > 0)
         {
             ConfirmTargeting();
         }

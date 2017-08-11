@@ -10,9 +10,12 @@ public class AttackViewUIElement : UIElement
     /// </summary>
     public static AttackViewUIElement focusedElement;
 
+    protected Player viewedPlayer;
+
     public override void Enable ()
     {
         base.Enable();
+        viewedPlayer = UserInterface.managedBattle.selectedPlayer;
     }
 
     public override void Disable ()
@@ -46,11 +49,15 @@ public class AttackViewUIElement : UIElement
     protected virtual void Focus ()
     {
         focusedElement = this;
+        Debug.Log( "Attack view focusing: " + name );
     }
 
     protected virtual void Unfocus ()
     {
-        focusedElement = null;
+        if (focusedElement == this)
+        {
+            focusedElement = null;
+        }
     }
 
     protected sealed override void OnTap ( Vector2 position )
@@ -86,7 +93,7 @@ public class AttackViewUIElement : UIElement
         }
         else if (IsFocused())
         {
-            OnFocusedDrag( initialPosition, currentPosition )
+            OnFocusedDrag( initialPosition, currentPosition );
         }
     }
 
