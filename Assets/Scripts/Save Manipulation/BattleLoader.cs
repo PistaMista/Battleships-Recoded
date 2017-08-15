@@ -141,8 +141,6 @@ public class BattleLoader : MonoBehaviour
                     for (int h = 0; h < tileData.hitBy.Length; h++)
                     {
                         tile.hitBy.Add( players[tileData.hitBy[h]] );
-                        Debug.Log( h );
-                        Debug.Log( players[tileData.hitBy[h]].label );
                     }
                 }
             }

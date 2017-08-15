@@ -185,7 +185,7 @@ public class AircraftTargeting_UIElement : UIElement
         sweepLine = new GameObject( "Sweep Line" );
 
         AircraftSweepLine_GraphicsElement graphic = sweepLine.AddComponent<AircraftSweepLine_GraphicsElement>();
-        graphic.material = Master.vars.aircraftSweepLineMaterial;
+        graphic.mainMaterial = Master.vars.aircraftSweepLineMaterial;
 
         graphic.Set( managedPlayer.aircraftCarrier.aircraftTarget.board.sideTileLength + 2, 0.3f, 0.3f, 0.5f, 0.72f, 0.7f, ( x ) => { return 1 - Mathf.Clamp( x - 0.5f, 0, 1 ) * 2.0f; } );
         sweepLine.transform.SetParent( transform );

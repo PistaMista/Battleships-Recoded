@@ -36,7 +36,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
 
                     rectangle.material = Master.vars.hitTileIndicatorMaterial;
 
-                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f, 0.1f, true, 0, 0, 0.1f, 0.1f );
+                    rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * 0.9f, 0.1f, true, 0, 0, 0.1f, 0.1f, 1.0f );
                 }
                 else
                 {
@@ -82,7 +82,7 @@ public class AttackView_BoardVisualModule : BoardVisualModule
                         rectangle.transform.position = position + Vector3.up * 0.11f;
                         rectangle.material = material;
 
-                        rectangle.Set( size, 0.1f, true, 0, types[x] ? 0 : 0.1f, 0.1f, 0.1f );
+                        rectangle.Set( size, 0.1f, true, 0, types[x] ? 0 : 0.1f, 0.1f, 0.1f, 1.0f );
                     }
                 }
             }

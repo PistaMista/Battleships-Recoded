@@ -125,6 +125,6 @@ public class TorpedoTargeting_UIElement : UIElement
 
         line.material = material;
         line.transform.localPosition = Vector3.forward * lineLength / 2f;
-        line.Set( new Vector2( 0.8f, lineLength ), 0.25f, true, 0, 0.3f, 0.1f, 0.1f );
+        line.Set( new Vector2( 0.8f, lineLength ), 0.25f, true, 0, 0.3f, 0.1f, 0.1f, 1.0f );
     }
 }

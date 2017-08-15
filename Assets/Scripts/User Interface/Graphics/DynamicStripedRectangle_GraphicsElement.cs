@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
+public class DynamicStripedRectangle_GraphicsElement : GraphicsElement
 {
     public Material material;
 
@@ -15,7 +15,6 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     public float diagonalStripeSpacing;
     Rectangle_GraphicsElement baseRectangle;
 
-    GameObject visualParent;
     Vector2 initialPosition;
     Vector2 diagonalDirection;
 
@@ -63,18 +62,15 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
     /// <param name="stripeMovementSpeed">Stripe movement speed.</param>
     /// <param name="stripeWidth">Stripe width.</param>
     /// <param name="stripeSpacing">Stripe spacing.</param>
-    public void Set ( Vector2 size, float sideWidth, bool flat, float backgroundAlpha, float stripeMovementSpeed, float stripeWidth, float stripeSpacing )
+    public void Set ( Vector2 size, float sideWidth, bool flat, float backgroundAlpha, float stripeMovementSpeed, float stripeWidth, float stripeSpacing, float transparency )
     {
-        Destroy( visualParent );
-        visualParent = new GameObject( "Visual Parent" );
-        visualParent.transform.parent = transform;
-        visualParent.transform.localPosition = Vector3.zero;
+        BaseReset();
 
         baseRectangle = new GameObject( "Base Rectangle" ).AddComponent<Rectangle_GraphicsElement>();
-        baseRectangle.material = material;
+        baseRectangle.mainMaterial = material;
         baseRectangle.transform.parent = visualParent.transform;
         baseRectangle.transform.localPosition = Vector3.zero;
-        baseRectangle.Set( size, sideWidth, false, backgroundAlpha );
+        baseRectangle.Set( size, sideWidth, false, backgroundAlpha, transparency );
 
         GameObject stripeObject = new GameObject( "Stripes" );
         stripeObject.transform.parent = visualParent.transform;
@@ -128,7 +124,7 @@ public class DynamicStripedRectangle_GraphicsElement : MonoBehaviour
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
         Vector2 defCorner = baseRectangle.size / 2f - Vector2.one * baseRectangle.sideWidth;
-        Vector2[] corners = new Vector2[] { defCorner, -defCorner, new Vector2( -defCorner.x, defCorner.y ), new Vector2( defCorner.x, -defCorner.y ) };
+        Vector2[] corners = { defCorner, -defCorner, new Vector2( -defCorner.x, defCorner.y ), new Vector2( defCorner.x, -defCorner.y ) };
 
         foreach (Stripe stripe in stripes)
         {

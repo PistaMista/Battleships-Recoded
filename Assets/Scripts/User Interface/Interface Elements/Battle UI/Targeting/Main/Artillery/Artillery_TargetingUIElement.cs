@@ -17,7 +17,9 @@ public class Artillery_TargetingUIElement : TargetingUIElement
     protected override void OnFocusableBeginPress ( Vector2 position )
     {
         base.OnFocusableBeginPress( position );
+        Debug.Log( "Focusable BG" );
         OnFocusedBeginPress( position );
+
         if (selectedTargetMarker != null)
         {
             Focus();
@@ -26,8 +28,8 @@ public class Artillery_TargetingUIElement : TargetingUIElement
 
     protected override void OnFocusableTap ( Vector2 position )
     {
-        BoardTile tile = viewedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y ) );
-        if (tile != null && !( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ) && targetMarkers.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
+        BoardTile tile = (BoardTile)CalculateTargetFromScreenPosition( position );
+        if (tile != null && targetMarkers.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
         {
             AddTarget( tile );
         }
@@ -39,6 +41,17 @@ public class Artillery_TargetingUIElement : TargetingUIElement
     {
         base.OnFocusedEndPress( initialPosition, currentPosition );
         Unfocus();
+    }
+
+    protected override object CalculateTargetFromScreenPosition ( Vector2 position )
+    {
+        BoardTile tile = viewedPlayer.board.GetTileAtWorldPosition( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y ) );
+        if (tile != null && !( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ))
+        {
+            return tile;
+        }
+
+        return null;
     }
 
     protected override TargetMarker AddTargetMarker ( object target )

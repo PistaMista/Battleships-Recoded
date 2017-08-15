@@ -36,18 +36,18 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         visualParent.transform.localPosition = Vector3.up * 3;
         if (board.owner.battle.selectedPlayer == board.owner)
         {
-            background.material = Master.vars.attackedPlayerTagBackgroundMaterial;
+            background.mainMaterial = Master.vars.attackedPlayerTagBackgroundMaterial;
         }
         else
         if (board.owner.battle.activePlayer == board.owner)
         {
-            background.material = Master.vars.activePlayerTagBackgroundMaterial;
+            background.mainMaterial = Master.vars.activePlayerTagBackgroundMaterial;
         }
         else
         {
-            background.material = Master.vars.playerTagBackgroundMaterial;
+            background.mainMaterial = Master.vars.playerTagBackgroundMaterial;
         }
-        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, 0.4f );
+        background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, 0.4f, 1.0f );
         //background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );
 
         float boardDimensions = board.sideTileLength;

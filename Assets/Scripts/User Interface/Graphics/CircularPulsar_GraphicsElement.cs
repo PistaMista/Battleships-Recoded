@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CircularPulsar_GraphicsElement : MonoBehaviour
+public class CircularPulsar_GraphicsElement : GraphicsElement
 {
 
     void Start ()
     {
         //pulses = new List<Pulse>();
     }
-    public Material material;
 
     float pulseWidth;
     float pulseSpeed;
     float pulseSpacing;
-    float transparency;
     int pulsesLeft;
     float maxOuterRadius;
 
@@ -24,7 +22,6 @@ public class CircularPulsar_GraphicsElement : MonoBehaviour
 
     float directionSpacing = 4.0f;
 
-    GameObject parent;
     List<Pulse> pulses;
     struct Pulse
     {
@@ -39,16 +36,13 @@ public class CircularPulsar_GraphicsElement : MonoBehaviour
         this.pulseWidth = pulseWidth;
         this.pulseSpeed = pulseSpeed;
         this.pulseSpacing = pulseSpacing;
-        this.transparency = transparency;
+        this.defaultTransparency = transparency;
         this.transparencyFunction = transparencyFunction;
         this.speedFunction = speedFunction;
         pulsesLeft = maxPulses;
         this.maxOuterRadius = maxOuterRadius;
 
-        Destroy( parent );
-        parent = new GameObject( "Graphical Parent" );
-        parent.transform.SetParent( transform );
-        pulses = new List<Pulse>();
+        BaseReset();
 
         float arc = Mathf.PI * 2 * fullness;
         directions = new Vector3[Mathf.CeilToInt( arc / ( Mathf.Deg2Rad * directionSpacing ) )];
@@ -79,9 +73,9 @@ public class CircularPulsar_GraphicsElement : MonoBehaviour
             pulse.outerRadius += speedFunction( pulse.outerRadius / maxOuterRadius ) * pulseSpeed * Time.deltaTime;
             pulse.innerRadius = Mathf.Clamp( pulse.outerRadius - pulseWidth, 0, Mathf.Infinity );
 
-            float transp = transparencyFunction( pulse.outerRadius / maxOuterRadius );
+            float transparencyFuncMod = transparencyFunction( pulse.outerRadius / maxOuterRadius );
 
-            if (transp <= 0)
+            if (transparencyFuncMod <= 0)
             {
                 Destroy( pulse.render.gameObject );
                 pulses.RemoveAt( i );
@@ -123,7 +117,7 @@ public class CircularPulsar_GraphicsElement : MonoBehaviour
                 //FINALIZATION
                 MaterialPropertyBlock block = new MaterialPropertyBlock();
                 Color color = Color.black;
-                color.a *= transp * transparency;
+                color.a *= transparencyFuncMod * transparencyMod * defaultTransparency;
                 block.SetColor( "_Color", color );
 
                 pulse.render.SetPropertyBlock( block );
@@ -165,8 +159,8 @@ public class CircularPulsar_GraphicsElement : MonoBehaviour
             pulse.innerRadius = 0;
             pulse.render = new GameObject( "Render" ).AddComponent<MeshRenderer>();
 
-            pulse.render.material = material;
-            pulse.render.transform.SetParent( parent.transform );
+            pulse.render.material = mainMaterial;
+            pulse.render.transform.SetParent( visualParent.transform );
             pulse.render.transform.localPosition = Vector3.zero;
             pulse.render.transform.localRotation = Quaternion.Euler( Vector3.right * 180 );
 

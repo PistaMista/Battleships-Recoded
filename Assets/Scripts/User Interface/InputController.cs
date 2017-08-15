@@ -94,7 +94,16 @@ public class InputController : MonoBehaviour
     {
         float clippingDistance = Camera.main.transform.position.y - referenceY;
         currentScreenInputPosition = new Vector3( Input.mousePosition.x, Input.mousePosition.y );
-        beginPress = Input.GetMouseButtonDown( 0 );
+
+        if (beginPress)
+        {
+            beginPress = false;
+        }
+        else
+        {
+            beginPress = Input.GetMouseButtonDown( 0 );
+        }
+
         if (endPress)
         {
             endPress = false;

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Security.Cryptography;
+using System.Linq;
 
 public class TargetingUIElement : AttackViewUIElement
 {
@@ -60,7 +60,7 @@ public class TargetingUIElement : AttackViewUIElement
             TargetMarker targetMarker = AddTargetMarker( target );
             targetMarker.target = target;
             targetMarker.transform.SetParent( transform );
-            targetMarker.SetUp();
+            targetMarker.SetVisualsForTarget( target );
             targetMarkers.Add( targetMarker );
             if (!activeTargetingElements.Contains( this ))
             {
@@ -96,11 +96,13 @@ public class TargetingUIElement : AttackViewUIElement
     protected override void OnFocusedBeginPress ( Vector2 position )
     {
         base.OnFocusedBeginPress( position );
+        Debug.Log( "BEGIN PRESS" );
         foreach (TargetMarker targetMarker in targetMarkers)
         {
             if (targetMarker.PositionIntersects( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - targetMarker.transform.position.y ) ))
             {
                 selectedTargetMarker = targetMarker;
+                targetMarker.StartMove();
                 break;
             }
         }
@@ -109,13 +111,29 @@ public class TargetingUIElement : AttackViewUIElement
     protected override void OnFocusedEndPress ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnFocusedEndPress( initialPosition, currentPosition );
+        if (selectedTargetMarker != null)
+        {
+            selectedTargetMarker.EndMove();
+        }
         selectedTargetMarker = null;
     }
 
     protected override void OnFocusedDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnFocusedDrag( initialPosition, currentPosition );
+        if (selectedTargetMarker != null)
+        {
+            object potentialTarget = CalculateTargetFromScreenPosition( currentPosition );
+            selectedTargetMarker.potentialTarget = potentialTarget;
+            selectedTargetMarker.Moving();
+        }
     }
+
+    protected virtual object CalculateTargetFromScreenPosition ( Vector2 position )
+    {
+        return null;
+    }
+
 
     public void OnFireButtonPress ()
     {
