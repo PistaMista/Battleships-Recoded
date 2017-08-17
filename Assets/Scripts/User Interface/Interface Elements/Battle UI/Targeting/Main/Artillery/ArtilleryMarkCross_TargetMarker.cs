@@ -14,7 +14,7 @@ public class ArtilleryMarkCross_TargetMarker : TargetMarker
     {
         base.SetVisualsForTarget( target );
 
-        ArtilleryMarkCross_GraphicsElement cross = new GameObject( "Artillery Marker Cross" ).AddComponent<ArtilleryMarkCross_GraphicsElement>();
+        ArtilleryMarkCross_DeployableGraphicsElement cross = new GameObject( "Artillery Marker Cross" ).AddComponent<ArtilleryMarkCross_DeployableGraphicsElement>();
         cross.transform.SetParent( transform );
         cross.mainMaterial = Master.vars.targetingUnconfirmedMaterial;
         cross.Set( 0.1f, 1.2f, 1.2f, 1.0f );

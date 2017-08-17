@@ -214,7 +214,6 @@ public class BattleLoader : MonoBehaviour
 
 
         battle.combatants = players;
-        Debug.Log( data.activePlayerID );
         battle.activePlayer = players[data.activePlayerID];
         battle.lastSelectedPlayer = data.lastSelectedPlayer >= 0 ? players[data.lastSelectedPlayer] : null;
 

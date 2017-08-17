@@ -27,10 +27,6 @@ public class TargetingUIElement : AttackViewUIElement
     public override void Disable ()
     {
         base.Disable();
-        foreach (TargetMarker targetMarker in targetMarkers)
-        {
-            targetMarker.OnRemove();
-        }
         targetMarkers = null;
     }
 
@@ -96,7 +92,6 @@ public class TargetingUIElement : AttackViewUIElement
     protected override void OnFocusedBeginPress ( Vector2 position )
     {
         base.OnFocusedBeginPress( position );
-        Debug.Log( "BEGIN PRESS" );
         foreach (TargetMarker targetMarker in targetMarkers)
         {
             if (targetMarker.PositionIntersects( InputController.ConvertToWorldPoint( position, Camera.main.transform.position.y - targetMarker.transform.position.y ) ))

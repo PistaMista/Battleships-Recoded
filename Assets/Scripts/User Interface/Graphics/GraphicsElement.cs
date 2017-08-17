@@ -20,7 +20,7 @@ public class GraphicsElement : MonoBehaviour
 
     public bool destroyAfterTransparencyTransition;
 
-    void Update ()
+    protected virtual void Update ()
     {
         if (Mathf.Abs( transparencyMod - targetTransparencyMod ) > 0.012f)
         {

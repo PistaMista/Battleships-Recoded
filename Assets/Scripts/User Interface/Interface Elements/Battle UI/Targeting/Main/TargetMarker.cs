@@ -15,12 +15,15 @@ public class TargetMarker : MonoBehaviour
     {
         main.targetTransparencyMod = 0.0f;
         main.destroyAfterTransparencyTransition = true;
-        potentialTarget = target;
 
         if (ghost != null)
         {
             Destroy( ghost.gameObject );
+            ghost = null;
         }
+
+        potentialTarget = null;
+        target = null;
     }
 
     public virtual bool PositionIntersects ( Vector3 worldPosition )
@@ -33,6 +36,7 @@ public class TargetMarker : MonoBehaviour
         if (main != null)
         {
             Destroy( main.gameObject );
+            main = null;
         }
     }
 
@@ -56,6 +60,7 @@ public class TargetMarker : MonoBehaviour
                 if (main != null)
                 {
                     Destroy( main.gameObject );
+                    main = null;
                 }
             }
             else
@@ -94,5 +99,10 @@ public class TargetMarker : MonoBehaviour
         {
             Destroy( gameObject );
         }
+    }
+
+    void OnDisable ()
+    {
+        Destroy( gameObject );
     }
 }

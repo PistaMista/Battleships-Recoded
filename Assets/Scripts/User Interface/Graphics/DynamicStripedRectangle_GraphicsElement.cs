@@ -94,7 +94,6 @@ public class DynamicStripedRectangle_GraphicsElement : GraphicsElement
         int stripeCount = (int)Mathf.Floor( initialPosition.magnitude * 2f / ( diagonalStripeWidth + diagonalStripeSpacing ) );
         diagonalStripeSpacing += ( initialPosition.magnitude * 2f - stripeCount * ( stripeWidth + stripeSpacing ) ) / (float)stripeCount;
 
-        Debug.Log( stripeCount );
         float currentLinePosition = 0;
 
         for (int i = 0; i < stripeCount; i++)

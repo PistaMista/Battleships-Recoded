@@ -17,7 +17,6 @@ public class Artillery_TargetingUIElement : TargetingUIElement
     protected override void OnFocusableBeginPress ( Vector2 position )
     {
         base.OnFocusableBeginPress( position );
-        Debug.Log( "Focusable BG" );
         OnFocusedBeginPress( position );
 
         if (selectedTargetMarker != null)

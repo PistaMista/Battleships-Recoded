@@ -29,7 +29,7 @@ public class BattleVisualModule : ScriptableObject
     public virtual void ProcessArtilleryAttack ( PlayerTurnActionInformation turnInfo )
     {
         running = true;
-        InputController.onTap += Skip;
+        //InputController.onTap += Skip;
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class BattleVisualModule : ScriptableObject
     public virtual void ProcessTorpedoAttack ( PlayerTurnActionInformation turnInfo )
     {
         running = true;
-        InputController.onTap += Skip;
+        //InputController.onTap += Skip;
     }
 
     /// <summary>
