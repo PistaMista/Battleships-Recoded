@@ -62,5 +62,6 @@ public class GraphicsElement : MonoBehaviour
         visualParent = new GameObject( "Graphical Parent" );
         visualParent.transform.SetParent( transform );
         visualParent.transform.localPosition = Vector3.zero;
+        visualParent.transform.localRotation = Quaternion.Euler( Vector3.zero );
     }
 }

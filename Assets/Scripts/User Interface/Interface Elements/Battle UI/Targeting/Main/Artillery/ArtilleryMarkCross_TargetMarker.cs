@@ -12,13 +12,17 @@ public class ArtilleryMarkCross_TargetMarker : TargetMarker
 
     public override void SetVisualsForTarget ( object target )
     {
-        base.SetVisualsForTarget( target );
+        //base.SetVisualsForTarget( target );
+        if (main == null)
+        {
+            ArtilleryMarkCross_DeployableGraphicsElement cross = new GameObject( "Artillery Marker Cross" ).AddComponent<ArtilleryMarkCross_DeployableGraphicsElement>();
+            cross.transform.SetParent( transform );
+            cross.mainMaterial = Master.vars.targetingUnconfirmedMaterial;
+            cross.Set( 0.35f, 1.65f, 0.85f, 1.0f );
+            cross.transform.rotation = Quaternion.Euler( new Vector3( 90, 45, 0 ) );
+            main = cross;
+        }
 
-        ArtilleryMarkCross_DeployableGraphicsElement cross = new GameObject( "Artillery Marker Cross" ).AddComponent<ArtilleryMarkCross_DeployableGraphicsElement>();
-        cross.transform.SetParent( transform );
-        cross.mainMaterial = Master.vars.targetingUnconfirmedMaterial;
-        cross.Set( 0.1f, 1.2f, 1.2f, 1.0f );
-        cross.transform.position = ( (BoardTile)target ).transform.position + Vector3.up * 0.111f;
-        main = cross;
+        main.transform.position = ( (BoardTile)target ).transform.position + Vector3.up * 0.111f;
     }
 }
