@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AttackViewMisc_AttackViewUIElement : AttackViewUIElement
 {
-    public GameObject fireButton;
+    public Button fireButton;
+    RectTransform fireButtonTransform;
+    public Vector2 retractedFireButtonPosition;
+    public Vector2 extendedFireButtonPosition;
+    Vector2 fireButtonVelocity;
 
     public override void Enable ()
     {
         base.Enable();
-        fireButton.SetActive( false );
+        fireButton.gameObject.SetActive( true );
+        fireButtonTransform = fireButton.GetComponent<RectTransform>();
+        fireButtonTransform.anchoredPosition = retractedFireButtonPosition;
 
         viewedPlayer.board.visualModules[2].Enable();
         viewedPlayer.board.visualModules[1].Enable();
@@ -21,7 +28,7 @@ public class AttackViewMisc_AttackViewUIElement : AttackViewUIElement
         {
             viewedPlayer.board.visualModules[2].Disable();
         }
-        fireButton.SetActive( false );
+        fireButton.gameObject.SetActive( false );
         base.Disable();
     }
 
@@ -39,18 +46,13 @@ public class AttackViewMisc_AttackViewUIElement : AttackViewUIElement
         base.Update();
         if (TargetingUIElement.activeTargetingElements != null)
         {
-            if (TargetingUIElement.activeTargetingElements.Count > 0)
-            {
-                fireButton.SetActive( true );
-            }
-            else
-            {
-                fireButton.SetActive( false );
-            }
+            fireButton.interactable = TargetingUIElement.activeTargetingElements.Count > 0;
         }
         else
         {
-            fireButton.SetActive( false );
+            fireButton.interactable = false;
         }
+
+        fireButtonTransform.anchoredPosition = Vector2.SmoothDamp( fireButtonTransform.anchoredPosition, fireButton.interactable ? extendedFireButtonPosition : retractedFireButtonPosition, ref fireButtonVelocity, 0.3f, Mathf.Infinity, Time.deltaTime );
     }
 }
