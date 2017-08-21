@@ -28,7 +28,7 @@ public class Artillery_TargetingUIElement : TargetingUIElement
     protected override void OnFocusableTap ( Vector2 position )
     {
         BoardTile tile = (BoardTile)CalculateTargetFromScreenPosition( position );
-        if (tile != null && targetMarkers.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
+        if (tile != null && targetMarkers.Count < UserInterface.managedBattle.activePlayer.gunTargetCap)
         {
             AddTarget( tile );
         }

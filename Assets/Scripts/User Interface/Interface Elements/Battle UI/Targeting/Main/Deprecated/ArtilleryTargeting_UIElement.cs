@@ -78,7 +78,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                     }
                     else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ) && TorpedoTargeting_UIElement.candidate == Vector3.zero)
                     {
-                        if (candidates.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
+                        if (candidates.Count < UserInterface.managedBattle.activePlayer.gunTargetCap)
                         {
                             candidates.Add( tile );
                         }
