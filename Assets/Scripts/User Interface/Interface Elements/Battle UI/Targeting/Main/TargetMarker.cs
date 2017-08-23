@@ -78,9 +78,12 @@ public class TargetMarker : MonoBehaviour
         if (potentialTarget != null)
         {
             target = potentialTarget;
-            ghost.targetTransparencyMod = 0.0f;
-            ghost.destroyAfterTransparencyTransition = true;
-            ghost = null;
+            if (ghost != null)
+            {
+                ghost.targetTransparencyMod = 0.0f;
+                ghost.destroyAfterTransparencyTransition = true;
+                ghost = null;
+            }
         }
         else
         {

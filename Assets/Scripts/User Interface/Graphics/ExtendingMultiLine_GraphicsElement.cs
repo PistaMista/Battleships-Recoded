@@ -9,14 +9,6 @@ public class ExtendingMultiLine_GraphicsElement : GraphicsElement
     float lineSpacing;
     float lineDeployTime;
 
-    private void Start ()
-    {
-        Reset( 1, 10, 3, 1.0f, 1 );
-        AddLine();
-        AddLine();
-        //AddLine();
-    }
-
     struct Line
     {
         public Renderer renderer;
@@ -29,9 +21,13 @@ public class ExtendingMultiLine_GraphicsElement : GraphicsElement
 
     List<Line> lines;
 
-    public void Reset ( float lineWidth, float lineLength, float lineSpacing, float lineDeployTime, float transparency )
+    public void Reset ( float lineWidth, float lineLength, float lineSpacing, float lineDeployTime, float transparency, bool flat )
     {
         BaseReset();
+        if (flat)
+        {
+            visualParent.transform.rotation = Quaternion.Euler( 90, 0, 0 );
+        }
         lines = new List<Line>();
 
         this.lineWidth = lineWidth;
@@ -95,7 +91,7 @@ public class ExtendingMultiLine_GraphicsElement : GraphicsElement
         for (int i = 0; i < lines.Count; i++)
         {
             Line line = lines[i];
-            Vector3 currentPosition = new Vector3( line.quad.transform.position.x, 0, 0 );
+            Vector3 currentPosition = new Vector3( line.quad.transform.localPosition.x, 0, 0 );
 
             line.quad.transform.localScale = new Vector3( lineWidth, Mathf.SmoothDamp( line.quad.transform.localScale.y, line.removing ? 0 : lineLength, ref line.lengthChangeRate, lineDeployTime, Mathf.Infinity ), 1 );
             line.quad.transform.localPosition = Vector3.SmoothDamp( currentPosition, line.targetPosition, ref line.velocity, lineDeployTime, Mathf.Infinity ) + Vector3.up * ( line.quad.transform.localScale.y / 2.0f );

@@ -181,6 +181,9 @@ public class BattleLoader : MonoBehaviour
 
                 ship.PositionOnBoard();
             }
+
+            //HACK DESTROYER TEST
+            player.destroyer.torpedoes = 3;
         }
 
         //HITS

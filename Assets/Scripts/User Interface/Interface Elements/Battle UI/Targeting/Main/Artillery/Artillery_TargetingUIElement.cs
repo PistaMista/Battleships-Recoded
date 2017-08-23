@@ -55,7 +55,7 @@ public class Artillery_TargetingUIElement : TargetingUIElement
 
     protected override TargetMarker AddTargetMarker ( object target )
     {
-        ArtilleryMarkCross_TargetMarker marker = new GameObject( "Marker" ).AddComponent<ArtilleryMarkCross_TargetMarker>();
+        ArtilleryMarkCross_TargetMarker marker = new GameObject( "Artillery Marker" ).AddComponent<ArtilleryMarkCross_TargetMarker>();
         return marker;
     }
 
