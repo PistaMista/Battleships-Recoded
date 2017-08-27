@@ -98,7 +98,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 Rectangle_GraphicsElement rectangle = new GameObject( "Highlight Rectangle for " + ship.name ).AddComponent<Rectangle_GraphicsElement>();
                 rectangle.transform.SetParent( highlightParent.transform );
                 rectangle.transform.position = ship.transform.position + Vector3.up * 0.11f;
-                rectangle.mainMaterial = Master.vars.shipPlacementIndicatorMaterial;
+                rectangle.MainMaterial = Master.vars.shipPlacementIndicatorMaterial;
 
                 float modifier = 1f - 0.1f;
                 rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * modifier, 0.1f, true, 0.2f, 1.0f );

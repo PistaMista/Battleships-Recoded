@@ -67,7 +67,7 @@ public class DynamicStripedRectangle_GraphicsElement : GraphicsElement
         BaseReset();
 
         baseRectangle = new GameObject( "Base Rectangle" ).AddComponent<Rectangle_GraphicsElement>();
-        baseRectangle.mainMaterial = material;
+        baseRectangle.MainMaterial = material;
         baseRectangle.transform.parent = visualParent.transform;
         baseRectangle.transform.localPosition = Vector3.zero;
         baseRectangle.Set( size, sideWidth, false, backgroundAlpha, transparency );

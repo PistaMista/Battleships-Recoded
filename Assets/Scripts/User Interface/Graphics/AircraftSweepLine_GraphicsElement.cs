@@ -20,7 +20,7 @@ public class AircraftSweepLine_GraphicsElement : GraphicsElement
         quad.transform.localScale = new Vector3( width, length, 1 );
 
         Renderer render = quad.GetComponent<Renderer>();
-        render.material = mainMaterial;
+        render.material = MainMaterial;
 
         MaterialPropertyBlock block = new MaterialPropertyBlock();
         Color color = Color.black;
@@ -34,7 +34,7 @@ public class AircraftSweepLine_GraphicsElement : GraphicsElement
         this.width = width;
 
         CircularPulsar_GraphicsElement pulsar = new GameObject( "Pulsar" ).AddComponent<CircularPulsar_GraphicsElement>();
-        pulsar.mainMaterial = mainMaterial;
+        pulsar.MainMaterial = MainMaterial;
         pulsar.Set( pulseWidth, pulseSpeed, pulseSpacing, transparency * transparencyMod, fallOffFunction, ( x ) => { return 1; }, 0.5f, 9999999, length / 2.0f, true );
 
         pulsar.gameObject.transform.SetParent( visualParent.transform );

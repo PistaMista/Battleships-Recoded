@@ -36,16 +36,16 @@ public class TacticalView_BoardVisualModule : BoardVisualModule
         visualParent.transform.localPosition = Vector3.up * 3;
         if (board.owner.battle.selectedPlayer == board.owner)
         {
-            background.mainMaterial = Master.vars.attackedPlayerTagBackgroundMaterial;
+            background.MainMaterial = Master.vars.attackedPlayerTagBackgroundMaterial;
         }
         else
         if (board.owner.battle.activePlayer == board.owner)
         {
-            background.mainMaterial = Master.vars.activePlayerTagBackgroundMaterial;
+            background.MainMaterial = Master.vars.activePlayerTagBackgroundMaterial;
         }
         else
         {
-            background.mainMaterial = Master.vars.playerTagBackgroundMaterial;
+            background.MainMaterial = Master.vars.playerTagBackgroundMaterial;
         }
         background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, 0.4f, 1.0f );
         //background.Set( new Vector2( textBounds.extents.x * 2 * 1.2f, textBounds.extents.z * 2 * 1.2f ), textBounds.extents.z / 8f, true, textBounds.extents.x / 10f, textBounds.extents.z / 8f, textBounds.extents.z / 8f );

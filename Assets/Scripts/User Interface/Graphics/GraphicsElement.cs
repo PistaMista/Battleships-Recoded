@@ -8,7 +8,7 @@ public class GraphicsElement : MonoBehaviour
 
     public float transparencyModTransitionTime = 0.31f;
 
-    public Material mainMaterial;
+    private Material mainMaterial;
 
     public float transparencyModTransitionSpeed;
 
@@ -19,6 +19,23 @@ public class GraphicsElement : MonoBehaviour
     public GameObject visualParent;
 
     public bool destroyAfterTransparencyTransition;
+
+    public Material MainMaterial
+    {
+        get
+        {
+            return mainMaterial;
+        }
+        set
+        {
+            mainMaterial = value;
+            foreach (Renderer render in GetComponentsInChildren<Renderer>())
+            {
+                render.material = value;
+                SetTransparencyForRenderer( render, defaultTransparency * transparencyMod );
+            }
+        }
+    }
 
     protected virtual void Update ()
     {

@@ -41,7 +41,7 @@ public class BattleLoader : MonoBehaviour
         Player[] players = new Player[data.combatants.Length];
         int humans = 0;
         battle.singleplayer = data.singleplayer;
-        BattleVisualModule visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Cinematic_BattleVisualModule" );
+        BattleVisualModule visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
         visualModule.battle = battle;
         battle.visualModule = visualModule;
 

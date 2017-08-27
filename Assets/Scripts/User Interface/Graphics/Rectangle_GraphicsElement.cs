@@ -41,7 +41,7 @@ public class Rectangle_GraphicsElement : GraphicsElement
             tmp.transform.localScale = scale;
 
             Renderer render = tmp.GetComponent<Renderer>();
-            render.material = mainMaterial;
+            render.material = MainMaterial;
             SetTransparencyForRenderer( render, defaultTransparency * transparencyMod );
 
             renderers[(int)( direction / 2.0f + 0.5f )] = render;
@@ -58,7 +58,7 @@ public class Rectangle_GraphicsElement : GraphicsElement
             tmp.transform.localScale = scale;
 
             Renderer render = tmp.GetComponent<Renderer>();
-            render.material = mainMaterial;
+            render.material = MainMaterial;
             SetTransparencyForRenderer( render, defaultTransparency * transparencyMod );
 
             renderers[(int)( direction / 2.0f + 2.5f )] = render;
@@ -73,7 +73,7 @@ public class Rectangle_GraphicsElement : GraphicsElement
 
             Renderer render = bg.GetComponent<Renderer>();
             bgRenderer = render;
-            render.material = mainMaterial;
+            render.material = MainMaterial;
 
             SetTransparencyForRenderer( render, backgroundTransparency );
 

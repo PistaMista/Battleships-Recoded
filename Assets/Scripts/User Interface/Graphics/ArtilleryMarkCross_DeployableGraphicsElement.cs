@@ -24,7 +24,7 @@ public class ArtilleryMarkCross_DeployableGraphicsElement : DeployableGraphicsEl
         {
             Renderer quad = GameObject.CreatePrimitive( PrimitiveType.Quad ).GetComponent<Renderer>();
             quad.transform.SetParent( visualParent.transform );
-            quad.material = mainMaterial;
+            quad.material = MainMaterial;
             SetTransparencyForRenderer( quad, defaultTransparency * transparencyMod );
             renderers[i] = quad;
             ManageLine( i, 0 );

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class ExtendingMultiLine_GraphicsElement : GraphicsElement
 {
-    float lineWidth;
-    float lineLength;
-    float lineSpacing;
-    float lineDeployTime;
+    public float lineWidth;
+    public float lineLength;
+    public float lineSpacing;
+    public float lineDeployTime;
+    public List<Line> lines;
 
-    struct Line
+    [System.Serializable]
+    public struct Line
     {
         public Renderer renderer;
         public GameObject quad;
@@ -19,7 +21,6 @@ public class ExtendingMultiLine_GraphicsElement : GraphicsElement
         public bool removing;
     }
 
-    List<Line> lines;
 
     public void Reset ( float lineWidth, float lineLength, float lineSpacing, float lineDeployTime, float transparency, bool flat )
     {
@@ -37,30 +38,54 @@ public class ExtendingMultiLine_GraphicsElement : GraphicsElement
         defaultTransparency = transparency;
     }
 
-    public void AddLine ()
+    public void AddLine ( int count )
     {
-        Line line = new Line();
-        line.quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
-        line.quad.transform.SetParent( visualParent.transform );
-        line.quad.transform.localScale = new Vector3( lineWidth, 0, 1 );
-        line.quad.transform.localRotation = Quaternion.Euler( Vector3.zero );
-        line.renderer = line.quad.GetComponent<Renderer>();
-        line.renderer.material = mainMaterial;
-        line.removing = false;
+        for (int i = 0; i < count; i++)
+        {
+            Line line = new Line();
+            line.quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
+            line.quad.transform.SetParent( visualParent.transform );
+            line.quad.transform.localScale = new Vector3( lineWidth, 0, 1 );
+            line.quad.transform.localRotation = Quaternion.Euler( Vector3.zero );
+            line.renderer = line.quad.GetComponent<Renderer>();
+            line.renderer.material = MainMaterial;
+            line.removing = false;
 
-        lines.Add( line );
-        RecalculateTargetPositions();
+            lines.Add( line );
+            RecalculateTargetPositions();
 
-        line.quad.transform.localPosition = lines[lines.Count - 1].targetPosition;
+            line.quad.transform.localPosition = lines[lines.Count - 1].targetPosition;
+        }
     }
 
-    public void RemoveLine ()
+    public void RemoveLine ( int count )
     {
-        if (lines.Count > 0)
+        for (int i = 0; i < count; i++)
         {
-            Line line = lines[lines.Count - 1];
-            line.removing = true;
-            lines[lines.Count - 1] = line;
+            for (int x = lines.Count - 1; x >= 0; x--)
+            {
+                Line line = lines[x];
+                if (!line.removing)
+                {
+                    line.removing = true;
+                    lines[x] = line;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void SetLineCount ( int count )
+    {
+        int actualCount = lines.FindAll( ( obj ) => !obj.removing ).Count;
+
+        if (count > actualCount)
+        {
+            AddLine( count - actualCount );
+        }
+        else if (count < actualCount)
+        {
+            RemoveLine( actualCount - count );
         }
     }
 

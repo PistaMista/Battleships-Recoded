@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class TargetMarker : MonoBehaviour
 {
-
-    public object target;
-    public object potentialTarget;
+    public TargetingUIElement.Target target;
+    public TargetingUIElement.Target potentialTarget;
 
     public GraphicsElement main;
     public GraphicsElement ghost;
@@ -22,8 +21,8 @@ public class TargetMarker : MonoBehaviour
             ghost = null;
         }
 
-        potentialTarget = null;
-        target = null;
+        potentialTarget.target = null;
+        target.target = null;
     }
 
     public virtual bool PositionIntersects ( Vector3 worldPosition )
@@ -31,13 +30,9 @@ public class TargetMarker : MonoBehaviour
         return false;
     }
 
-    public virtual void SetVisualsForTarget ( object target )
+    public virtual void SetVisualsForTarget ( TargetingUIElement.Target target )
     {
-        if (main != null)
-        {
-            Destroy( main.gameObject );
-            main = null;
-        }
+        main.MainMaterial = target.valid ? Master.vars.targetValidMaterial : Master.vars.targetInvalidMaterial;
     }
 
     public virtual void StartMove ()
@@ -50,12 +45,12 @@ public class TargetMarker : MonoBehaviour
         lastTarget = null;
     }
 
-    object lastTarget;
+    protected object lastTarget;
     public virtual void Moving ()
     {
-        if (potentialTarget != lastTarget)
+        if (potentialTarget.target != lastTarget)
         {
-            if (potentialTarget == null)
+            if (potentialTarget.target == null)
             {
                 if (main != null)
                 {
@@ -75,7 +70,7 @@ public class TargetMarker : MonoBehaviour
 
     public virtual void EndMove ()
     {
-        if (potentialTarget != null)
+        if (potentialTarget.valid)
         {
             target = potentialTarget;
             if (ghost != null)
@@ -87,6 +82,12 @@ public class TargetMarker : MonoBehaviour
         }
         else
         {
+            if (main != null)
+            {
+                main.targetTransparencyMod = 0.0f;
+                main.destroyAfterTransparencyTransition = true;
+            }
+
             if (ghost != null)
             {
                 main = ghost;

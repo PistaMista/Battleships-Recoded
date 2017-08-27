@@ -16,6 +16,46 @@ public class TargetingUIElement : AttackViewUIElement
 
     public TargetMarker selectedTargetMarker;
 
+    public struct Target
+    {
+        public object target;
+        public bool valid;
+
+        public Target ( object target, bool valid )
+        {
+            this.target = target;
+            this.valid = valid;
+        }
+
+        public static bool operator == ( Target a, Target b )
+        {
+            return a.target == b.target && a.valid == b.valid;
+        }
+
+        public static bool operator != ( Target a, Target b )
+        {
+            return !( a.target == b.target && a.valid == b.valid );
+        }
+
+        public override bool Equals ( object obj )
+        {
+            if (obj != typeof( Target ))
+            {
+                return false;
+            }
+
+            Target tar = (Target)obj;
+
+            return tar.target == target && tar.valid == valid;
+        }
+
+        public override int GetHashCode ()
+        {
+            return base.GetHashCode();
+        }
+    }
+
+
 
     public override void Enable ()
     {
@@ -49,9 +89,9 @@ public class TargetingUIElement : AttackViewUIElement
         selectedTargetMarker = null;
     }
 
-    protected void AddTarget ( object target )
+    protected void AddTarget ( Target target )
     {
-        if (!targetMarkers.Find( ( TargetMarker obj ) => obj.target == target ))
+        if (!targetMarkers.Find( ( TargetMarker obj ) => obj.Equals( target ) ))
         {
             TargetMarker targetMarker = AddTargetMarker( target );
             targetMarker.target = target;
@@ -65,7 +105,7 @@ public class TargetingUIElement : AttackViewUIElement
         }
     }
 
-    protected virtual TargetMarker AddTargetMarker ( object target )
+    protected virtual TargetMarker AddTargetMarker ( Target target )
     {
         return null;
     }
@@ -111,6 +151,15 @@ public class TargetingUIElement : AttackViewUIElement
             selectedTargetMarker.EndMove();
         }
         selectedTargetMarker = null;
+
+        for (int i = 0; i < targetMarkers.Count; i++)
+        {
+            if (!targetMarkers[i].target.valid)
+            {
+                RemoveTargetMarker( targetMarkers[i] );
+                i--;
+            }
+        }
     }
 
     protected override void OnFocusedDrag ( Vector2 initialPosition, Vector2 currentPosition )
@@ -118,15 +167,15 @@ public class TargetingUIElement : AttackViewUIElement
         base.OnFocusedDrag( initialPosition, currentPosition );
         if (selectedTargetMarker != null)
         {
-            object potentialTarget = CalculateTargetFromScreenPosition( currentPosition );
+            Target potentialTarget = CalculateTargetFromScreenPosition( currentPosition );
             selectedTargetMarker.potentialTarget = potentialTarget;
             selectedTargetMarker.Moving();
         }
     }
 
-    protected virtual object CalculateTargetFromScreenPosition ( Vector2 position )
+    protected virtual Target CalculateTargetFromScreenPosition ( Vector2 position )
     {
-        return null;
+        return new Target( null, false );
     }
 
 

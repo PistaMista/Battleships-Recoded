@@ -91,15 +91,11 @@ public class InspectorVariableContainer : MonoBehaviour
     /// <summary>
     /// The targeting unconfirmed material.
     /// </summary>
-    public Material targetingUnconfirmedMaterial;
+    public Material targetValidMaterial;
     /// <summary>
     /// The targeting confirmed material.
     /// </summary>
-    public Material targetingConfirmedMaterial;
-    /// <summary>
-    /// The targeting failed material.
-    /// </summary>
-    public Material targetingFailedMaterial;
+    public Material targetInvalidMaterial;
     /// <summary>
     /// The aircraft sweep line material.
     /// </summary>

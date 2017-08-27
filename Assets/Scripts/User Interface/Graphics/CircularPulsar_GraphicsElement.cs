@@ -159,7 +159,7 @@ public class CircularPulsar_GraphicsElement : GraphicsElement
             pulse.innerRadius = 0;
             pulse.render = new GameObject( "Render" ).AddComponent<MeshRenderer>();
 
-            pulse.render.material = mainMaterial;
+            pulse.render.material = MainMaterial;
             pulse.render.transform.SetParent( visualParent.transform );
             pulse.render.transform.localPosition = Vector3.zero;
             pulse.render.transform.localRotation = Quaternion.Euler( Vector3.right * 180 );
