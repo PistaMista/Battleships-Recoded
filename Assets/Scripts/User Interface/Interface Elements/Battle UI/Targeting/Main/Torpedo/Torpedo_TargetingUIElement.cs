@@ -30,7 +30,7 @@ public class Torpedo_TargetingUIElement : TargetingUIElement
     protected override void OnFocusableDrag ( Vector2 initialPosition, Vector2 currentPosition )
     {
         base.OnFocusableDrag( initialPosition, currentPosition );
-        if (targetMarkers.Count == 0 && !UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1)
+        if (targetMarkers.Count == 0 && !UserInterface.managedBattle.activePlayer.destroyer.destroyed && UserInterface.managedBattle.activePlayer.destroyer.torpedoes >= 1 && InputController.screenInputPoints == 1)
         {
             Focus();
         }
@@ -48,13 +48,6 @@ public class Torpedo_TargetingUIElement : TargetingUIElement
 
     protected override void OnFocusedEndPress ( Vector2 initialPosition, Vector2 currentPosition )
     {
-        //if (selectedTargetMarker != null)
-        //{
-        //    if (selectedTargetMarker.ghost == null && selectedTargetMarker.potentialTarget.valid == false)
-        //    {
-        //        RemoveTargetMarker( selectedTargetMarker );
-        //    }
-        //}
         base.OnFocusedEndPress( initialPosition, currentPosition );
         Unfocus();
     }
@@ -105,7 +98,7 @@ public class Torpedo_TargetingUIElement : TargetingUIElement
         float totalDistance = Vector2.Distance( points[0], points[1] );
         float extendedDistance = Vector2.Distance( position, points[1] );
 
-        int torpedoCount = Mathf.CeilToInt( Mathf.Clamp01( extendedDistance / totalDistance ) * UserInterface.managedBattle.activePlayer.destroyer.torpedoes );
+        int torpedoCount = Mathf.CeilToInt( Mathf.Clamp01( extendedDistance / totalDistance ) * Mathf.Floor( UserInterface.managedBattle.activePlayer.destroyer.torpedoes ) );
 
         Debug.Log( "Torpedo count: " + torpedoCount );
         TorpedoTarget target = new TorpedoTarget( directionThreeDimensional, torpedoCount );

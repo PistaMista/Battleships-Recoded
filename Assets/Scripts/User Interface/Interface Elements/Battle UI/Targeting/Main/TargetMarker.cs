@@ -80,7 +80,7 @@ public class TargetMarker : MonoBehaviour
                 ghost = null;
             }
         }
-        else
+        else if (ghost != null)
         {
             if (main != null)
             {
@@ -88,12 +88,11 @@ public class TargetMarker : MonoBehaviour
                 main.destroyAfterTransparencyTransition = true;
             }
 
-            if (ghost != null)
-            {
-                main = ghost;
-                main.targetTransparencyMod = 1.0f;
-                ghost = null;
-            }
+
+            main = ghost;
+            main.targetTransparencyMod = 1.0f;
+            ghost = null;
+
         }
     }
 

@@ -10,7 +10,7 @@ public class TorpedoMarkLine_TargetMarker : TargetMarker
     {
         Vector3 localPos = main.transform.InverseTransformPoint( worldPosition );
         Debug.Log( "Torpedo target marker:" + localPos );
-        return Mathf.Abs( localPos.x ) < 0.2f;
+        return Mathf.Abs( localPos.x ) < 1.5f;
     }
 
     public override void SetVisualsForTarget ( TargetingUIElement.Target target )
