@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rectangle_GraphicsElement : MonoBehaviour
+public class Rectangle_GraphicsElement : GraphicsElement
 {
-    public Material material;
     public float sideWidth;
     public Vector2 size;
-    GameObject visualParent;
+    float backgroundTransparency;
     // Use this for initialization
     void Start ()
     {
@@ -20,12 +19,16 @@ public class Rectangle_GraphicsElement : MonoBehaviour
 
     }
 
-    public void Set ( Vector2 size, float sideWidth, bool flat, float backgroundAlpha )
+    Renderer[] renderers;
+    Renderer bgRenderer;
+
+    public void Set ( Vector2 size, float sideWidth, bool flat, float backgroundTransparency, float transparency )
     {
-        Destroy( visualParent );
-        visualParent = new GameObject( "Visual Parent" );
-        visualParent.transform.parent = transform;
-        visualParent.transform.localPosition = Vector3.zero;
+        BaseReset();
+
+        renderers = new Renderer[4];
+        defaultTransparency = transparency;
+        this.backgroundTransparency = backgroundTransparency;
 
         for (int direction = -1; direction < 2; direction += 2)
         {
@@ -37,7 +40,11 @@ public class Rectangle_GraphicsElement : MonoBehaviour
             tmp.transform.localPosition = position;
             tmp.transform.localScale = scale;
 
-            tmp.GetComponent<Renderer>().material = material;
+            Renderer render = tmp.GetComponent<Renderer>();
+            render.material = MainMaterial;
+            SetTransparencyForRenderer( render, defaultTransparency * transparencyMod );
+
+            renderers[(int)( direction / 2.0f + 0.5f )] = render;
         }
 
         for (int direction = -1; direction < 2; direction += 2)
@@ -50,28 +57,41 @@ public class Rectangle_GraphicsElement : MonoBehaviour
             tmp.transform.localPosition = position;
             tmp.transform.localScale = scale;
 
-            tmp.GetComponent<Renderer>().material = material;
+            Renderer render = tmp.GetComponent<Renderer>();
+            render.material = MainMaterial;
+            SetTransparencyForRenderer( render, defaultTransparency * transparencyMod );
+
+            renderers[(int)( direction / 2.0f + 2.5f )] = render;
         }
 
-        if (backgroundAlpha > 0)
+        if (backgroundTransparency > 0)
         {
             GameObject bg = GameObject.CreatePrimitive( PrimitiveType.Quad );
             bg.transform.SetParent( visualParent.transform );
             bg.transform.localPosition = Vector3.forward * 0.001f;
             bg.transform.localScale = size - Vector2.one * sideWidth * 2;
-            Renderer rd = bg.GetComponent<Renderer>();
 
-            MaterialPropertyBlock matBlock = new MaterialPropertyBlock();
-            Color color = material.color;
-            color.a = backgroundAlpha;
-            matBlock.SetColor( "_Color", color );
+            Renderer render = bg.GetComponent<Renderer>();
+            bgRenderer = render;
+            render.material = MainMaterial;
 
-            rd.material = material;
-            rd.SetPropertyBlock( matBlock );
+            SetTransparencyForRenderer( render, backgroundTransparency );
+
         }
 
         this.sideWidth = sideWidth;
         this.size = size;
         visualParent.transform.rotation = Quaternion.Euler( Vector3.right * ( flat ? 90 : 0 ) );
+    }
+
+    protected override void SetTransparencyMod ( float transparencyMod )
+    {
+        base.SetTransparencyMod( transparencyMod );
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SetTransparencyForRenderer( renderers[i], defaultTransparency * transparencyMod );
+        }
+
+        SetTransparencyForRenderer( bgRenderer, backgroundTransparency * transparencyMod );
     }
 }

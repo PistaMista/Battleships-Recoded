@@ -60,7 +60,7 @@ public class Player_AI : Player
 
         foreach (BoardTile tile in battle.selectedPlayer.board.tiles)
         {
-            if (results.Count < shotCapacity)
+            if (results.Count < gunTargetCap)
             {
                 if (tile.revealedBy.Contains( this ) && !( hits.ContainsKey( tile ) ))
                 {
@@ -191,7 +191,7 @@ public class Player_AI : Player
             }
         }
 
-        for (int i = 0; i < shotCapacity * 2 && results.Count < shotCapacity; i++)
+        for (int i = 0; i < gunTargetCap * 2 && results.Count < gunTargetCap; i++)
         {
             int targetRank = Random.Range( 0, highestRank - 1 );
             //Choose a rank to pick a tile from

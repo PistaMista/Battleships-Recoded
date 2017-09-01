@@ -5,7 +5,6 @@ using UnityEngine;
 public class InputController : MonoBehaviour
 {
 
-    //The y layer at which to process input
     /// <summary>
     /// The y layer at which to process input.
     /// </summary>
@@ -94,7 +93,16 @@ public class InputController : MonoBehaviour
     {
         float clippingDistance = Camera.main.transform.position.y - referenceY;
         currentScreenInputPosition = new Vector3( Input.mousePosition.x, Input.mousePosition.y );
-        beginPress = Input.GetMouseButtonDown( 0 );
+
+        if (beginPress)
+        {
+            beginPress = false;
+        }
+        else
+        {
+            beginPress = Input.GetMouseButtonDown( 0 );
+        }
+
         if (endPress)
         {
             endPress = false;
@@ -128,8 +136,24 @@ public class InputController : MonoBehaviour
             pressed = false;
         }
 
-        beginPress = !lastState && pressed;
-        endPress = lastState && !pressed;
+        if (beginPress)
+        {
+            beginPress = false;
+        }
+        else
+        {
+            beginPress = !lastState && pressed;
+        }
+
+        if (endPress)
+        {
+            endPress = false;
+        }
+        else
+        {
+            endPress = lastState && !pressed;
+
+        }
 
         lastState = pressed;
     }

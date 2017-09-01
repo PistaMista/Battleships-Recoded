@@ -72,7 +72,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 Vector3 relative = selectedTiles[selectedTiles.Count - 1].transform.position - selectedTiles[0].transform.position;
                 indicator.transform.position = relative / 2f + selectedTiles[0].transform.position + Vector3.up * 0.12f;
 
-                indicator.Set( new Vector2( Mathf.Clamp( Mathf.Abs( relative.x ) + 1, 1, Mathf.Infinity ), Mathf.Clamp( Mathf.Abs( relative.z ) + 1, 1, Mathf.Infinity ) ), 0.1f, true, 0.2f, 0.5f, 0.1f, 0.1f );
+                indicator.Set( new Vector2( Mathf.Clamp( Mathf.Abs( relative.x ) + 1, 1, Mathf.Infinity ), Mathf.Clamp( Mathf.Abs( relative.z ) + 1, 1, Mathf.Infinity ) ), 0.1f, true, 0.2f, 0.5f, 0.1f, 0.1f, 1.0f );
             }
             else
             {
@@ -98,10 +98,10 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 Rectangle_GraphicsElement rectangle = new GameObject( "Highlight Rectangle for " + ship.name ).AddComponent<Rectangle_GraphicsElement>();
                 rectangle.transform.SetParent( highlightParent.transform );
                 rectangle.transform.position = ship.transform.position + Vector3.up * 0.11f;
-                rectangle.material = Master.vars.shipPlacementIndicatorMaterial;
+                rectangle.MainMaterial = Master.vars.shipPlacementIndicatorMaterial;
 
                 float modifier = 1f - 0.1f;
-                rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * modifier, 0.1f, true, 0.2f );
+                rectangle.Set( new Vector2( Mathf.Abs( relative.x ), Mathf.Abs( relative.z ) ) + Vector2.one * modifier, 0.1f, true, 0.2f, 1.0f );
             }
         }
     }
@@ -122,7 +122,7 @@ public class ShipPositioner_BoardVisualModule : BoardVisualModule
                 restrictionIndicator.transform.SetParent( invalidTileHighlightParent.transform );
                 restrictionIndicator.transform.position = tile.transform.position + Vector3.up * 0.11f;
                 restrictionIndicator.material = Master.vars.shipPlacementRestrictionMaterial;
-                restrictionIndicator.Set( Vector2.one * 0.9f, 0, true, 0, 0, 0.1f, 0.1f );
+                restrictionIndicator.Set( Vector2.one * 0.9f, 0, true, 0, 0, 0.1f, 0.1f, 1.0f );
 
             }
         }

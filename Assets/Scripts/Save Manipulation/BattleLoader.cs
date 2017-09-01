@@ -41,7 +41,7 @@ public class BattleLoader : MonoBehaviour
         Player[] players = new Player[data.combatants.Length];
         int humans = 0;
         battle.singleplayer = data.singleplayer;
-        BattleVisualModule visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Cinematic_BattleVisualModule" );
+        BattleVisualModule visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
         visualModule.battle = battle;
         battle.visualModule = visualModule;
 
@@ -141,8 +141,6 @@ public class BattleLoader : MonoBehaviour
                     for (int h = 0; h < tileData.hitBy.Length; h++)
                     {
                         tile.hitBy.Add( players[tileData.hitBy[h]] );
-                        Debug.Log( h );
-                        Debug.Log( players[tileData.hitBy[h]].label );
                     }
                 }
             }
@@ -183,6 +181,9 @@ public class BattleLoader : MonoBehaviour
 
                 ship.PositionOnBoard();
             }
+
+            //HACK DESTROYER TEST
+            player.destroyer.torpedoes = 3;
         }
 
         //HITS
@@ -216,7 +217,6 @@ public class BattleLoader : MonoBehaviour
 
 
         battle.combatants = players;
-        Debug.Log( data.activePlayerID );
         battle.activePlayer = players[data.activePlayerID];
         battle.lastSelectedPlayer = data.lastSelectedPlayer >= 0 ? players[data.lastSelectedPlayer] : null;
 

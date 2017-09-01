@@ -47,7 +47,7 @@ public class Battle : MonoBehaviour
             combatants[i].battle = this;
         }
 
-        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Cinematic_BattleVisualModule" );
+        visualModule = (BattleVisualModule)ScriptableObject.CreateInstance( "Test_BattleVisualModule" );
         visualModule.battle = this;
 
         ShipPositioner.AddShipsToBattle( this );
@@ -102,7 +102,7 @@ public class Battle : MonoBehaviour
     {
         turnLog[0].type = TurnActionType.ARTILLERY_ATTACK;
 
-        for (int i = 0; i < tiles.Length && i < activePlayer.shotCapacity; i++)
+        for (int i = 0; i < tiles.Length && i < activePlayer.gunTargetCap; i++)
         {
             BoardTile tile = tiles[i];
             if (!activePlayer.hits[selectedPlayer].ContainsKey( tile ))

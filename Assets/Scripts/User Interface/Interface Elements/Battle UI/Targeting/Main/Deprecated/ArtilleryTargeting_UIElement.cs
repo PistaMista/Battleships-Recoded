@@ -78,7 +78,7 @@ public class ArtilleryTargeting_UIElement : UIElement
                     }
                     else if (!( tile.hitBy.Contains( UserInterface.managedBattle.activePlayer ) || ( UserInterface.managedBattle.activePlayer == tile.board.owner && tile.hitBy.Count > 0 ) ) && TorpedoTargeting_UIElement.candidate == Vector3.zero)
                     {
-                        if (candidates.Count < UserInterface.managedBattle.activePlayer.shotCapacity)
+                        if (candidates.Count < UserInterface.managedBattle.activePlayer.gunTargetCap)
                         {
                             candidates.Add( tile );
                         }
@@ -114,8 +114,8 @@ public class ArtilleryTargeting_UIElement : UIElement
                 DynamicStripedRectangle_GraphicsElement tmp = new GameObject( "Candidate Target Indicator" ).AddComponent<DynamicStripedRectangle_GraphicsElement>();
                 tmp.transform.SetParent( indicator.transform );
                 tmp.transform.position = tile.transform.position + Vector3.up * 0.111f;
-                tmp.material = confirmed ? Master.vars.targetingConfirmedMaterial : Master.vars.targetingUnconfirmedMaterial;
-                tmp.Set( Vector2.one * 0.9f, 0.05f, true, 0, 0.3f, 0.05f, 0.05f );
+                tmp.material = confirmed ? Master.vars.targetInvalidMaterial : Master.vars.targetValidMaterial;
+                tmp.Set( Vector2.one * 0.9f, 0.05f, true, 0, 0.3f, 0.05f, 0.05f, 1.0f );
             }
         }
     }

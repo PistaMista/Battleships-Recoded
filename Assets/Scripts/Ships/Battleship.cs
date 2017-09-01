@@ -11,7 +11,7 @@ public class Battleship : Ship
         base.OnShipDestroyed( ship );
         if (ship == this)
         {
-            owner.shotCapacity -= shotBonus;
+            owner.gunTargetCap -= shotBonus;
         }
     }
 
@@ -20,7 +20,7 @@ public class Battleship : Ship
         base.OnShipPlace( ship );
         if (ship == this)
         {
-            owner.shotCapacity += shotBonus;
+            owner.gunTargetCap += shotBonus;
         }
     }
 
@@ -29,7 +29,7 @@ public class Battleship : Ship
         base.OnShipRemove( ship );
         if (ship == this)
         {
-            owner.shotCapacity -= shotBonus;
+            owner.gunTargetCap -= shotBonus;
         }
     }
 }
